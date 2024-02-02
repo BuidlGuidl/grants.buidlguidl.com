@@ -1,12 +1,37 @@
 "use client";
 
 import { useState } from "react";
+import { useAccount, useSignMessage } from "wagmi";
 import { InputBase } from "~~/components/scaffold-eth";
+import { useBGBuilderData } from "~~/hooks/useBGBuilderData";
+import { notification } from "~~/utils/scaffold-eth";
+
+/*
+ * 1. Disable submit button when wallet is not connected, and show a tooltip
+ * 2. Fetch for bg status once the wallet connected
+ */
 
 const selectOptions = [0.1, 0.25, 0.5, 1];
 
 const Form = () => {
   const [formState, setFormState] = useState({ title: "", description: "", askAmount: 0.1 });
+  const { signMessageAsync } = useSignMessage();
+  const { isConnected, address: connectedAddress } = useAccount();
+  const { isBuilderPresent, isLoading: isFetchingBuilderData } = useBGBuilderData(connectedAddress);
+
+  const handleSubmit = async () => {
+    if (formState.title === "" || formState.description === "") {
+      notification.error("Title and description are required");
+      return;
+    }
+
+    const signedMessage = await signMessageAsync({ message: JSON.stringify(formState) });
+
+    console.log("Signed message", signedMessage);
+    console.log("Form data", formState);
+  };
+
+  const isSubmitDisabled = !isConnected || isFetchingBuilderData || !isBuilderPresent;
 
   return (
     <div className="card card-compact w-96 bg-base-100 shadow-xl">
@@ -48,9 +73,16 @@ const Form = () => {
             ))}
           </select>
         </div>
-        <button className="btn btn-primary" onClick={() => console.log(formState)}>
-          Submit
-        </button>
+
+        <div
+          className={`flex ${isSubmitDisabled && "tooltip tooltip-bottom"}`}
+          data-tip={`${!isConnected ? "Please connect your wallet" : !isBuilderPresent ? "Builder not found" : ""}`}
+        >
+          <button className="btn btn-primary w-full" disabled={isSubmitDisabled} onClick={handleSubmit}>
+            {isFetchingBuilderData && <span className="loading loading-spinner loading-md"></span>}
+            Submit
+          </button>
+        </div>
       </div>
     </div>
   );
