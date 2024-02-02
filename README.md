@@ -25,7 +25,7 @@ yarn install
 ```
 
 2. Set up your environment variables (and optionally, a local Firebase instance):
-Copy the `packages/nextjs/.env.example` file to `packages/nextjs/.env` and fill in the required environment variables.
+Copy the `packages/nextjs/.env.example` file to `packages/nextjs/.env.local` and fill in the required environment variables.
 
 (Optional) Start the firebase emulators (vs set up a live Firebase instance). You will need to install the [firebase CLI](https://firebase.google.com/docs/cli#install_the_firebase_cli) and run the following command:
 ```bash
