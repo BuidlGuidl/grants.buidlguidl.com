@@ -1,39 +1,5 @@
 import { useEffect, useState } from "react";
-
-type SocialLinks = {
-  twitter?: string;
-  github?: string;
-  discord?: string;
-  telegram?: string;
-  instagram?: string;
-  email?: string;
-};
-
-type Build = {
-  submittedTimestamp: number;
-  id: string;
-};
-
-type Status = {
-  text: string;
-  timestamp: number;
-};
-
-type Graduated = {
-  reason: string;
-  status: boolean;
-};
-
-type BuilderData = {
-  id: string;
-  socialLinks: SocialLinks;
-  role: string;
-  function: string;
-  creationTimestamp: number;
-  builds: Build[];
-  status: Status;
-  graduated: Graduated;
-};
+import { BuilderData } from "~~/services/database/schema";
 
 export const useBGBuilderData = (address?: string) => {
   const [data, setData] = useState<BuilderData | null>(null);
