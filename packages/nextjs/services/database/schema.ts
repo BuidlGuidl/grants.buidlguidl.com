@@ -32,3 +32,13 @@ export type BuilderData = {
   status?: Status;
   graduated?: Graduated;
 };
+
+export type GrantData = {
+  id: string;
+  title: string;
+  description: string;
+  askAmount: number;
+  builder: string;
+  timestamp: number;
+  status: "pending" | "approved" | "completed" | "rejected";
+};

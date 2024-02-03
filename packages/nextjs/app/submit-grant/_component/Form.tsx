@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { subgmitGrantAction } from "../_actions";
 import SubmitButton from "./SubmitButton";
 import { useAccount, useSignMessage } from "wagmi";
@@ -10,6 +11,7 @@ const selectOptions = [0.1, 0.25, 0.5, 1];
 const Form = () => {
   const { signMessageAsync } = useSignMessage();
   const { address: connectedAddress } = useAccount();
+  const router = useRouter();
 
   const clientFormAction = async (formData: FormData) => {
     try {
@@ -19,17 +21,19 @@ const Form = () => {
         return;
       }
 
-      const message = JSON.stringify(formState);
-      const signature = await signMessageAsync({ message });
+      const signature = await signMessageAsync({ message: JSON.stringify(formState) });
       const signedMessageObject = {
         signature: signature,
         address: connectedAddress,
-        message,
+        message: JSON.stringify(formState),
       };
 
       // server action
       const submitGrantActionWithSignedMessage = subgmitGrantAction.bind(null, signedMessageObject);
       await submitGrantActionWithSignedMessage(formData);
+
+      notification.success("Proposal submitted successfully!");
+      router.push("/");
     } catch (error: any) {
       if (error instanceof Error) {
         notification.error(error.message);

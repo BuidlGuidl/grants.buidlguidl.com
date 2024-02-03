@@ -1,6 +1,7 @@
 "use server";
 
 import { verifyMessage } from "viem";
+import { createGrant } from "~~/services/database/grants";
 import { findUserByAddress } from "~~/services/database/users";
 
 type SignedMessage = {
@@ -31,6 +32,14 @@ export const subgmitGrantAction = async ({ message, signature, address }: Signed
     }
 
     // Save the form data to the database
+    const grant = await createGrant({
+      title: formData.title as string,
+      description: formData.description as string,
+      askAmount: Number(formData.askAmount),
+      builder: address,
+    });
+
+    return grant;
   } catch (e) {
     if (e instanceof Error) {
       throw e;
