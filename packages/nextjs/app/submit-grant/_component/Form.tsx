@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { subgmitGrantAction } from "../_actions";
+import { submitGrantAction } from "../_actions";
 import SubmitButton from "./SubmitButton";
 import { useAccount, useSignMessage } from "wagmi";
 import { notification } from "~~/utils/scaffold-eth";
@@ -29,7 +29,7 @@ const Form = () => {
       };
 
       // server action
-      const submitGrantActionWithSignedMessage = subgmitGrantAction.bind(null, signedMessageObject);
+      const submitGrantActionWithSignedMessage = submitGrantAction.bind(null, signedMessageObject);
       await submitGrantActionWithSignedMessage(formData);
 
       notification.success("Proposal submitted successfully!");

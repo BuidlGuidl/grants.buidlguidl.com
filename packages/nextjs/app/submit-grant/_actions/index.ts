@@ -10,7 +10,7 @@ type SignedMessage = {
   address?: string;
 };
 
-export const subgmitGrantAction = async ({ message, signature, address }: SignedMessage, form: FormData) => {
+export const submitGrantAction = async ({ message, signature, address }: SignedMessage, form: FormData) => {
   try {
     const formData = Object.fromEntries(form.entries());
     if (!formData.title || !formData.description || !formData.askAmount) {
