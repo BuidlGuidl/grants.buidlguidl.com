@@ -75,7 +75,7 @@ const Form = () => {
             <option disabled>Select amount</option>
             {selectOptions.map(option => (
               <option key={option} value={option}>
-                {option}
+                {option} ETH
               </option>
             ))}
           </select>
