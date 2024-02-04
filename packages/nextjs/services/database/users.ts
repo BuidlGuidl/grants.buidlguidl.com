@@ -7,10 +7,15 @@ const getUserDoc = (id: string) => firestoreDB.collection("users").doc(id);
 const getUserSnapshotById = (id: string) => getUserDoc(id).get();
 
 export const findUserByAddress = async (builderAddress: string): Promise<BuilderDataResponse> => {
-  const builderSnapshot = await getUserSnapshotById(builderAddress);
-  if (!builderSnapshot.exists) {
-    return { exists: false };
+  try {
+    const builderSnapshot = await getUserSnapshotById(builderAddress);
+    if (!builderSnapshot.exists) {
+      return { exists: false };
+    }
+    const data = builderSnapshot.data() as DocumentData;
+    return { exists: true, data: { id: builderSnapshot.id, ...data } };
+  } catch (error) {
+    console.error("Error finding user by address:", error);
+    throw error;
   }
-  const data = builderSnapshot.data() as DocumentData;
-  return { exists: true, data: { id: builderSnapshot.id, ...data } };
 };
