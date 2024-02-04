@@ -1,10 +1,10 @@
 "use client";
 
-// To use useFormStatus we need to make sure button is child of form
 import { useFormStatus } from "react-dom";
 import { useAccount } from "wagmi";
 import { useBGBuilderData } from "~~/hooks/useBGBuilderData";
 
+// To use useFormStatus we need to make sure button is child of form
 const SubmitButton = () => {
   const { pending } = useFormStatus();
   const { isConnected, address: connectedAddress } = useAccount();
