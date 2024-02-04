@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BuilderData } from "~~/services/database/schema";
+import { BuilderData, BuilderDataResponse } from "~~/services/database/schema";
 
 export const useBGBuilderData = (address?: string) => {
   const [data, setData] = useState<BuilderData | null>(null);
@@ -18,20 +18,19 @@ export const useBGBuilderData = (address?: string) => {
     const fetchBuilderData = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`https://buidlguidl-v3.ew.r.appspot.com/builders/${address}`);
+        const response = await fetch(`/api/builders/${address}`);
         if (!response.ok) {
-          if (response.status === 404) {
-            // server send 404 if User doesn't exist
-            setData(null);
-            setIsBuilderPresent(false);
-          } else {
-            throw new Error("An error occurred while fetching the data");
-          }
-        } else {
-          const jsonData: BuilderData = await response.json();
-          setData(jsonData);
-          setIsBuilderPresent(true);
+          throw new Error("An error occurred while fetching builder data");
         }
+        const jsonData: BuilderDataResponse = await response.json();
+        if (!jsonData.exists || !jsonData.data) {
+          setData(null);
+          setIsBuilderPresent(false);
+          return;
+        }
+
+        setData(jsonData.data);
+        setIsBuilderPresent(true);
       } catch (err: any) {
         setError(err);
         setIsBuilderPresent(false);

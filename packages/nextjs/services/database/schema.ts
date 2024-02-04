@@ -33,6 +33,11 @@ export type BuilderData = {
   graduated?: Graduated;
 };
 
+export type BuilderDataResponse = {
+  exists: boolean;
+  data?: BuilderData;
+};
+
 export type GrantData = {
   id: string;
   title: string;

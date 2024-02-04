@@ -14,7 +14,13 @@ const SubmitButton = () => {
   return (
     <div
       className={`flex ${(!isConnected || !isBuilderPresent) && "tooltip tooltip-bottom"}`}
-      data-tip={`${!isConnected ? "Please connect your wallet" : !isBuilderPresent ? "Builder not found" : ""}`}
+      data-tip={`${
+        !isConnected
+          ? "Please connect your wallet"
+          : !isBuilderPresent
+          ? "You should be a buidlguidl builder to submit grant"
+          : ""
+      }`}
     >
       <button className="btn btn-primary w-full" disabled={isSubmitDisabled} aria-disabled={isSubmitDisabled}>
         {(isFetchingBuilderData || pending) && <span className="loading loading-spinner loading-md"></span>}
