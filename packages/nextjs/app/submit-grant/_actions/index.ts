@@ -4,23 +4,24 @@ import { verifyMessage } from "viem";
 import { createGrant } from "~~/services/database/grants";
 import { findUserByAddress } from "~~/services/database/users";
 
-type SignedMessage = {
-  message?: string;
+type SignatureAndSigner = {
   signature?: `0x${string}`;
   address?: string;
 };
 
-export const submitGrantAction = async ({ message, signature, address }: SignedMessage, form: FormData) => {
+export const submitGrantAction = async ({ signature, address }: SignatureAndSigner, form: FormData) => {
   try {
     const formData = Object.fromEntries(form.entries());
     if (!formData.title || !formData.description || !formData.askAmount) {
       throw new Error("Invalid form data");
     }
-    if (!message || !signature || !address) {
-      throw new Error("Invalid message, signature, or address.");
+
+    if (!signature || !address) {
+      throw new Error("Signature and address are required to submit grant");
     }
 
-    const isMessageValid = await verifyMessage({ message, signature, address });
+    const constructedMessage = JSON.stringify(formData);
+    const isMessageValid = await verifyMessage({ message: constructedMessage, signature, address });
     if (!isMessageValid) {
       throw new Error("Invalid signature");
     }

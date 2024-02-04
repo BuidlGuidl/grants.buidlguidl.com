@@ -25,7 +25,6 @@ const Form = () => {
       const signedMessageObject = {
         signature: signature,
         address: connectedAddress,
-        message: JSON.stringify(formState),
       };
 
       // server action
