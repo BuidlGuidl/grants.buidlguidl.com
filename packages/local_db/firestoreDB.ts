@@ -14,7 +14,7 @@ const getFirestoreConnector = () => {
   } else {
     console.log("Initializing local Firestore instance");
     initializeApp({
-      projectId: "buidlguidl",
+      projectId: process.env.FIREBASE_PROJECT_ID,
     });
   }
 

@@ -17,7 +17,7 @@ const getFirestoreConnector = () => {
     // ToDo. Something is not working. Getting "Error: Could not load the default credentials."
     console.log("Initializing local Firestore instance");
     initializeApp({
-      projectId: "buidlguidl-v3",
+      projectId: process.env.FIREBASE_PROJECT_ID,
     });
   }
 
