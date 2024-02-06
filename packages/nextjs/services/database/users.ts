@@ -1,0 +1,21 @@
+import { getFirestoreConnector } from "./firestoreDB";
+import { BuilderDataResponse } from "./schema";
+import { DocumentData } from "firebase-admin/firestore";
+
+const firestoreDB = getFirestoreConnector();
+const getUserDoc = (id: string) => firestoreDB.collection("users").doc(id);
+const getUserSnapshotById = (id: string) => getUserDoc(id).get();
+
+export const findUserByAddress = async (builderAddress: string): Promise<BuilderDataResponse> => {
+  try {
+    const builderSnapshot = await getUserSnapshotById(builderAddress);
+    if (!builderSnapshot.exists) {
+      return { exists: false };
+    }
+    const data = builderSnapshot.data() as DocumentData;
+    return { exists: true, data: { id: builderSnapshot.id, ...data } };
+  } catch (error) {
+    console.error("Error finding user by address:", error);
+    throw error;
+  }
+};
