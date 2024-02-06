@@ -5,12 +5,21 @@ import { getFirestoreConnector } from "./firestoreDB.js";
 import { importSeed } from "./utils.js";
 
 const seedData = async () => {
+  const firestoreDB = getFirestoreConnector();
+
+  const args = process.argv.slice(2);
+  const flags = args.filter((arg) => arg.startsWith("--"));
+  const isForceProd = flags.includes("--force-prod");
+
   if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
-    console.log("Connected to LIVE Firestore, exiting.");
-    return;
+    console.log("Connected to LIVE Firestore");
+    if (!isForceProd) {
+      console.log("To update Live firestore use `yarn seed --force-prod`");
+      console.log("Exiting...");
+      return;
+    }
   }
 
-  const firestoreDB = getFirestoreConnector();
   try {
     await importSeed(firestoreDB);
   } catch (error) {
