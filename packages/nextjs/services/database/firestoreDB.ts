@@ -1,4 +1,4 @@
-import { applicationDefault, getApps, initializeApp } from "firebase-admin/app";
+import { applicationDefault, cert, getApps, initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 
 const getFirestoreConnector = () => {
@@ -9,12 +9,20 @@ const getFirestoreConnector = () => {
   }
 
   if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
-    console.log("Initializing LIVE Firestore");
+    console.log("Initializing LIVE Firestore with GOOGLE_APPLICATION_CREDENTIALS");
     initializeApp({
       credential: applicationDefault(),
     });
+  } else if (process.env.FIREBASE_PRIVATE_KEY) {
+    console.log("Initializing LIVE Firestore with FIREBASE_PRIVATE_KEY");
+    initializeApp({
+      credential: cert({
+        projectId: process.env.FIREBASE_PROJECT_ID,
+        privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      }),
+    });
   } else {
-    // ToDo. Something is not working. Getting "Error: Could not load the default credentials."
     console.log("Initializing local Firestore instance");
     initializeApp({
       projectId: process.env.FIREBASE_PROJECT_ID,
