@@ -14,10 +14,9 @@ export async function POST(request: Request) {
 
   if (!isMessageValid) return new Response("Unauthorized", { status: 401 });
 
-  // Create a JWT token, with process.env.JWT_SECRET as the secret, and expires in 1 week
   const token = jwt.sign({ address }, process.env.JWT_SECRET, { expiresIn: "1w" });
-  console.log("token", token);
-  // const user = await findUserByAddress(signature);
-  // if (!user) return new Response("Unauthorized", { status: 401 });
-  return new Response(token, { status: 200 });
+
+  return new Response(JSON.stringify({ token }), {
+    headers: { "Content-Type": "application/json" },
+  });
 }
