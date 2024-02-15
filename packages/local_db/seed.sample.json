@@ -34,6 +34,39 @@
         }
       ]
     },
+    "0x55b9CB0bCf56057010b9c471e7D42d60e1111EEa": {
+      "creationTimestamp": 1633088553221,
+      "role": "admin",
+      "ens": "shivbonde.eth",
+      "function": "damageDealer",
+      "status": {
+        "text": "My Status",
+        "timestamp": 1657208443047
+      },
+      "builderCohort": [
+        {
+          "id": "0x2eA63c9C9C114ae85b1027697A906420a23e8572",
+          "name": "Sand Garden",
+          "url": "https://sandgarden.buidlguidl.com"
+        }
+      ],
+      "stream": {
+        "streamAddress": "0xCC756617C97a05aC472fD8Ab92C88F2A9cb681EC",
+        "streamAddress_rinkeby": "0xCC756617C97a05aC472fD8Ab92C88F2A9cb681EC",
+        "streamAddress_localhost": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+        "cap": "0.5",
+        "frequency": 2592000,
+        "lastContract": 1654720543,
+        "lastIndexedBlock": 10983432,
+        "balance": "0.21"
+      },
+      "builds": [
+        {
+          "id": "06bb3c9d-784b-44d1-b7e2-1ae5affdfa8b",
+          "submittedTimestamp": 1658587661752
+        }
+      ]
+    },
     "0x70997970C51812dc3A010C7d01b50e0d17dc79C8": {
       "creationTimestamp": 1633088553223,
       "role": "builder",
@@ -91,6 +124,48 @@
       "featured": false,
       "submittedTimestamp": 1658587661752,
       "likes": ["0x60583563D5879C2E59973E5718c7DE2147971807"]
+    }
+  },
+  "grants": {
+    "fWmHtS89edfHhVwOOYOz": {
+      "askAmount": 0.5,
+      "builder": "0x55b9CB0bCf56057010b9c471e7D42d60e1111EEa",
+      "description": "This is long description for 1st grant",
+      "status": "completed",
+      "timestamp": 1660983774000,
+      "title": "1s Test grant"
+    },
+    "eOp1CMm83N1LzlVhcLZu": {
+      "askAmount": 0.5,
+      "builder": "0x60583563D5879C2E59973E5718c7DE2147971807",
+      "title": "2nd Test grant",
+      "description": "This is long description",
+      "status": "completed",
+      "timestamp": 1660993774000
+    },
+    "5nwkdmFIAecWO2XUyyWP": {
+      "askAmount": 0.1,
+      "builder": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+      "title": "3rd Test grant",
+      "description": "This is long description for 3rd grant",
+      "status": "completed",
+      "timestamp": 1660983774000
+    },
+    "9ZoLxv5ay18mnGn6BwqG": {
+      "askAmount": 0.25,
+      "builder": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+      "title": "4th Test grant",
+      "description": "This is long description for 3rd grant",
+      "status": "proposed",
+      "timestamp": 1660983774000
+    },
+    "7kTh6xnk2338O0gJyzt6": {
+      "askAmount": 1,
+      "builder": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+      "title": "5th Test grant",
+      "description": "This is long description for 5th grant",
+      "status": "approved",
+      "timestamp": 1660983774000
     }
   },
   "events": [
