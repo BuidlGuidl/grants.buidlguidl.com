@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "@rainbow-me/rainbowkit/styles.css";
 import { Metadata } from "next";
 import { ScaffoldEthAppWithProviders } from "~~/components/ScaffoldEthAppWithProviders";
+import { ThemeProvider } from "~~/components/ThemeProvider";
 import "~~/styles/globals.css";
 
 const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
@@ -71,9 +72,11 @@ const spaceGrotesk = Space_Grotesk({
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (
-    <html className={`${ppEditorial.variable} ${spaceMono.variable} ${spaceGrotesk.variable}`}>
+    <html suppressHydrationWarning className={`${ppEditorial.variable} ${spaceMono.variable} ${spaceGrotesk.variable}`}>
       <body>
-        <ScaffoldEthAppWithProviders>{children}</ScaffoldEthAppWithProviders>
+        <ThemeProvider enableSystem>
+          <ScaffoldEthAppWithProviders>{children}</ScaffoldEthAppWithProviders>
+        </ThemeProvider>
       </body>
     </html>
   );
