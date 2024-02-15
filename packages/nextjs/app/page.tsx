@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 const Home = () => {
   return (
@@ -24,9 +25,12 @@ const Home = () => {
                 Our micro grants are one of many ways BuidlGuidl funds development and contribute to Ethereum. Did you
                 just finished SRE or completed one of our batches? This could be your next step in BuidlGuidl’s journey.
               </p>
-              <button className="btn btn-primary btn-md border-1 border-black rounded-2xl px-14 font-medium shadow-none">
+              <Link
+                href="/submit-grant"
+                className="btn btn-primary btn-md border-1 border-black rounded-2xl px-14 font-medium shadow-none"
+              >
                 Learn More
-              </button>
+              </Link>
             </div>
           </div>
           <div className="flex flex-col items-center">
