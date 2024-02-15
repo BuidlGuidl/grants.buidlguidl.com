@@ -60,7 +60,7 @@ export const getAllCompletedGrants = async () => {
 export const getGrantsStats = async () => {
   // Summation of askAmount for completed grants: total_eth_granted
   // Total number of completed grants : total_completed_grants
-  // Total number of submitted grants (proposed) : total_submitted_grants
+  // Total number of submitted grants all grants : total_submitted_grants
   // Total number of Active grants (approved): total_active_grants
   try {
     const copmltedGrants = await getAllCompletedGrants();
@@ -69,7 +69,6 @@ export const getGrantsStats = async () => {
 
     const allGrantsSnapshot = await grantsCollection.get();
     const total_grants = allGrantsSnapshot.size;
-    console.log("total_grants", total_grants);
 
     const approvedGrantsSnapshot = await grantsCollection.where("status", "==", PROPOSAL_STATUS.APPROVED).get();
     const total_active_grants = approvedGrantsSnapshot.size;
