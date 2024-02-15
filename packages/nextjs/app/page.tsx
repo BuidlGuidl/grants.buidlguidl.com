@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { CompletedGrants } from "./_components/CompletedGrants";
 import { GrantsStats } from "./_components/GrantsStats";
 
 const Home = () => {
@@ -42,6 +43,7 @@ const Home = () => {
         </div>
       </div>
       <GrantsStats />
+      <CompletedGrants />
     </>
   );
 };
