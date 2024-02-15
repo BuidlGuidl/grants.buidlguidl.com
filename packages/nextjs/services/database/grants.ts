@@ -67,13 +67,19 @@ export const getGrantsStats = async () => {
     const total_eth_granted = copmltedGrants.reduce((acc, grant) => acc + grant.askAmount, 0);
     const total_completed_grants = copmltedGrants.length;
 
-    const submitedGrantsSnapshot = await grantsCollection.where("status", "==", PROPOSAL_STATUS.SUBMITTED).get();
-    const total_submitted_grants = submitedGrantsSnapshot.size;
+    const allGrantsSnapshot = await grantsCollection.get();
+    const total_grants = allGrantsSnapshot.size;
+    console.log("total_grants", total_grants);
 
     const approvedGrantsSnapshot = await grantsCollection.where("status", "==", PROPOSAL_STATUS.APPROVED).get();
     const total_active_grants = approvedGrantsSnapshot.size;
 
-    return { total_eth_granted, total_completed_grants, total_submitted_grants, total_active_grants };
+    return {
+      total_grants,
+      total_eth_granted,
+      total_completed_grants,
+      total_active_grants,
+    };
   } catch (error) {
     console.error("Error getting grants stats:", error);
     throw error;
