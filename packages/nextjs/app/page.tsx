@@ -1,3 +1,4 @@
+import SIWE from "~~/components/SIWE";
 import { listCollections } from "~~/services/database/collections";
 
 // revalidate the data at most every hour (just testing)
@@ -21,6 +22,10 @@ const Home = async () => {
               <li key={collection.id}>{collection.id}</li>
             ))}
           </ul>
+          <h2 className="font-bold mt-8">SIWE:</h2>
+          <div>
+            <SIWE />
+          </div>
         </div>
       </div>
     </>
