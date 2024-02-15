@@ -23,7 +23,7 @@ const SIWE = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ signature }),
+        body: JSON.stringify({ signature, address }),
       });
       if (!verifyRes.ok) throw new Error("Error verifying message");
     } catch (error) {
