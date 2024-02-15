@@ -17,15 +17,13 @@ module.exports = {
           neutral: "#212638",
           "neutral-content": "#ffffff",
           "base-100": "#ffffff",
-          "base-200": "#EAF2FF",
+          "base-200": "#FFFCFC",
           "base-300": "#DAE8FF",
           "base-content": "#212638",
           info: "#93BBFB",
           success: "#34EEB6",
           warning: "#FFCF72",
           error: "#FF8863",
-
-          "--rounded-btn": "9999rem",
 
           ".tooltip": {
             "--tooltip-tail": "6px",
@@ -56,8 +54,6 @@ module.exports = {
           success: "#34EEB6",
           warning: "#FFCF72",
           error: "#FF8863",
-
-          "--rounded-btn": "9999rem",
 
           ".tooltip": {
             "--tooltip-tail": "6px",

@@ -24,7 +24,9 @@ const Home = () => {
                 Our micro grants are one of many ways BuidlGuidl funds development and contribute to Ethereum. Did you
                 just finished SRE or completed one of our batches? This could be your next step in BuidlGuidl’s journey.
               </p>
-              <button className="btn bg-base-100 btn-md h-14 px-16 font-medium">Learn More</button>
+              <button className="btn btn-primary btn-md border-1 border-black rounded-2xl px-14 font-medium shadow-none">
+                Learn More
+              </button>
             </div>
           </div>
           <div className="flex flex-col items-center">
