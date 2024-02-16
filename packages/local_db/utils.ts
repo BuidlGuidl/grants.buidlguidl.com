@@ -9,6 +9,7 @@ type SeedData = {
   config: Record<string, object>;
   cohorts: Record<string, object>;
   notifications: Record<string, object>;
+  grants: Record<string, object>;
 };
 
 async function importCollectionData(
@@ -63,6 +64,7 @@ export const importSeed = async (database: Firestore) => {
     importCollectionData(database, "config", seedToImport.config),
     importCollectionData(database, "cohorts", seedToImport.cohorts),
     importCollectionData(database, "notifications", seedToImport.notifications),
+    importCollectionData(database, "grants", seedToImport.grants),
   ]);
 
   console.log("Seed completed successfully! 🌱");
