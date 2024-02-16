@@ -1,3 +1,4 @@
+import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import { verifyMessage } from "viem";
 import { findUserByAddress } from "~~/services/database/users";
@@ -17,7 +18,5 @@ export async function POST(request: Request) {
 
   const token = jwt.sign({ address }, process.env.JWT_SECRET, { expiresIn: "1w" });
 
-  return new Response(JSON.stringify({ token }), {
-    headers: { "Content-Type": "application/json" },
-  });
+  return NextResponse.json({ token });
 }
