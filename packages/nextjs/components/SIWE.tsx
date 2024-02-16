@@ -5,7 +5,8 @@ import { useLocalStorage } from "usehooks-ts";
 import { useAccount, useSignMessage } from "wagmi";
 import { notification } from "~~/utils/scaffold-eth";
 
-// ToDo. Nonce.
+// ToDo. Connect wallet tooltip if disabled
+// ToDo. Nonce?
 // ToDo. Check if expired?
 const SIWE = () => {
   const { isConnected, address } = useAccount();
