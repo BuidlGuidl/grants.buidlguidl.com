@@ -1,3 +1,5 @@
+import { Space_Grotesk, Space_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "@rainbow-me/rainbowkit/styles.css";
 import { Metadata } from "next";
 import { ScaffoldEthAppWithProviders } from "~~/components/ScaffoldEthAppWithProviders";
@@ -42,9 +44,35 @@ export const metadata: Metadata = {
   },
 };
 
+const ppEditorial = localFont({
+  src: [
+    { path: "../public/fonts/PPEditorialNew-Ultralight.woff2", weight: "200", style: "normal" },
+    {
+      path: "../public/fonts/PPEditorialNew-UltralightItalic.woff2",
+      weight: "200",
+      style: "italic",
+    },
+  ],
+  variable: "--font-pp-editorial",
+});
+
+const spaceMono = Space_Mono({
+  subsets: ["latin"],
+  display: "swap",
+  weight: "400",
+  variable: "--font-space-mono",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  display: "swap",
+  weight: "400",
+  variable: "--font-space-grotesk",
+});
+
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (
-    <html suppressHydrationWarning>
+    <html suppressHydrationWarning className={`${ppEditorial.variable} ${spaceMono.variable} ${spaceGrotesk.variable}`}>
       <body>
         <ThemeProvider enableSystem>
           <ScaffoldEthAppWithProviders>{children}</ScaffoldEthAppWithProviders>
