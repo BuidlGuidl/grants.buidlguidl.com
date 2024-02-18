@@ -43,6 +43,22 @@ export const getAllGrants = async () => {
   }
 };
 
+export const getAllGrantsForReview = async () => {
+  try {
+    const grantsSnapshot = await grantsCollection
+      .where("status", "in", [PROPOSAL_STATUS.PROPOSED, PROPOSAL_STATUS.SUBMITTED])
+      .get();
+    const grants: GrantData[] = [];
+    grantsSnapshot.forEach(doc => {
+      grants.push({ id: doc.id, ...doc.data() } as GrantData);
+    });
+    return grants;
+  } catch (error) {
+    console.error("Error getting all completed grants:", error);
+    throw error;
+  }
+};
+
 export const getAllCompletedGrants = async () => {
   try {
     const grantsSnapshot = await grantsCollection.where("status", "==", PROPOSAL_STATUS.COMPLETED).get();
