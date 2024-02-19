@@ -3,8 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { RainbowKitCustomConnectButton } from "./scaffold-eth";
+import { useAccount } from "wagmi";
 import { LockClosedIcon } from "@heroicons/react/24/outline";
-import { useGlobalState } from "~~/services/store/store";
+import { useBGBuilderData } from "~~/hooks/useBGBuilderData";
 
 type HeaderMenuLink = {
   label: string;
@@ -26,7 +27,8 @@ export const menuLinks: HeaderMenuLink[] = [
 
 export const HeaderMenuLinks = () => {
   const pathname = usePathname();
-  const builderData = useGlobalState(state => state.builderData);
+  const { address: connectedAddress } = useAccount();
+  const { data: builderData } = useBGBuilderData(connectedAddress);
 
   return (
     <>
