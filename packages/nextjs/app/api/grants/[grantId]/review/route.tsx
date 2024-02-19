@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { recoverTypedDataAddress } from "viem";
 import { reviewGrant } from "~~/services/database/grants";
+import { findUserByAddress } from "~~/services/database/users";
 import { EIP_712_DOMAIN, EIP_712_TYPES__REVIEW_GRANT } from "~~/utils/eip712";
 
 export async function POST(req: NextRequest, { params }: { params: { grantId: string } }) {
@@ -21,6 +22,14 @@ export async function POST(req: NextRequest, { params }: { params: { grantId: st
 
   if (recoveredAddress !== signer) {
     console.error("Signature error", recoveredAddress, signer);
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Only admins can review grants
+  const signerData = await findUserByAddress(signer);
+
+  if (signerData.data?.role !== "admin") {
+    console.error("Unauthorized", signer);
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

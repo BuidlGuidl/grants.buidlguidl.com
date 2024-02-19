@@ -25,7 +25,7 @@ type Graduated = {
 export type BuilderData = {
   id: string;
   socialLinks?: SocialLinks;
-  role?: string;
+  role?: "anonymous" | "builder" | "admin";
   function?: string;
   creationTimestamp?: number;
   builds?: Build[];
