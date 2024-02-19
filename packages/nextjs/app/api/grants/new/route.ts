@@ -15,7 +15,7 @@ export async function POST(req: Request) {
   try {
     const { title, description, askAmount, signature, address } = (await req.json()) as ReqBody;
 
-    if (!title || !description || !askAmount || !signature || !address) {
+    if (!title || !description || !askAmount || isNaN(Number(askAmount)) || !signature || !address) {
       return NextResponse.json({ error: "Invalid form details submited" }, { status: 400 });
     }
 
