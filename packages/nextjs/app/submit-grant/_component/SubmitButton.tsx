@@ -8,6 +8,7 @@ import { useBGBuilderData } from "~~/hooks/useBGBuilderData";
 const SubmitButton = () => {
   const { pending } = useFormStatus();
   const { isConnected, address: connectedAddress } = useAccount();
+  // ToDo. We could use builderData from global state
   const { isBuilderPresent, isLoading: isFetchingBuilderData } = useBGBuilderData(connectedAddress);
   const isSubmitDisabled = !isConnected || isFetchingBuilderData || pending || !isBuilderPresent;
 

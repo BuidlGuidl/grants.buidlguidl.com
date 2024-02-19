@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { RainbowKitCustomConnectButton } from "./scaffold-eth";
 import { LockClosedIcon } from "@heroicons/react/24/outline";
+import { useGlobalState } from "~~/services/store/store";
 
 type HeaderMenuLink = {
   label: string;
@@ -16,7 +17,6 @@ export const menuLinks: HeaderMenuLink[] = [
     label: "Home",
     href: "/",
   },
-  // ToDo. Show only on admins
   {
     label: "Admin",
     href: "/admin",
@@ -26,11 +26,13 @@ export const menuLinks: HeaderMenuLink[] = [
 
 export const HeaderMenuLinks = () => {
   const pathname = usePathname();
+  const builderData = useGlobalState(state => state.builderData);
 
   return (
     <>
       {menuLinks.map(({ label, href, icon }) => {
         const isActive = pathname === href;
+        if (href === "/admin" && builderData?.role !== "admin") return null;
         return (
           <li key={href}>
             <Link
