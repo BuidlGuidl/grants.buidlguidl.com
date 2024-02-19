@@ -4,7 +4,6 @@ export const EIP_712_DOMAIN = {
   chainId: 10,
 } as const;
 
-// ToDo. We could add more fields (grant title, builder, etc)
 export const EIP_712_TYPES__APPLY_FOR_GRANT = {
   Message: [
     { name: "title", type: "string" },
