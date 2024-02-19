@@ -1,13 +1,6 @@
 import { getFirestoreConnector } from "./firestoreDB";
 import { GrantData } from "./schema";
-
-export const PROPOSAL_STATUS = {
-  PROPOSED: "proposed",
-  APPROVED: "approved",
-  SUBMITTED: "submitted",
-  COMPLETED: "completed",
-  REJECTED: "rejected",
-} as const;
+import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";
 
 const firestoreDB = getFirestoreConnector();
 const grantsCollection = firestoreDB.collection("grants");
@@ -43,6 +36,22 @@ export const getAllGrants = async () => {
   }
 };
 
+export const getAllGrantsForReview = async () => {
+  try {
+    const grantsSnapshot = await grantsCollection
+      .where("status", "in", [PROPOSAL_STATUS.PROPOSED, PROPOSAL_STATUS.SUBMITTED])
+      .get();
+    const grants: GrantData[] = [];
+    grantsSnapshot.forEach(doc => {
+      grants.push({ id: doc.id, ...doc.data() } as GrantData);
+    });
+    return grants;
+  } catch (error) {
+    console.error("Error getting all completed grants:", error);
+    throw error;
+  }
+};
+
 export const getAllCompletedGrants = async () => {
   try {
     const grantsSnapshot = await grantsCollection.where("status", "==", PROPOSAL_STATUS.COMPLETED).get();
@@ -53,6 +62,15 @@ export const getAllCompletedGrants = async () => {
     return grants;
   } catch (error) {
     console.error("Error getting all completed grants:", error);
+    throw error;
+  }
+};
+
+export const reviewGrant = async (grantId: string, action: ProposalStatusType) => {
+  try {
+    await grantsCollection.doc(grantId).update({ status: action });
+  } catch (error) {
+    console.error("Error approving the grant:", error);
     throw error;
   }
 };
