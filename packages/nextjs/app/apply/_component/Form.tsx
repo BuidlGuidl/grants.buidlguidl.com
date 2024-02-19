@@ -26,10 +26,15 @@ const Form = () => {
         address: connectedAddress,
       };
 
-      await fetch("/api/grants/new", {
+      const res = await fetch("/api/grants/new", {
         method: "POST",
         body: JSON.stringify({ ...formState, ...signedMessageObject }),
       });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Error submitting grant proposal");
+      }
 
       notification.success("Proposal submitted successfully!");
       router.push("/");
