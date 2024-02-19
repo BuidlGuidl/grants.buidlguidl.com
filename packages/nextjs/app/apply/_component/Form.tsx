@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { submitGrantAction } from "../_actions";
 import SubmitButton from "./SubmitButton";
 import { useAccount, useSignMessage } from "wagmi";
 import { notification } from "~~/utils/scaffold-eth";
@@ -27,9 +26,10 @@ const Form = () => {
         address: connectedAddress,
       };
 
-      // server action
-      const submitGrantActionWithSignedMessage = submitGrantAction.bind(null, signedMessageObject);
-      await submitGrantActionWithSignedMessage(formData);
+      await fetch("/api/grants/new", {
+        method: "POST",
+        body: JSON.stringify({ ...formState, ...signedMessageObject }),
+      });
 
       notification.success("Proposal submitted successfully!");
       router.push("/");
