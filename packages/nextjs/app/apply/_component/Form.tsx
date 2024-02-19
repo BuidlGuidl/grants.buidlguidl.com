@@ -2,33 +2,46 @@
 
 import { useRouter } from "next/navigation";
 import SubmitButton from "./SubmitButton";
-import { useAccount, useSignMessage } from "wagmi";
+import { useAccount, useSignTypedData } from "wagmi";
+import { EIP_712_DOMAIN, EIP_712_TYPES__APPLY_FOR_GRANT } from "~~/utils/eip712";
 import { notification } from "~~/utils/scaffold-eth";
 
 const selectOptions = [0.1, 0.25, 0.5, 1];
 
 const Form = () => {
-  const { signMessageAsync } = useSignMessage();
   const { address: connectedAddress } = useAccount();
+  const { signTypedDataAsync } = useSignTypedData();
   const router = useRouter();
 
   const clientFormAction = async (formData: FormData) => {
+    if (!connectedAddress) {
+      notification.error("Please connect your wallet");
+      return;
+    }
+
     try {
-      const formState = Object.fromEntries(formData.entries());
-      if (formState.title === "" || formState.description === "") {
-        notification.error("Title and description are required");
+      const title = formData.get("title");
+      const description = formData.get("description");
+      const askAmount = formData.get("askAmount");
+      if (!title || !description || !askAmount) {
+        notification.error("Please fill all the fields");
         return;
       }
 
-      const signature = await signMessageAsync({ message: JSON.stringify(formState) });
-      const signedMessageObject = {
-        signature: signature,
-        address: connectedAddress,
-      };
+      const signature = await signTypedDataAsync({
+        domain: EIP_712_DOMAIN,
+        types: EIP_712_TYPES__APPLY_FOR_GRANT,
+        primaryType: "Message",
+        message: {
+          title: title as string,
+          description: description as string,
+          askAmount: askAmount as string,
+        },
+      });
 
       const res = await fetch("/api/grants/new", {
         method: "POST",
-        body: JSON.stringify({ ...formState, ...signedMessageObject }),
+        body: JSON.stringify({ title, description, askAmount, signature, signer: connectedAddress }),
       });
 
       if (!res.ok) {
@@ -59,6 +72,7 @@ const Form = () => {
               placeholder="title"
               name="title"
               autoComplete="off"
+              type="text"
             />
           </div>
         </div>

@@ -1,43 +1,49 @@
 import { NextResponse } from "next/server";
-import { verifyMessage } from "viem";
+import { recoverTypedDataAddress } from "viem";
 import { createGrant } from "~~/services/database/grants";
 import { findUserByAddress } from "~~/services/database/users";
+import { EIP_712_DOMAIN, EIP_712_TYPES__APPLY_FOR_GRANT } from "~~/utils/eip712";
 
 type ReqBody = {
   title?: string;
   description?: string;
   askAmount?: string;
   signature?: `0x${string}`;
-  address?: string;
+  signer?: string;
 };
 
+// TODO: We could also add extra validtion of nonce
 export async function POST(req: Request) {
   try {
-    const { title, description, askAmount, signature, address } = (await req.json()) as ReqBody;
+    const { title, description, askAmount, signature, signer } = (await req.json()) as ReqBody;
 
-    if (!title || !description || !askAmount || isNaN(Number(askAmount)) || !signature || !address) {
+    if (!title || !description || !askAmount || isNaN(Number(askAmount)) || !signature || !signer) {
       return NextResponse.json({ error: "Invalid form details submited" }, { status: 400 });
     }
 
-    const constructedMessage = JSON.stringify({ title, description, askAmount });
-    const isMessageValid = await verifyMessage({ message: constructedMessage, signature, address });
-
-    if (!isMessageValid) {
-      return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
-    }
-
     // Verif if the builder is present
-    const builder = await findUserByAddress(address);
+    const builder = await findUserByAddress(signer);
     if (!builder.exists) {
       return NextResponse.json({ error: "Only buidlguild builders can submit for grants" }, { status: 401 });
     }
 
-    // Save the form data to the database
+    const recoveredAddress = await recoverTypedDataAddress({
+      domain: EIP_712_DOMAIN,
+      types: EIP_712_TYPES__APPLY_FOR_GRANT,
+      primaryType: "Message",
+      message: { title, description, askAmount },
+      signature: signature,
+    });
+
+    if (recoveredAddress !== signer) {
+      return NextResponse.json({ error: "Recovered address did not match signer" }, { status: 401 });
+    }
+
     const grant = await createGrant({
       title: title,
       description: description,
       askAmount: Number(askAmount),
-      builder: address,
+      builder: signer,
     });
 
     return NextResponse.json({ grant }, { status: 201 });
