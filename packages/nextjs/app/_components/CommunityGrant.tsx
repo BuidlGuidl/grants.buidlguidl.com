@@ -9,9 +9,9 @@ export const CommunityGrant = () => {
         <div className="my-10 lg:py-16 space-y-2 lg:max-w-[40%] flex flex-col items-center lg:items-start">
           {/* Title  */}
           <div>
-            <h2 className="text-2xl md:text-3xl lg:text-5xl text-center lg:text-left font-ppEditorial">BuidlGuidl</h2>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl text-center lg:text-left font-ppEditorial">BuidlGuidl</h2>
             <div className="relative">
-              <h2 className="text-2xl md:text-3xl lg:text-5xl text-center lg:text-left font-ppEditorial">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl text-center lg:text-left font-ppEditorial">
                 Community Grants
               </h2>
               <Image
@@ -24,16 +24,16 @@ export const CommunityGrant = () => {
             </div>
           </div>
           {/* Description */}
-          <div className="text-center font-spaceMono px-1 max-w-lg lg:max-w-none lg:w-11/12 lg:px-0 lg:text-left space-y-5">
+          <div className="text-center font-spaceMono px-1 max-w-xs sm:max-w-lg lg:max-w-none lg:w-11/12 lg:px-0 lg:text-left space-y-5">
             <p className="m-0 text-xs md:text-sm lg:text-lg">
               Have you just joined BG or finished one of our batches, and want to build something to improve the
               ecosystem? BuidlGuidl can sponsor up to 1 ETH to build your idea.
             </p>
             <Link
               href="/apply"
-              className="btn bg-white hover:opacity-90 hover:bg-white btn-md border-1 border-black hover:border-1 hover:border-black rounded-2xl px-6 shadow-none"
+              className="btn bg-white hover:opacity-90 hover:bg-white btn-md border-1 border-black hover:border-1 hover:border-black rounded-2xl px-6 shadow-none font-medium"
             >
-              Apply for communtiy grant
+              Apply for grant
             </Link>
           </div>
         </div>
