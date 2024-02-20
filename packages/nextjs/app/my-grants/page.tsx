@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { NextPage } from "next";
+import useSWR from "swr";
 import { useAccount } from "wagmi";
 import { GrantData } from "~~/services/database/schema";
 import { PROPOSAL_STATUS } from "~~/utils/grants";
@@ -15,31 +15,16 @@ const badgeBgColor = {
 };
 
 // ToDo. Action (v1.0 = submit grant after completion)
-// ToDo. Loading states
 const MyGrants: NextPage = () => {
   const { address } = useAccount();
-  const [builderGrants, setBuilderGrants] = useState<GrantData[]>([]);
-
-  useEffect(() => {
-    const fetchBuilderGrants = async () => {
-      try {
-        const response = await fetch(`/api/builders/${address}/grants`);
-        const data = await response.json();
-        setBuilderGrants(data);
-      } catch (error) {
-        console.error("Failed to fetch builder grants", error);
-      }
-    };
-
-    if (address) {
-      fetchBuilderGrants();
-    }
-  }, [address]);
+  const { data: builderGrants, isLoading } = useSWR<GrantData[]>(address ? `/api/builders/${address}/grants` : null);
 
   return (
     <div className="container mx-auto max-w-screen-md mt-12">
       <h1 className="text-4xl font-bold">My grants</h1>
-      {builderGrants.map(grant => (
+      {isLoading && <span className="loading loading-spinner"></span>}
+      {builderGrants?.length === 0 && <p>No grants found</p>}
+      {builderGrants?.map(grant => (
         <div key={grant.id} className="border p-4 my-4">
           <h3 className="font-bold">
             {grant.title}
