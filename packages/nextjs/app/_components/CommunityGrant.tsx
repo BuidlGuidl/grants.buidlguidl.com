@@ -50,7 +50,7 @@ export const CommunityGrant = () => {
               </p>
             </div>
           </div>
-          <div className="absolute h-[100px] w-[120px] lg:h-[250px] lg:w-[275px] -bottom-2 left-1/3 lg:-bottom-6 z-10 lg:z-0 lg:left-[30%]">
+          <div className="absolute h-[100px] w-[115px] lg:h-[250px] lg:w-[275px] -bottom-3 left-1/3 lg:-bottom-6 z-10 lg:z-0 lg:left-[30%]">
             <Image src="/assets/orange-patch.png" alt="Who section background" fill className="w-full" />
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center lg:space-y-2">
               <h2 className="font-extrabold text-xs lg:text-lg">Payment</h2>
