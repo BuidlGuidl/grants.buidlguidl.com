@@ -6,7 +6,7 @@ export const CommunityGrant = () => {
     <div className="bg-secondary">
       <div className="container max-w-[90%] sm:max-w-md lg:max-w-7xl m-auto xl:pl-18 lg:pl-8 flex flex-col-reverse lg:flex-row gap-5 lg:gap-0 max-h-[30rem]">
         {/* Left section(Title, desc and btn) */}
-        <div className="my-7 lg:py-16 space-y-2 lg:max-w-[40%] flex flex-col items-center lg:items-start">
+        <div className="my-4 lg:py-16 space-y-2 lg:max-w-[40%] flex flex-col items-center lg:items-start">
           {/* Title  */}
           <div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl text-center lg:text-left font-ppEditorial mb-0 lg:mb-2">
@@ -50,7 +50,7 @@ export const CommunityGrant = () => {
               </p>
             </div>
           </div>
-          <div className="absolute h-[100px] w-[120px] lg:h-[250px] lg:w-[275px] -bottom-7 left-1/3 lg:-bottom-6 lg:left-[30%]">
+          <div className="absolute h-[100px] w-[120px] lg:h-[250px] lg:w-[275px] -bottom-2 left-1/3 lg:-bottom-6 z-10 lg:z-0 lg:left-[30%]">
             <Image src="/assets/orange-patch.png" alt="Who section background" fill className="w-full" />
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center lg:space-y-2">
               <h2 className="font-extrabold text-xs lg:text-lg">Payment</h2>
