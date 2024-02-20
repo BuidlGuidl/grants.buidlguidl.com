@@ -12,6 +12,7 @@ import { BlockieAvatar } from "~~/components/scaffold-eth";
 import { ProgressBar } from "~~/components/scaffold-eth/ProgressBar";
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
 import { appChains } from "~~/services/web3/wagmiConnectors";
+import { fetcher } from "~~/utils/swr";
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -25,15 +26,6 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
     </>
   );
 };
-
-async function fetcher(...args: Parameters<typeof fetch>) {
-  const res = await fetch(...args);
-  const data = await res.json();
-  if (!res.ok) {
-    throw new Error(data.error || "Error fetching data");
-  }
-  return data;
-}
 
 export const ScaffoldEthAppWithProviders = ({ children }: { children: React.ReactNode }) => {
   const { resolvedTheme } = useTheme();
@@ -52,7 +44,7 @@ export const ScaffoldEthAppWithProviders = ({ children }: { children: React.Reac
         avatar={BlockieAvatar}
         theme={mounted ? (isDarkMode ? darkTheme() : lightTheme()) : lightTheme()}
       >
-        <SWRConfig value={{ fetcher, revalidateOnFocus: false }}>
+        <SWRConfig value={{ fetcher: fetcher, revalidateOnFocus: false }}>
           <ScaffoldEthApp>{children}</ScaffoldEthApp>
         </SWRConfig>
       </RainbowKitProvider>

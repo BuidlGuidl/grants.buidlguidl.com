@@ -6,6 +6,7 @@ import useSWRMutation from "swr/mutation";
 import { useAccount, useSignTypedData } from "wagmi";
 import { EIP_712_DOMAIN, EIP_712_TYPES__APPLY_FOR_GRANT } from "~~/utils/eip712";
 import { notification } from "~~/utils/scaffold-eth";
+import { postMutationFetcher } from "~~/utils/swr";
 
 // TODO: move to a shared location
 type ReqBody = {
@@ -18,22 +19,11 @@ type ReqBody = {
 
 const selectOptions = [0.1, 0.25, 0.5, 1];
 
-const createNewGrant = async (url: string, { arg }: { arg: ReqBody }) => {
-  const res = await fetch(url, {
-    method: "POST",
-    body: JSON.stringify(arg),
-  });
-  if (!res.ok) {
-    const data = await res.json();
-    throw new Error(data.error || "Error submitting grant proposal");
-  }
-};
-
 const Form = () => {
   const { address: connectedAddress } = useAccount();
   const { signTypedDataAsync } = useSignTypedData();
   const router = useRouter();
-  const { trigger: postNewGrant } = useSWRMutation("/api/grants/new", createNewGrant);
+  const { trigger: postNewGrant } = useSWRMutation("/api/grants/new", postMutationFetcher<ReqBody>);
 
   const clientFormAction = async (formData: FormData) => {
     if (!connectedAddress) {

@@ -5,24 +5,12 @@ import { GrantData } from "~~/services/database/schema";
 import { EIP_712_DOMAIN, EIP_712_TYPES__REVIEW_GRANT } from "~~/utils/eip712";
 import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";
 import { notification } from "~~/utils/scaffold-eth";
+import { postMutationFetcher } from "~~/utils/swr";
 
-const reviewGrant = async (
-  url: string,
-  { arg }: { arg: { signer: string; signature: `0x${string}`; action: ProposalStatusType } },
-) => {
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(arg),
-  });
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.error || "Error reviewing grant");
-  }
-  return data;
+type ReqBody = {
+  signer: string;
+  signature: `0x${string}`;
+  action: ProposalStatusType;
 };
 
 export const GrantReview = ({ grant }: { grant: GrantData }) => {
@@ -30,7 +18,7 @@ export const GrantReview = ({ grant }: { grant: GrantData }) => {
   const { signTypedDataAsync, isLoading: isSigningMessage } = useSignTypedData();
   const { trigger: postReviewGrant, isMutating: isPostingNewGrant } = useSWRMutation(
     `/api/grants/${grant.id}/review`,
-    reviewGrant,
+    postMutationFetcher<ReqBody>,
   );
   const { mutate } = useSWRConfig();
   const isLoading = isSigningMessage || isPostingNewGrant;
