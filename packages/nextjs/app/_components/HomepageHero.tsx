@@ -16,7 +16,7 @@ export const HomepageHero = () => (
           just finished SRE or completed one of our batches? This could be the next step in your BuidlGuidl’s journey.
         </p>
         <Link
-          href="/apply"
+          href="#communityGrants"
           className="btn btn-primary btn-md border-1 border-black rounded-2xl px-14 font-medium shadow-none"
         >
           Learn More

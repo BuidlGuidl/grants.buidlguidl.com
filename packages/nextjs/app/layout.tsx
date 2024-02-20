@@ -72,7 +72,10 @@ const spaceGrotesk = Space_Grotesk({
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (
-    <html suppressHydrationWarning className={`${ppEditorial.variable} ${spaceMono.variable} ${spaceGrotesk.variable}`}>
+    <html
+      suppressHydrationWarning
+      className={`${ppEditorial.variable} ${spaceMono.variable} ${spaceGrotesk.variable} scroll-smooth`}
+    >
       <body>
         <ThemeProvider enableSystem>
           <ScaffoldEthAppWithProviders>{children}</ScaffoldEthAppWithProviders>
