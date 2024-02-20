@@ -8,7 +8,7 @@ export async function GET(_request: Request, { params }: { params: { builderAddr
     return NextResponse.json(builderData);
   } catch (error) {
     return NextResponse.json(
-      { message: "Internal Server Error" },
+      { error: "Internal Server Error" },
       {
         status: 500,
       },
