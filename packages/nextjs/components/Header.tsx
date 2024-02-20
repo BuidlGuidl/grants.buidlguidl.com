@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { RainbowKitCustomConnectButton } from "./scaffold-eth";
 import { useAccount } from "wagmi";
-import { LockClosedIcon } from "@heroicons/react/24/outline";
+import { AcademicCapIcon, LockClosedIcon } from "@heroicons/react/24/outline";
 import { useBGBuilderData } from "~~/hooks/useBGBuilderData";
 
 type HeaderMenuLink = {
@@ -15,8 +15,9 @@ type HeaderMenuLink = {
 
 export const menuLinks: HeaderMenuLink[] = [
   {
-    label: "Home",
-    href: "/",
+    label: "My Grants",
+    href: "/my-grants",
+    icon: <AcademicCapIcon className="h-4 w-4" />,
   },
   {
     label: "Admin",
@@ -35,6 +36,7 @@ export const HeaderMenuLinks = () => {
       {menuLinks.map(({ label, href, icon }) => {
         const isActive = pathname === href;
         if (href === "/admin" && builderData?.role !== "admin") return null;
+        if (href === "/my-grants" && !builderData) return null;
         return (
           <li key={href}>
             <Link
