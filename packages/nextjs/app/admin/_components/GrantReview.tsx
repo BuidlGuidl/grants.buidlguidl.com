@@ -48,7 +48,7 @@ export const GrantReview = ({ grant }: { grant: GrantData }) => {
 
     let notificationId;
     try {
-      notificationId = notification.loading("Submiting reivew");
+      notificationId = notification.loading("Submitting review");
       await postReviewGrant({ signer: address, signature, action });
       await mutate("/api/grants/review");
       notification.remove(notificationId);

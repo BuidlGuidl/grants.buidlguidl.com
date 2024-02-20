@@ -23,7 +23,7 @@ const AdminPage = () => {
   return (
     <div className="container mx-auto max-w-screen-md mt-12">
       <h1 className="text-4xl font-bold">Admin page</h1>
-      {isLoading && <span className="loading loading-spinner "></span>}
+      {isLoading && <span className="loading loading-spinner"></span>}
       {grants && (
         <>
           <h2 className="font-bold mt-8">Proposals submitted as completed:</h2>
