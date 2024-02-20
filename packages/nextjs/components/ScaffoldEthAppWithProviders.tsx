@@ -27,7 +27,12 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
 };
 
 async function fetcher(...args: Parameters<typeof fetch>) {
-  return (await fetch(...args)).json();
+  const res = await fetch(...args);
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.error || "Error fetching data");
+  }
+  return data;
 }
 
 export const ScaffoldEthAppWithProviders = ({ children }: { children: React.ReactNode }) => {
