@@ -68,7 +68,7 @@ export const CommunityGrant = () => {
               </p>
             </div>
           </div>
-          <div className="absolute rotate-6 h-[70px] w-[70px] lg:h-[200px] lg:w-[200px] -bottom-6 lg:bottom-4 right-3 lg:right-0">
+          <div className="absolute rotate-6 h-[70px] w-[70px] lg:h-[200px] lg:w-[200px] -bottom-2 lg:bottom-4 right-3 lg:right-0">
             <Image src="/assets/gray-patch.png" alt="Who section background" fill className="w-full" />
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center lg:space-y-2">
               <h2 className="font-extrabold text-xs lg:text-lg">Amount</h2>
