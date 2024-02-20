@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
-import { findUserByAddress } from "~~/services/database/users";
+import { getAllGrantsForUser } from "~~/services/database/grants";
 
 export async function GET(_request: Request, { params }: { params: { builderAddress: string } }) {
   try {
     const builderAddress = params.builderAddress;
-    const builderData = await findUserByAddress(builderAddress);
-    return NextResponse.json(builderData);
+    const grants = await getAllGrantsForUser(builderAddress);
+    return NextResponse.json(grants);
   } catch (error) {
     return NextResponse.json(
       { error: "Internal Server Error" },

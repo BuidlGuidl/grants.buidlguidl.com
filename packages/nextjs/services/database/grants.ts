@@ -36,6 +36,20 @@ export const getAllGrants = async () => {
   }
 };
 
+export const getAllGrantsForUser = async (userAddress: string) => {
+  try {
+    const grantsSnapshot = await grantsCollection.where("builder", "==", userAddress).get();
+    const grants: GrantData[] = [];
+    grantsSnapshot.forEach(doc => {
+      grants.push({ id: doc.id, ...doc.data() } as GrantData);
+    });
+    return grants;
+  } catch (error) {
+    console.error("Error getting all grants for user:", error);
+    throw error;
+  }
+};
+
 export const getAllGrantsForReview = async () => {
   try {
     const grantsSnapshot = await grantsCollection
