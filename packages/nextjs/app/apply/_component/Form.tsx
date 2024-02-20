@@ -2,9 +2,20 @@
 
 import { useRouter } from "next/navigation";
 import SubmitButton from "./SubmitButton";
+import useSWRMutation from "swr/mutation";
 import { useAccount, useSignTypedData } from "wagmi";
 import { EIP_712_DOMAIN, EIP_712_TYPES__APPLY_FOR_GRANT } from "~~/utils/eip712";
 import { notification } from "~~/utils/scaffold-eth";
+import { postMutationFetcher } from "~~/utils/swr";
+
+// TODO: move to a shared location
+type ReqBody = {
+  title?: string;
+  description?: string;
+  askAmount?: string;
+  signature?: `0x${string}`;
+  signer?: string;
+};
 
 const selectOptions = [0.1, 0.25, 0.5, 1];
 
@@ -12,6 +23,7 @@ const Form = () => {
   const { address: connectedAddress } = useAccount();
   const { signTypedDataAsync } = useSignTypedData();
   const router = useRouter();
+  const { trigger: postNewGrant } = useSWRMutation("/api/grants/new", postMutationFetcher<ReqBody>);
 
   const clientFormAction = async (formData: FormData) => {
     if (!connectedAddress) {
@@ -20,9 +32,9 @@ const Form = () => {
     }
 
     try {
-      const title = formData.get("title");
-      const description = formData.get("description");
-      const askAmount = formData.get("askAmount");
+      const title = formData.get("title") as string;
+      const description = formData.get("description") as string;
+      const askAmount = formData.get("askAmount") as string;
       if (!title || !description || !askAmount) {
         notification.error("Please fill all the fields");
         return;
@@ -33,21 +45,13 @@ const Form = () => {
         types: EIP_712_TYPES__APPLY_FOR_GRANT,
         primaryType: "Message",
         message: {
-          title: title as string,
-          description: description as string,
-          askAmount: askAmount as string,
+          title: title,
+          description: description,
+          askAmount: askAmount,
         },
       });
 
-      const res = await fetch("/api/grants/new", {
-        method: "POST",
-        body: JSON.stringify({ title, description, askAmount, signature, signer: connectedAddress }),
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Error submitting grant proposal");
-      }
+      await postNewGrant({ title, description, askAmount, signature, signer: connectedAddress });
 
       notification.success("Proposal submitted successfully!");
       router.push("/");
