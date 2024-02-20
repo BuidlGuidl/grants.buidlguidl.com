@@ -4,12 +4,14 @@ import Link from "next/link";
 export const CommunityGrant = () => {
   return (
     <div className="bg-secondary">
-      <div className="container max-w-[90%] lg:max-w-7xl m-auto xl:pl-18 lg:pl-8 flex flex-col-reverse lg:flex-row gap-5 lg:gap-0 max-h-[30rem]">
+      <div className="container max-w-[90%] sm:max-w-md lg:max-w-7xl m-auto xl:pl-18 lg:pl-8 flex flex-col-reverse lg:flex-row gap-5 lg:gap-0 max-h-[30rem]">
         {/* Left section(Title, desc and btn) */}
-        <div className="my-10 lg:py-16 space-y-2 lg:max-w-[40%] flex flex-col items-center lg:items-start">
+        <div className="my-7 lg:py-16 space-y-2 lg:max-w-[40%] flex flex-col items-center lg:items-start">
           {/* Title  */}
           <div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl text-center lg:text-left font-ppEditorial">BuidlGuidl</h2>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl text-center lg:text-left font-ppEditorial mb-0 lg:mb-2">
+              BuidlGuidl
+            </h2>
             <div className="relative">
               <h2 className="text-3xl sm:text-4xl lg:text-5xl text-center lg:text-left font-ppEditorial">
                 Community Grants
@@ -38,41 +40,41 @@ export const CommunityGrant = () => {
           </div>
         </div>
         {/* Right section (Who, process, payment, etc) */}
-        <div className="relative w-full overflow-hidden">
-          <div className="absolute rotate-6 h-[370px] w-[370px] top-4">
+        <div className="relative w-full h-44 lg:h-auto lg:overflow-hidden">
+          <div className="absolute rotate-6 h-[150px] w-[150px] lg:h-[370px] lg:w-[370px] top-4">
             <Image src="/assets/blue-patch.png" alt="Who section background" fill className="w-full" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center space-y-6">
-              <h2 className="font-extrabold text-lg">WHO</h2>
-              <p className="my-0 text-xs font-medium">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center lg:space-y-6">
+              <h2 className="font-extrabold text-xs lg:text-lg">WHO</h2>
+              <p className="my-0 text-[0.4rem] lg:text-xs font-medium">
                 Individuals or small teams from BuildGuidl, who want to start a project to contribute to the ecosystem
                 and require some kind of sponsorship.
               </p>
             </div>
           </div>
-          <div className="absolute h-[250px] w-[275px] -bottom-6 left-[30%]">
+          <div className="absolute h-[100px] w-[120px] lg:h-[250px] lg:w-[275px] -bottom-7 left-1/3 lg:-bottom-6 lg:left-[30%]">
             <Image src="/assets/orange-patch.png" alt="Who section background" fill className="w-full" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center space-y-6">
-              <h2 className="font-extrabold text-lg">Payment</h2>
-              <p className="my-0 text-xs font-medium">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center lg:space-y-6">
+              <h2 className="font-extrabold text-xs lg:text-lg">Payment</h2>
+              <p className="my-0 text-[0.4rem] lg:text-xs font-medium">
                 50% upfront when your application is approved and 50% at grant completion.
               </p>
             </div>
           </div>
-          <div className="absolute -rotate-6 h-[300px] w-[300px] top-6 right-6">
+          <div className="absolute -rotate-6 h-[130px] w-[140px] lg:h-[300px] lg:w-[300px] top-2 right-0 lg:top-6 lg:right-6">
             <Image src="/assets/green-patch.png" alt="Who section background" fill className="w-full" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center space-y-6">
-              <h2 className="font-extrabold text-lg">Process</h2>
-              <p className="my-0 text-xs font-medium">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center lg:space-y-6">
+              <h2 className="font-extrabold text-xs lg:text-lg">Process</h2>
+              <p className="my-0 text-[0.4rem] lg:text-xs font-medium">
                 Fill your application, the BG Grants team will evaluate it, approving or rejecting it, and will give you
                 feedback about your application.
               </p>
             </div>
           </div>
-          <div className="absolute rotate-6 h-[200px] w-[200px] bottom-4 right-0">
+          <div className="absolute rotate-6 h-[70px] w-[70px] lg:h-[200px] lg:w-[200px] -bottom-6 lg:bottom-4 right-3 lg:right-0">
             <Image src="/assets/gray-patch.png" alt="Who section background" fill className="w-full" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center space-y-4">
-              <h2 className="font-extrabold text-lg">Amount</h2>
-              <p className="my-0 text-xs font-medium">Up to 1 ETH</p>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center lg:space-y-4">
+              <h2 className="font-extrabold text-xs lg:text-lg">Amount</h2>
+              <p className="my-0 text-[0.4rem] lg:text-xs font-medium">Up to 1 ETH</p>
             </div>
           </div>
         </div>
