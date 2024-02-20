@@ -12,8 +12,8 @@ export const HomepageHero = () => (
       </div>
       <div className="text-center font-spaceMono px-1 max-w-lg lg:max-w-none lg:w-4/5 lg:px-0 lg:text-left space-y-5">
         <p className="m-0 text-xs md:text-sm lg:text-lg">
-          Our micro grants are one of many ways BuidlGuidl funds development and contribute to Ethereum. Did you just
-          finished SRE or completed one of our batches? This could be your next step in BuidlGuidl’s journey.
+          BG grants are one of the ways BuidlGuidl funds development and contribute to the Ethereum ecosystem. Did you
+          just finished SRE or completed one of our batches? This could be the next step in your BuidlGuidl’s journey.
         </p>
         <Link
           href="/apply"
