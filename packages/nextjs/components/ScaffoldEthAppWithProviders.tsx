@@ -52,7 +52,7 @@ export const ScaffoldEthAppWithProviders = ({ children }: { children: React.Reac
         avatar={BlockieAvatar}
         theme={mounted ? (isDarkMode ? darkTheme() : lightTheme()) : lightTheme()}
       >
-        <SWRConfig value={{ fetcher }}>
+        <SWRConfig value={{ fetcher, revalidateOnFocus: false }}>
           <ScaffoldEthApp>{children}</ScaffoldEthApp>
         </SWRConfig>
       </RainbowKitProvider>
