@@ -5,11 +5,13 @@ const EcosystemGrantsCard = ({
   description,
   imageLink,
   amountGranted,
+  twitterLink,
 }: {
   title: string;
   description: string;
   imageLink: string;
   amountGranted: string;
+  twitterLink: string;
 }) => {
   return (
     <div className="bg-base-100 rounded-2xl min-h-[380px] max-w-[370px] flex flex-col">
@@ -22,9 +24,14 @@ const EcosystemGrantsCard = ({
           {description ||
             "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.Lorem ipsum dolor sit amet, qui minim labore adipisicing."}
         </p>
-        <div className="bg-primary rounded-lg py-1 px-2 text-xs font-bold">
-          Amount:
-          <span className="text-sm"> {amountGranted}</span>
+        <div className="flex justify-between items-baseline w-full">
+          <div className="bg-primary rounded-lg py-1 px-2 text-xs font-bold">
+            Amount:
+            <span className="text-sm"> {amountGranted}</span>
+          </div>
+          <a href={twitterLink} target="_blank" className="text-sm underline underline-offset-1">
+            Twitter
+          </a>
         </div>
       </div>
     </div>
@@ -47,6 +54,7 @@ export const EcosystemGrants = () => {
             description=""
             imageLink="/assets/jessy-hacker-house.png"
             amountGranted="1 ETH"
+            twitterLink="https://twitter.com/wehack247"
           />
           {/* Solidty By Example */}
           <EcosystemGrantsCard
@@ -54,6 +62,7 @@ export const EcosystemGrants = () => {
             description=""
             imageLink="/assets/solidity-by-example.png"
             amountGranted="1 ETH"
+            twitterLink="https://twitter.com/ProgrammerSmart"
           />
           {/* Winter */}
           <EcosystemGrantsCard
@@ -61,6 +70,7 @@ export const EcosystemGrants = () => {
             description="Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet."
             imageLink="/assets/winter.png"
             amountGranted="1 ETH"
+            twitterLink="https://x.com/w1nt3r_eth"
           />
         </div>
       </div>
