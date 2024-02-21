@@ -59,7 +59,7 @@ const ppEditorial = localFont({
 const spaceMono = Space_Mono({
   subsets: ["latin"],
   display: "swap",
-  weight: "400",
+  weight: ["400", "700"],
   variable: "--font-space-mono",
 });
 

@@ -23,9 +23,7 @@ export const CompletedGrants = async () => {
     <div className="bg-primary">
       <div className="container flex flex-col justify-center max-w-[90%] lg:max-w-7xl mx-auto py-12 lg:px-4 gap-4">
         <div className="self-center md:self-start w-fit relative">
-          <h2 className="text-3xl md:text-4xl lg:text-6xl text-center lg:text-left font-ppEditorial">
-            Completed grants
-          </h2>
+          <h2 className="text-4xl lg:text-6xl text-center lg:text-left font-ppEditorial">Completed grants</h2>
           <Image
             className="absolute -top-3 -right-7 invert"
             src="/assets/sparkle.png"
