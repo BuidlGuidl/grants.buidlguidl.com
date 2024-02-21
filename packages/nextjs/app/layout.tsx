@@ -66,13 +66,16 @@ const spaceMono = Space_Mono({
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   display: "swap",
-  weight: "400",
+  weight: ["300", "400", "500", "600", "700"],
   variable: "--font-space-grotesk",
 });
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (
-    <html suppressHydrationWarning className={`${ppEditorial.variable} ${spaceMono.variable} ${spaceGrotesk.variable}`}>
+    <html
+      suppressHydrationWarning
+      className={`${ppEditorial.variable} ${spaceMono.variable} ${spaceGrotesk.variable} scroll-smooth`}
+    >
       <body>
         <ThemeProvider enableSystem>
           <ScaffoldEthAppWithProviders>{children}</ScaffoldEthAppWithProviders>
