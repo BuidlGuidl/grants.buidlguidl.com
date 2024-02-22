@@ -1,6 +1,7 @@
 import { useSWRConfig } from "swr";
 import useSWRMutation from "swr/mutation";
 import { useAccount, useSignTypedData } from "wagmi";
+import { Address } from "~~/components/scaffold-eth";
 import { GrantData } from "~~/services/database/schema";
 import { EIP_712_DOMAIN, EIP_712_TYPES__REVIEW_GRANT } from "~~/utils/eip712";
 import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";
@@ -70,25 +71,22 @@ export const GrantReview = ({ grant }: { grant: GrantData }) => {
         {grant.title}
         <span className="text-sm text-gray-500 ml-2">({grant.id})</span>
       </h3>
+      <Address address={grant.builder} />
       <p>{grant.description}</p>
-      <div className="mt-4">
+      <div className="flex gap-4 mt-4 justify-end">
         <button
-          className={`bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ${
-            isLoading ? "opacity-50" : ""
-          }`}
-          onClick={() => handleReviewGrant(grant, acceptStatus)}
-          disabled={isLoading}
-        >
-          {acceptLabel}
-        </button>
-        <button
-          className={`bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-4 ${
-            isLoading ? "opacity-50" : ""
-          }`}
+          className={`btn btn-sm btn-error ${isLoading ? "opacity-50" : ""}`}
           onClick={() => handleReviewGrant(grant, PROPOSAL_STATUS.REJECTED)}
           disabled={isLoading}
         >
           Reject
+        </button>
+        <button
+          className={`btn btn-sm btn-success ${isLoading ? "opacity-50" : ""}`}
+          onClick={() => handleReviewGrant(grant, acceptStatus)}
+          disabled={isLoading}
+        >
+          {acceptLabel}
         </button>
       </div>
     </div>
