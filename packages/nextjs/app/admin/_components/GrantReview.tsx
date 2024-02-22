@@ -1,8 +1,10 @@
 import { useSWRConfig } from "swr";
 import useSWRMutation from "swr/mutation";
 import { useAccount, useSignTypedData } from "wagmi";
+import TelegramIcon from "~~/components/assets/TelegramIcon";
+import TwitterIcon from "~~/components/assets/TwitterIcon";
 import { Address } from "~~/components/scaffold-eth";
-import { GrantData } from "~~/services/database/schema";
+import { GrantData, GrantDataWithBuilder, SocialLinks } from "~~/services/database/schema";
 import { EIP_712_DOMAIN, EIP_712_TYPES__REVIEW_GRANT } from "~~/utils/eip712";
 import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";
 import { notification } from "~~/utils/scaffold-eth";
@@ -14,7 +16,36 @@ type ReqBody = {
   action: ProposalStatusType;
 };
 
-export const GrantReview = ({ grant }: { grant: GrantData }) => {
+const BuilderSocials = ({ socialLinks }: { socialLinks?: SocialLinks }) => {
+  if (!socialLinks) return null;
+
+  return (
+    <>
+      {socialLinks?.twitter && (
+        <a
+          className="inline-block w-[20px] hover:opacity-80"
+          href={`https://twitter.com/${socialLinks?.twitter}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <TwitterIcon />
+        </a>
+      )}
+      {socialLinks?.telegram && (
+        <a
+          className="inline-block w-[20px] hover:opacity-80"
+          href={`https://telegram.me/${socialLinks?.telegram}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <TelegramIcon />
+        </a>
+      )}
+    </>
+  );
+};
+
+export const GrantReview = ({ grant }: { grant: GrantDataWithBuilder }) => {
   const { address } = useAccount();
   const { signTypedDataAsync, isLoading: isSigningMessage } = useSignTypedData();
   const { trigger: postReviewGrant, isMutating: isPostingNewGrant } = useSWRMutation(
@@ -71,7 +102,17 @@ export const GrantReview = ({ grant }: { grant: GrantData }) => {
         {grant.title}
         <span className="text-sm text-gray-500 ml-2">({grant.id})</span>
       </h3>
-      <Address address={grant.builder} />
+      <div className="flex gap-4 items-center">
+        <a
+          href={`https://app.buidlguidl.com/builders/${grant.builder}`}
+          className="inline-block"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <Address address={grant.builder} disableAddressLink />
+        </a>
+        <BuilderSocials socialLinks={grant.builderData?.socialLinks} />
+      </div>
       <p>{grant.description}</p>
       <div className="flex gap-4 mt-4 justify-end">
         <button

@@ -1,4 +1,4 @@
-type SocialLinks = {
+export type SocialLinks = {
   twitter?: string;
   github?: string;
   discord?: string;
@@ -50,3 +50,5 @@ export type GrantData = {
   // proposed and submited timestamp are imp
   status: "proposed" | "approved" | "submitted" | "completed" | "rejected";
 };
+
+export type GrantDataWithBuilder = GrantData & { builderData?: BuilderData };
