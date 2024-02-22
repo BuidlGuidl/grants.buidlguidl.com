@@ -1,5 +1,3 @@
-/* eslint react/jsx-props-no-spreading: off */
-// ☝️ we want this component to be usable with chakra props
 import React from "react";
 
 const TwitterIcon = (props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>) => (
