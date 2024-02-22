@@ -2,14 +2,14 @@
 
 import { GrantReview } from "./_components/GrantReview";
 import useSWR from "swr";
-import { GrantData } from "~~/services/database/schema";
+import { GrantDataWithBuilder } from "~~/services/database/schema";
 import { PROPOSAL_STATUS } from "~~/utils/grants";
 import { notification } from "~~/utils/scaffold-eth";
 
 // ToDo. "Protect" with address header or PROTECT with signing the read.
 const AdminPage = () => {
   // TODO: Move the response type to a shared location
-  const { data, isLoading } = useSWR<{ data: GrantData[] }>("/api/grants/review", {
+  const { data, isLoading } = useSWR<{ data: GrantDataWithBuilder[] }>("/api/grants/review", {
     onError: error => {
       console.error("Error fetching grants", error);
       notification.error("Error getting grants data");
