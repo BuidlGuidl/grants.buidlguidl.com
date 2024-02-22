@@ -17,9 +17,9 @@ export const HomepageHero = () => (
         </p>
         <Link
           href="#communityGrants"
-          className="btn btn-primary btn-md border-1 border-black rounded-2xl px-14 font-medium shadow-none"
+          className="btn btn-primary btn-md border-1 border-black hover:border-black hover:border-1 rounded-2xl px-14 font-bold shadow-none"
         >
-          Learn More
+          Learn more
         </Link>
       </div>
     </div>
