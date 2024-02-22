@@ -1,5 +1,6 @@
 import { getFirestoreConnector } from "./firestoreDB";
-import { GrantData } from "./schema";
+import { BuilderData, GrantData, GrantDataWithBuilder } from "./schema";
+import { findUserByAddress } from "~~/services/database/users";
 import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";
 
 const firestoreDB = getFirestoreConnector();
@@ -55,11 +56,19 @@ export const getAllGrantsForReview = async () => {
     const grantsSnapshot = await grantsCollection
       .where("status", "in", [PROPOSAL_STATUS.PROPOSED, PROPOSAL_STATUS.SUBMITTED])
       .get();
-    const grants: GrantData[] = [];
-    grantsSnapshot.forEach(doc => {
-      grants.push({ id: doc.id, ...doc.data() } as GrantData);
+
+    const grantsPromises = grantsSnapshot.docs.map(async doc => {
+      const grantData = doc.data() as Omit<GrantData, "id">;
+      const builderDataResponse = await findUserByAddress(grantData.builder);
+
+      return {
+        id: doc.id,
+        ...grantData,
+        builderData: builderDataResponse.exists ? (builderDataResponse.data as BuilderData) : undefined,
+      } as GrantDataWithBuilder;
     });
-    return grants;
+
+    return await Promise.all(grantsPromises);
   } catch (error) {
     console.error("Error getting all completed grants:", error);
     throw error;
