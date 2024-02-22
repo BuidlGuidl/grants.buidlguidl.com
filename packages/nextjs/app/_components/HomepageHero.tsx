@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 export const HomepageHero = () => (
-  <div className="container max-w-[90%] lg:max-w-7xl m-auto pt-4 pb-8 xl:pl-18 lg:pl-8 flex flex-col-reverse lg:flex-row items-center justify-between gap-5 lg:gap-0">
+  <div className="container max-w-[90%] lg:py-12 xl:py-0 lg:max-w-7xl m-auto pt-4 pb-8 xl:pl-18 lg:pl-8 flex flex-col-reverse lg:flex-row items-center justify-between gap-5 lg:gap-0">
     <div className="space-y-2 lg:max-w-[55%] flex flex-col items-center lg:items-start">
       <div className="relative">
         <h2 className="text-3xl md:text-4xl lg:text-6xl lg:leading-[1.2] text-center lg:text-left font-ppEditorial">
