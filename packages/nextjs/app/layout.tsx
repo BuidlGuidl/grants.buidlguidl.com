@@ -77,7 +77,7 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
       className={`${ppEditorial.variable} ${spaceMono.variable} ${spaceGrotesk.variable} scroll-smooth`}
     >
       <body>
-        <ThemeProvider enableSystem>
+        <ThemeProvider enableSystem={false} defaultTheme="light">
           <ScaffoldEthAppWithProviders>{children}</ScaffoldEthAppWithProviders>
         </ThemeProvider>
       </body>
