@@ -4,7 +4,7 @@ import { getGrantsStats } from "~~/services/database/grants";
 export const GrantsStats = async () => {
   const stats = await getGrantsStats();
   return (
-    <div className="bg-base-100">
+    <div className="bg-base-300">
       <div className="container flex flex-col items-center justify-center max-w-[90%] lg:max-w-7xl mx-auto py-12 lg:px-12 gap-6">
         <div className="flex flex-col gap-8 md:flex-row justify-between items-start lg:w-4/5">
           <div className="flex flex-col items-center">
