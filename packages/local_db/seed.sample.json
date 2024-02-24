@@ -132,7 +132,7 @@
             "builder": "0x55fF7E28e7cd43C104dC89Aa69285E0E6EBa064e",
             "title": "Buidl Guild English Auction",
             "description": "Buidl Guild is a testnet english auction platform where users can create an auction on NFTs.",
-            "status": "completed",
+            "status": "approved",
             "timestamp": 1706627065000
         },
         "fhiWGoHrfdGM2iuFZTGT": {
@@ -140,7 +140,7 @@
             "builder": "0x2F142f9F52af0845B7b8b1353E349Ca1Cb8EFE92",
             "title": "15 Puzzle",
             "description": "The famous sliding puzzle with 15 squares. Base starter writes your moves to the blockchain.",
-            "status": "completed",
+            "status": "approved",
             "timestamp": 1706656049000
         },
         "EkbuyFm9gYwn27nja7m3": {
@@ -148,7 +148,7 @@
             "builder": "0x2b30efBA367D669c9cd7723587346a79b67A42DB",
             "title": "0xPoker",
             "description": "A Commit and Reveal Poker Game! Live on the Optimism chain =) Took inspiration from the RockPaperScissors",
-            "status": "completed",
+            "status": "approved",
             "timestamp": 1706690199000
         },
         "MINVRoKfXZOgO6nsxUp0": {
@@ -156,7 +156,7 @@
             "builder": "0x5D70E3b540f58beCd10B74f6c0958b31e3190DA7",
             "title": "Duel - Bet dApp",
             "description": "This dApp allows users to make bets on the future price of Ethereum (ETH). Users can: - Create bets: Choose a future date and ETH price, and stake an amount of ETH. - Resolve bets: When the chosen date arrives, bets can be finalized according to the ETH price at the target date. - Win or lose: If the ETH price is above the chosen price when the bet is chosen as \"Higher\", the user wins the bet and receives the staked ETH plus winnings. I will be glad to hear your feedbacks. Have fun!\n",
-            "status": "completed",
+            "status": "approved",
             "timestamp": 1706815801000
         },
         "nLsqcBkuoNb8nWVAuJg0": {
@@ -164,7 +164,7 @@
             "builder": "0x1CeF0e6072810013487f7632350f9336AD6CADAD",
             "title": "Public Good supportUs",
             "description": "Decentralized public goods funding application. Campaign owners can set funds needed",
-            "status": "completed",
+            "status": "approved",
             "timestamp": 1706860595000
         },
         "BeyVyZuAvbFnUWjVbJ7U": {
@@ -172,7 +172,7 @@
             "builder": "0xC6e64eBeFaFaB3d646adadca5D93A7c44f62544f",
             "title": "ZeroTrust Accounts",
             "description": "ZeroTrust Accounts will provide a decentralized, secure, and self-sovereign approach to Ethereum smart contract accounts",
-            "status": "completed",
+            "status": "approved",
             "timestamp": 1706892428000
         },
         "6JZBiYsLbfZ06SrQGyGz": {
@@ -180,7 +180,7 @@
             "builder": "0x3b529ac4F8dc0C40Fec0f1192029755275A0c3Cd",
             "title": "Event Management Dapp",
             "description": "An app to create, manage, and sell tickets for events and buy them along with many functionalities",
-            "status": "completed",
+            "status": "approved",
             "timestamp": 1706940527000
         },
         "ItKedxWVEaX9OcCrphMu": {
@@ -188,7 +188,7 @@
             "builder": "0xbE7fD3889C01F032184544DC0005F0d47daCcf09",
             "title": "Switch Dapp",
             "description": "Switch is a web app for sending defferred transactions. The user has a simple UI for setting a transaction which will be triggered and excecuted later based on speficied: 1) Time delay or 2) On-chain variable output. Implements Chainlink Functions and Automation.",
-            "status": "completed",
+            "status": "approved",
             "timestamp": 1707065464000
         },
         "ZW4MfCMCU209bKP8Va8M": {
@@ -196,7 +196,7 @@
             "builder": "0x8757F328371E571308C1271BD82B91882253FDd1",
             "title": "D-Auction Platform (Decentralized Auction)",
             "description": "Decentralized Auction Platform named D-Auction is a smart contract-based solution for conducting decentralized auctions of non-fungible tokens (NFTs). This platform allows users to create auctions for their NFTs, participate in bidding, and claim ownership of the NFTs upon winning the auctions",
-            "status": "completed",
+            "status": "approved",
             "timestamp": 1707065465000
         },
         "i2ChwolQO0qR1Qbp0qCQ": {
