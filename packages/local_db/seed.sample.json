@@ -131,7 +131,7 @@
             "askAmount": 0.125,
             "builder": "0x55fF7E28e7cd43C104dC89Aa69285E0E6EBa064e",
             "title": "Buidl Guild English Auction",
-            "description": "Buidl Guild is a testnet english auction platform where users can create an auction on NFTs.",
+            "description": "English auction platform where users can create an auction on NFTs.",
             "status": "approved",
             "timestamp": 1706627065000
         },
