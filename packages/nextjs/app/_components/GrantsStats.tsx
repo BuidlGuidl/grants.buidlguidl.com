@@ -6,8 +6,8 @@ const Stat = ({ label, imgLink, value }: { label: string; imgLink: string; value
   return (
     <div className="flex flex-col gap-2 items-center">
       <div className="flex gap-2 items-baseline">
-        <Image src={imgLink} alt={label} width={45} height={50} className="mt-1" />
-        <h2 className="text-4xl lg:text-6xl my-0 font-ppEditorial lg:leading-3">{value}</h2>
+        <Image src={imgLink} alt={label} width={45} height={50} className="w-[30px] lg:w-[50px] lg:h-[50px] mt-1" />
+        <h2 className="text-4xl lg:text-6xl my-0 font-ppEditorial leading-[0.5rem] lg:leading-3">{value}</h2>
       </div>
       <p className="text-lg my-0">{label}</p>
     </div>
