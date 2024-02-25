@@ -44,6 +44,7 @@ export type GrantData = {
   description: string;
   askAmount: number;
   builder: string;
+  link: string;
   timestamp: number;
   // TODO Check if firebase has it bydefault
   // updated timestamp;
