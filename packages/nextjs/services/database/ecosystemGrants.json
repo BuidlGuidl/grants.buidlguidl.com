@@ -17,9 +17,9 @@
     {
       "name": "W1nt3r",
       "description": "Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet.",
-      "imgLink": "/assets/winter.png",
       "amountGranted": "1",
-      "twitterLink": "https://x.com/w1nt3r_eth"
+      "twitterLink": "https://x.com/w1nt3r_eth",
+      "imgLink": "/assets/winter.png"
     }
   ]
 }
