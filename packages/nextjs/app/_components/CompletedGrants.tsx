@@ -13,9 +13,9 @@ const CompletedGrantCard = ({ title, description, askAmount, builder }: GrantDat
       <div className="flex flex-col gap-2 px-3">
         <Address address={builder} />
         <p className="text-base m-0 mt-2">
-          Amount granted: <span className="font-medium"> {askAmount} ETH</span>
+          <span className="font-medium">{askAmount} ETH</span>
         </p>
-        <p className="text-base m-0 line-clamp-3 hover:line-clamp-none">{description}</p>
+        <p className="text-base m-0 line-clamp-3">{description}</p>
       </div>
     </div>
   );
