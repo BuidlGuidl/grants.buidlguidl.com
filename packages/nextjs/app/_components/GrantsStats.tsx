@@ -28,7 +28,7 @@ export const GrantsStats = async () => {
   return (
     <div className="bg-base-300">
       <div className="container flex flex-col items-center justify-center max-w-[90%] lg:max-w-7xl mx-auto py-12 lg:px-12 gap-6">
-        <div className="flex flex-col gap-8 md:flex-row justify-between items-start lg:w-4/5">
+        <div className="flex flex-col gap-8 md:flex-row justify-between items-start md:w-3/5 lg:w-4/5">
           <Stat label="Total grants" imgLink="/assets/stats-total.png" value={totalGrants} />
           <Stat label="ETH granted" imgLink="/assets/stats-eth-granted.png" value={totalEthGranted} />
           <Stat label="Active grants" imgLink="/assets/stats-active.png" value={stats.total_active_grants} />
