@@ -3,11 +3,18 @@ import { Address } from "~~/components/scaffold-eth";
 import { getAllCompletedGrants } from "~~/services/database/grants";
 import { GrantData } from "~~/services/database/schema";
 
-const CompletedGrantCard = ({ title, description, askAmount, builder }: GrantData) => {
+const CompletedGrantCard = ({ title, description, askAmount, builder, link }: GrantData) => {
   return (
     <div className="w-72 md:w-[300px] bg-primary min-h-full rounded-2xl overflow-hidden shadow-lg p-4 space-y-4">
       <div className="h-44 w-full bg-secondary rounded-xl relative">
-        <div className="badge bg-base-200 absolute top-4 right-4 rounded-2xl py-3 px-3">Learn more</div>
+        <a
+          href={link}
+          className="badge bg-base-200 absolute top-4 right-4 rounded-2xl py-3 px-3 hover:opacity-80"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Learn more
+        </a>
         <p className="m-0 absolute bottom-4 left-4 text-lg">{title}</p>
       </div>
       <div className="flex flex-col gap-2 px-3">
