@@ -99,25 +99,22 @@ export const reviewGrant = async (grantId: string, action: ProposalStatusType) =
 };
 
 export const getGrantsStats = async () => {
-  // Summation of askAmount for completed grants: total_eth_granted
-  // Total number of completed grants : total_completed_grants
-  // Total number of submitted grants all grants : total_submitted_grants
-  // Total number of Active grants (approved): total_active_grants
+  // total_eth_granted is the summation of askAmount of all completed grants
+  // total_active_grants is the count of grants with status "approved"
+  // total_grants is the summation of completed and active grants
   try {
-    const copmltedGrants = await getAllCompletedGrants();
-    const total_eth_granted = copmltedGrants.reduce((acc, grant) => acc + grant.askAmount, 0);
-    const total_completed_grants = copmltedGrants.length;
-
-    const allGrantsSnapshot = await grantsCollection.get();
-    const total_grants = allGrantsSnapshot.size;
+    const completedGrants = await getAllCompletedGrants();
+    const total_eth_granted = completedGrants.reduce((acc, grant) => acc + grant.askAmount, 0);
+    const total_completed_grants = completedGrants.length;
 
     const approvedGrantsSnapshot = await grantsCollection.where("status", "==", PROPOSAL_STATUS.APPROVED).get();
     const total_active_grants = approvedGrantsSnapshot.size;
 
+    const total_grants = total_completed_grants + total_active_grants;
+
     return {
       total_grants,
       total_eth_granted,
-      total_completed_grants,
       total_active_grants,
     };
   } catch (error) {

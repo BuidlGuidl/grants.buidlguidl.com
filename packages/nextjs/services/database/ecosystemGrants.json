@@ -1,0 +1,25 @@
+{
+  "grants": [
+    {
+      "name": "Jessy's Hacker House",
+      "description": "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.Lorem ipsum dolor sit amet, qui minim labore adipisicing.",
+      "amountGranted": "14",
+      "twitterLink": "https://twitter.com/wehack247",
+      "imgLink": "/assets/jessy-hacker-house.png"
+    },
+    {
+      "name": "Solidity By Example",
+      "description": "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.Lorem ipsum dolor sit amet, qui minim labore adipisicing.",
+      "amountGranted": "1",
+      "twitterLink": "https://twitter.com/ProgrammerSmart",
+      "imgLink": "/assets/solidity-by-example.png"
+    },
+    {
+      "name": "W1nt3r",
+      "description": "Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet.",
+      "amountGranted": "1",
+      "twitterLink": "https://x.com/w1nt3r_eth",
+      "imgLink": "/assets/winter.png"
+    }
+  ]
+}
