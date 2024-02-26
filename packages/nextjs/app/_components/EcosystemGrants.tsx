@@ -1,4 +1,5 @@
 import Image from "next/image";
+import ecosystemGrants from "~~/services/database/ecosystemGrants.json";
 
 const EcosystemGrantsCard = ({
   title,
@@ -16,7 +17,7 @@ const EcosystemGrantsCard = ({
   return (
     <div className="bg-base-100 rounded-2xl min-h-[380px] max-w-[370px] flex flex-col">
       <div className="h-56 w-full bg-gray-400/60 rounded-tl-2xl rounded-tr-2xl relative">
-        <Image src={imageLink} alt={title} layout="fill" className="rounded-tl-2xl rounded-tr-2xl" />
+        <Image src={imageLink} alt={title} fill={true} className="rounded-tl-2xl rounded-tr-2xl" />
         <p className="m-0 absolute bottom-4 left-4 text-2xl md:text-3xl lg:text-4xl font-ppEditorial">{title}</p>
       </div>
       <div className="flex-1 flex flex-col items-start justify-between space-y-4 p-4">
@@ -27,7 +28,7 @@ const EcosystemGrantsCard = ({
         <div className="flex justify-between items-baseline w-full">
           <div className="bg-primary rounded-lg py-1 px-2 text-xs font-bold">
             Amount:
-            <span className="text-sm"> {amountGranted}</span>
+            <span className="text-sm"> {amountGranted} ETH</span>
           </div>
           <a href={twitterLink} target="_blank" className="text-sm underline underline-offset-1">
             Twitter
@@ -48,30 +49,16 @@ export const EcosystemGrants = () => {
         </div>
 
         <div className="flex flex-col flex-wrap items-center md:flex-row md:justify-center md:items-stretch gap-8 px-4 lg:px-0">
-          {/* Jessy's Hacker House */}
-          <EcosystemGrantsCard
-            title="Jessy's Hacker House"
-            description=""
-            imageLink="/assets/jessy-hacker-house.png"
-            amountGranted="1 ETH"
-            twitterLink="https://twitter.com/wehack247"
-          />
-          {/* Solidty By Example */}
-          <EcosystemGrantsCard
-            title="Solidity By Example"
-            description=""
-            imageLink="/assets/solidity-by-example.png"
-            amountGranted="1 ETH"
-            twitterLink="https://twitter.com/ProgrammerSmart"
-          />
-          {/* Winter */}
-          <EcosystemGrantsCard
-            title="W1nt3r"
-            description="Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet."
-            imageLink="/assets/winter.png"
-            amountGranted="1 ETH"
-            twitterLink="https://x.com/w1nt3r_eth"
-          />
+          {ecosystemGrants.grants.map((grant, index) => (
+            <EcosystemGrantsCard
+              key={`${grant.name}_${index}`}
+              title={grant.name}
+              description={grant.description}
+              imageLink={grant.imgLink}
+              amountGranted={grant.amountGranted}
+              twitterLink={grant.twitterLink}
+            />
+          ))}
         </div>
       </div>
     </div>
