@@ -44,11 +44,8 @@ export type GrantData = {
   description: string;
   askAmount: number;
   builder: string;
-  link: string;
+  link?: string;
   timestamp: number;
-  // TODO Check if firebase has it bydefault
-  // updated timestamp;
-  // proposed and submited timestamp are imp
   status: "proposed" | "approved" | "submitted" | "completed" | "rejected";
 };
 

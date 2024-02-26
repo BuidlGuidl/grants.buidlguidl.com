@@ -8,7 +8,6 @@ type ReqBody = {
   title?: string;
   description?: string;
   askAmount?: string;
-  link?: string;
   signature?: `0x${string}`;
   signer?: string;
 };
@@ -16,7 +15,7 @@ type ReqBody = {
 // TODO: We could also add extra validtion of nonce
 export async function POST(req: Request) {
   try {
-    const { title, description, askAmount, link = "", signature, signer } = (await req.json()) as ReqBody;
+    const { title, description, askAmount, signature, signer } = (await req.json()) as ReqBody;
 
     if (!title || !description || !askAmount || isNaN(Number(askAmount)) || !signature || !signer) {
       return NextResponse.json({ error: "Invalid form details submited" }, { status: 400 });
@@ -45,7 +44,6 @@ export async function POST(req: Request) {
       description: description,
       askAmount: Number(askAmount),
       builder: signer,
-      link: link,
     });
 
     return NextResponse.json({ grant }, { status: 201 });
