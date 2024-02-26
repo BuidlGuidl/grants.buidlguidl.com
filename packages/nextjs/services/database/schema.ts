@@ -1,3 +1,5 @@
+import type { Simplify } from "type-fest";
+
 export type SocialLinks = {
   twitter?: string;
   github?: string;
@@ -38,19 +40,20 @@ export type BuilderDataResponse = {
   data?: BuilderData;
 };
 
-export type GrantData = {
+export type GrantWithoutTimestamps = {
   id: string;
   title: string;
   description: string;
   askAmount: number;
   builder: string;
   link?: string;
-  proposedAt?: number;
-  approvedAt?: number;
-  submittedAt?: number;
-  completedAt?: number;
-  rejectedAt?: number;
   status: "proposed" | "approved" | "submitted" | "completed" | "rejected";
 };
 
-export type GrantDataWithBuilder = GrantData & { builderData?: BuilderData };
+export type GrantData = Simplify<
+  GrantWithoutTimestamps & {
+    [k in GrantWithoutTimestamps["status"] as `${k}At`]?: number;
+  }
+>;
+
+export type GrantDataWithBuilder = Simplify<GrantData & { builderData?: BuilderData }>;
