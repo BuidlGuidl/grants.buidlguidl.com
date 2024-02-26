@@ -45,7 +45,11 @@ export type GrantData = {
   askAmount: number;
   builder: string;
   link?: string;
-  timestamp: number;
+  proposedAt?: number;
+  approvedAt?: number;
+  submittedAt?: number;
+  completedAt?: number;
+  rejectedAt?: number;
   status: "proposed" | "approved" | "submitted" | "completed" | "rejected";
 };
 
