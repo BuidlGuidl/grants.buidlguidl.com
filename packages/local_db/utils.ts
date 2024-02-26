@@ -16,8 +16,13 @@ async function importCollectionData(
   database: Firestore,
   collectionName: string,
   data: Record<string, object>,
+  ignoreId: boolean = false,
 ) {
   for (const [id, docData] of Object.entries(data)) {
+    if (ignoreId) {
+      await database.collection(collectionName).add(docData);
+      continue;
+    }
     await database.collection(collectionName).doc(id).set(docData);
   }
 }
@@ -64,7 +69,7 @@ export const importSeed = async (database: Firestore) => {
     importCollectionData(database, "config", seedToImport.config),
     importCollectionData(database, "cohorts", seedToImport.cohorts),
     importCollectionData(database, "notifications", seedToImport.notifications),
-    importCollectionData(database, "grants", seedToImport.grants),
+    importCollectionData(database, "grants", seedToImport.grants, true),
   ]);
 
   console.log("Seed completed successfully! 🌱");
