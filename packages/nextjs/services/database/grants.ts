@@ -8,12 +8,12 @@ const grantsCollection = firestoreDB.collection("grants");
 // const getGrantsDoc = (id: string) => grantsCollection.doc(id);
 // const getGrantSnapshotById = (id: string) => getGrantsDoc(id).get();
 
-export const createGrant = async (grantData: Omit<GrantData, "id" | "timestamp" | "status">) => {
+export const createGrant = async (grantData: Omit<GrantData, "id" | "proposedAt" | "status">) => {
   try {
     const timestamp = new Date().getTime();
     const status = PROPOSAL_STATUS.PROPOSED;
 
-    const grantRef = await grantsCollection.add({ ...grantData, timestamp, status });
+    const grantRef = await grantsCollection.add({ ...grantData, proposedAt: timestamp, status });
     const grantSnapshot = await grantRef.get();
 
     return { id: grantSnapshot.id, ...grantSnapshot.data() } as GrantData;
@@ -77,7 +77,10 @@ export const getAllGrantsForReview = async () => {
 
 export const getAllCompletedGrants = async () => {
   try {
-    const grantsSnapshot = await grantsCollection.where("status", "==", PROPOSAL_STATUS.COMPLETED).get();
+    const grantsSnapshot = await grantsCollection
+      .where("status", "==", PROPOSAL_STATUS.COMPLETED)
+      .orderBy("completedAt", "desc")
+      .get();
     const grants: GrantData[] = [];
     grantsSnapshot.forEach(doc => {
       grants.push({ id: doc.id, ...doc.data() } as GrantData);
@@ -91,7 +94,13 @@ export const getAllCompletedGrants = async () => {
 
 export const reviewGrant = async (grantId: string, action: ProposalStatusType) => {
   try {
-    await grantsCollection.doc(grantId).update({ status: action });
+    const validActions = Object.values(PROPOSAL_STATUS);
+    if (!validActions.includes(action)) {
+      throw new Error(`Invalid action: ${action}`);
+    }
+    const grantActionTimeStamp = new Date().getTime();
+    const grantActionTimeStampKey = (action + "At") as `${typeof action}At`;
+    await grantsCollection.doc(grantId).update({ status: action, [grantActionTimeStampKey]: grantActionTimeStamp });
   } catch (error) {
     console.error("Error approving the grant:", error);
     throw error;
