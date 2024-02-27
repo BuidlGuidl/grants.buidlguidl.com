@@ -77,7 +77,10 @@ export const getAllGrantsForReview = async () => {
 
 export const getAllCompletedGrants = async () => {
   try {
-    const grantsSnapshot = await grantsCollection.where("status", "==", PROPOSAL_STATUS.COMPLETED).get();
+    const grantsSnapshot = await grantsCollection
+      .where("status", "==", PROPOSAL_STATUS.COMPLETED)
+      .orderBy("completedAt", "desc")
+      .get();
     const grants: GrantData[] = [];
     grantsSnapshot.forEach(doc => {
       grants.push({ id: doc.id, ...doc.data() } as GrantData);
