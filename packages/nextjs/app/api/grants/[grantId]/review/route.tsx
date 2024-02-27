@@ -3,10 +3,18 @@ import { recoverTypedDataAddress } from "viem";
 import { reviewGrant } from "~~/services/database/grants";
 import { findUserByAddress } from "~~/services/database/users";
 import { EIP_712_DOMAIN, EIP_712_TYPES__REVIEW_GRANT } from "~~/utils/eip712";
+import { PROPOSAL_STATUS } from "~~/utils/grants";
 
 export async function POST(req: NextRequest, { params }: { params: { grantId: string } }) {
   const { grantId } = params;
   const { signature, signer, action } = await req.json();
+
+  // Validate action is valid
+  const validActions = Object.values(PROPOSAL_STATUS);
+  if (!validActions.includes(action)) {
+    console.error("Invalid action", action);
+    return NextResponse.json({ error: "Invalid action" }, { status: 400 });
+  }
 
   // Validate Signature
   const recoveredAddress = await recoverTypedDataAddress({
