@@ -4,7 +4,7 @@ import { getAllActiveGrants } from "~~/services/database/grants";
 import { GrantData } from "~~/services/database/schema";
 import { formatDateFromNow } from "~~/utils/grants";
 
-const ActiveGrantRow = ({ title, askAmount, builder, timestamp }: GrantData) => {
+const ActiveGrantRow = ({ title, askAmount, builder, approvedAt }: GrantData) => {
   return (
     <tr className="border-b border-black p-10 text-base">
       <td className="p-4 pl-4">{title}</td>
@@ -12,7 +12,7 @@ const ActiveGrantRow = ({ title, askAmount, builder, timestamp }: GrantData) => 
       <td className="p-4 pl-4">
         <Address address={builder} />
       </td>
-      <td className="p-4 pl-4">{formatDateFromNow(timestamp)}</td>
+      <td className="p-4 pl-4">{approvedAt ? formatDateFromNow(approvedAt) : "-"}</td>
     </tr>
   );
 };
