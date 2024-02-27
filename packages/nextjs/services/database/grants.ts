@@ -92,6 +92,20 @@ export const getAllCompletedGrants = async () => {
   }
 };
 
+export const getAllActiveGrants = async () => {
+  try {
+    const grantsSnapshot = await grantsCollection.where("status", "==", PROPOSAL_STATUS.APPROVED).get();
+    const grants: GrantData[] = [];
+    grantsSnapshot.forEach(doc => {
+      grants.push({ id: doc.id, ...doc.data() } as GrantData);
+    });
+    return grants;
+  } catch (error) {
+    console.error("Error getting all active grants:", error);
+    throw error;
+  }
+};
+
 export const reviewGrant = async (grantId: string, action: ProposalStatusType) => {
   try {
     const validActions = Object.values(PROPOSAL_STATUS);
