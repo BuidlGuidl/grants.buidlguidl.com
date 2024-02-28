@@ -107,38 +107,40 @@ const MyGrants: NextPage = () => {
 
       {modalIsOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-8 md:p-0"
+          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-8 md:p-0 z-10"
           onClick={closeModal}
         >
           <div
             className="rounded-2xl bg-primary p-5 w-auto md:w-1/2 lg:w-1/3 xl:w-1/4"
             onClick={e => e.stopPropagation()}
           >
-            <button onClick={closeModal} className="float-right text-xs">
+            <button onClick={closeModal} className="float-right text-xs hover:underline">
               Close
             </button>
             <h2 className="font-medium text-lg pb-2">{currentGrantTitle}</h2>
-            <div className="flex flex-col bg-white border-2 border-blue-500 px-2 rounded-lg">
-              <div className="flex items-start">
-                <InformationCircleIcon className="h-[2rem] w-[2rem] mr-2 mt-2" />
-                <p className="text-sm text-gray-400">
-                  First you&apos;ll need to register the build in your&nbsp;
-                  <a
-                    href={`https://app.buidlguidl.com/builders/${address}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-black-500 underline"
-                  >
-                    BuidlGuidl profile
-                  </a>
-                  &nbsp;and then submit the URL of your BG build in this form. BG Grants team will review to complete
-                  the grant.
-                </p>
-              </div>
+            <div role="alert" className="alert bg-gray-100 border-0">
+              <span className="text-sm text-primary">
+                <InformationCircleIcon
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="2"
+                  className="stroke-info shrink-0 w-5 h-5 inline-block mr-2"
+                />
+                First you&apos;ll need to register the build in your&nbsp;
+                <a
+                  href={`https://app.buidlguidl.com/builders/${address}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-black-500 underline"
+                >
+                  BuidlGuidl profile
+                </a>
+                &nbsp;and then submit the URL of your BG build in this form. BG Grants team will review it to complete
+                the grant.
+              </span>
             </div>
-
             <label className="block mt-4">
-              <span className="font-medium">Build URL</span> to be reviewed and complete grant
+              <span className="font-medium">Build URL</span> to be reviewed and complete grant:
             </label>
             <input
               type="text"
