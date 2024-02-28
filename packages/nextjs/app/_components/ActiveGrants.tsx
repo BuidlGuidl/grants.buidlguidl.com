@@ -10,7 +10,7 @@ const ActiveGrantRow = ({ title, askAmount, builder, approvedAt }: GrantData) =>
       <td className="p-4 pl-4">{title}</td>
       <td className="p-4 pl-4">{askAmount} ETH</td>
       <td className="p-4 pl-4">
-        <Address address={builder} />
+        <Address address={builder} link={`https://app.buidlguidl.com/builders/${builder}`} />
       </td>
       <td className="p-4 pl-4">{approvedAt ? formatDateFromNow(approvedAt) : "-"}</td>
     </tr>

@@ -16,6 +16,7 @@ type AddressProps = {
   disableAddressLink?: boolean;
   format?: "short" | "long";
   size?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl";
+  link?: string;
 };
 
 const blockieSizeMap = {
@@ -31,7 +32,7 @@ const blockieSizeMap = {
 /**
  * Displays an address (or ENS) with a Blockie image and option to copy address.
  */
-export const Address = ({ address, disableAddressLink, format, size = "base" }: AddressProps) => {
+export const Address = ({ address, disableAddressLink, format, size = "base", link }: AddressProps) => {
   const [ens, setEns] = useState<string | null>();
   const [ensAvatar, setEnsAvatar] = useState<string | null>();
   const [addressCopied, setAddressCopied] = useState(false);
@@ -71,7 +72,7 @@ export const Address = ({ address, disableAddressLink, format, size = "base" }: 
     return <span className="text-error">Wrong address</span>;
   }
 
-  const blockExplorerAddressLink = getBlockExplorerAddressLink(targetNetwork, address);
+  const destinationHref = link ?? getBlockExplorerAddressLink(targetNetwork, address);
   let displayAddress = address?.slice(0, 5) + "..." + address?.slice(-4);
 
   if (ens) {
@@ -91,15 +92,15 @@ export const Address = ({ address, disableAddressLink, format, size = "base" }: 
       </div>
       {disableAddressLink ? (
         <span className={`ml-1.5 text-${size} font-normal`}>{displayAddress}</span>
-      ) : targetNetwork.id === hardhat.id ? (
+      ) : targetNetwork.id === hardhat.id && !Boolean(link) ? (
         <span className={`ml-1.5 text-${size} font-normal`}>
-          <Link href={blockExplorerAddressLink}>{displayAddress}</Link>
+          <Link href={destinationHref}>{displayAddress}</Link>
         </span>
       ) : (
         <a
           className={`ml-1.5 text-${size} font-normal`}
           target="_blank"
-          href={blockExplorerAddressLink}
+          href={destinationHref}
           rel="noopener noreferrer"
         >
           {displayAddress}
