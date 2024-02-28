@@ -19,7 +19,10 @@ export async function POST(req: Request) {
     // Verify if the builder is present
     const builder = await findUserByAddress(signer);
     if (!builder.exists) {
-      return NextResponse.json({ error: "Only buidlguild builders can submit for grants" }, { status: 401 });
+      return NextResponse.json(
+        { error: "Only buidlguild builders can submit their builds for active grants" },
+        { status: 401 },
+      );
     }
 
     const submitBuild = await submitGrantBuild(grantId, link);

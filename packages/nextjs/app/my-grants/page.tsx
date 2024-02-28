@@ -53,22 +53,20 @@ const MyGrants: NextPage = () => {
   const handleSubmit = async () => {
     let processedUrl = buildUrl;
 
-    // Add https:// if it's missing
     if (!processedUrl.startsWith("http://") && !processedUrl.startsWith("https://")) {
       processedUrl = "https://" + processedUrl;
     }
 
-    // Replace http:// with https://
     if (processedUrl.startsWith("http://")) {
       processedUrl = "https://" + processedUrl.substring(7);
     }
 
     const urlPattern = new RegExp("^(https://app\\.buidlguidl\\.com/build/)[a-z0-9-]+$");
+
     if (urlPattern.test(processedUrl.toLowerCase())) {
       let notificationId;
       try {
         notificationId = notification.loading("Submitting build URL");
-        console.log("Submitting build URL:", processedUrl, "for grant:", currentGrantId, "by:", address);
         await submitBuildLink({ grantId: currentGrantId, link: processedUrl, signer: address });
         mutate(`/api/builders/${address}/grants`);
         closeModal();
@@ -118,8 +116,8 @@ const MyGrants: NextPage = () => {
               Close
             </button>
             <h2 className="font-medium text-lg pb-2">{currentGrantTitle}</h2>
-            <div role="alert" className="alert bg-gray-100 border-0">
-              <span className="text-sm text-primary">
+            <div role="alert" className="alert border-0">
+              <span className="text-sm text-gray-400">
                 <InformationCircleIcon
                   fill="none"
                   viewBox="0 0 24 24"
