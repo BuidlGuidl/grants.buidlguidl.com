@@ -101,6 +101,11 @@ export const GrantReview = ({ grant }: { grant: GrantDataWithBuilder }) => {
       <h3 className="font-bold">
         {grant.title}
         <span className="text-sm text-gray-500 ml-2">({grant.id})</span>
+        {grant.link && (
+          <a href={grant.link} className="ml-4 underline" target="_blank" rel="noopener noreferrer">
+            View Build
+          </a>
+        )}
       </h3>
       <div className="flex gap-4 items-center">
         <a
