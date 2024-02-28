@@ -145,3 +145,16 @@ export const getGrantsStats = async () => {
     throw error;
   }
 };
+
+export const submitGrantBuild = async (grantId: string, link: string) => {
+  const status = PROPOSAL_STATUS.SUBMITTED;
+  const grantActionTimeStamp = new Date().getTime();
+  const grantActionTimeStampKey = (status + "At") as `${typeof status}At`;
+
+  try {
+    await grantsCollection.doc(grantId).update({ status, link, [grantActionTimeStampKey]: grantActionTimeStamp });
+  } catch (error) {
+    console.error("Error updating the grant status:", error);
+    throw error;
+  }
+};
