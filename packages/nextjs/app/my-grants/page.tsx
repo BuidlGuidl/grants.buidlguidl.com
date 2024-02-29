@@ -8,7 +8,6 @@ import { useAccount } from "wagmi";
 import { GrantData } from "~~/services/database/schema";
 import { PROPOSAL_STATUS } from "~~/utils/grants";
 
-// TODO: Move this to util
 const badgeBgColor = {
   [PROPOSAL_STATUS.PROPOSED]: "bg-warning",
   [PROPOSAL_STATUS.APPROVED]: "bg-success",
