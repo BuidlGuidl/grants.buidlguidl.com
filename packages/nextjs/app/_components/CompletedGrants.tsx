@@ -39,12 +39,10 @@ export const CompletedGrants = async ({ view = "full" }) => {
 
   return (
     <div className="bg-base-100">
-      <div className="container max-w-[95%] lg:max-w-7xl mx-auto py-12 px-4 lg:px-0">
-        <div className="flex flex-col items-center lg:items-start">
-          <div className="text-4xl lg:text-6xl font-ppEditorial mb-6 text-center lg:text-left">
-            Completed grants
-            <Image src="/assets/sparkle.png" alt="sparkle" width={32} height={32} className="inline-block ml-4" />
-          </div>
+      <div className="container flex flex-col justify-center max-w-[95%] lg:max-w-7xl mx-auto py-12 gap-4">
+        <div className="self-center lg:self-start w-fit relative">
+          <h2 className="text-4xl lg:text-6xl text-center lg:text-left font-ppEditorial">Completed grants</h2>
+          <Image className="absolute -top-3 -right-7" src="/assets/sparkle.png" alt="sparkle" width={32} height={32} />
         </div>
         <div
           className={`${
