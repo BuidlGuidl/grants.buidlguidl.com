@@ -108,14 +108,7 @@ export const GrantReview = ({ grant }: { grant: GrantDataWithBuilder }) => {
         )}
       </h3>
       <div className="flex gap-4 items-center">
-        <a
-          href={`https://app.buidlguidl.com/builders/${grant.builder}`}
-          className="inline-block"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <Address address={grant.builder} disableAddressLink />
-        </a>
+        <Address address={grant.builder} link={`https://app.buidlguidl.com/builders/${grant.builder}`} />
         <BuilderSocials socialLinks={grant.builderData?.socialLinks} />
       </div>
       <p>{grant.description}</p>

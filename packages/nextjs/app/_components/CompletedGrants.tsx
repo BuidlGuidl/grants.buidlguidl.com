@@ -23,7 +23,7 @@ const CompletedGrantCard = ({ title, description, askAmount, builder, link, comp
         <p className="m-0 absolute bottom-4 left-4 text-lg">{title}</p>
       </div>
       <div className="flex flex-col gap-2 px-3">
-        <Address address={builder} />
+        <Address address={builder} link={`https://app.buidlguidl.com/builders/${builder}`} />
         <p className="text-base m-0 mt-2">
           <span className="font-medium">{askAmount} ETH</span>
         </p>
