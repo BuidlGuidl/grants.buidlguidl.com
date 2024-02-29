@@ -8,6 +8,7 @@ type ReqBody = {
   link?: string;
 };
 
+// TODO: Check if the grants is owned by the builder
 export async function POST(req: Request) {
   try {
     const { grantId, link, signer } = (await req.json()) as ReqBody;
