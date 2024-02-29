@@ -12,7 +12,7 @@ const Home = () => {
       <GrantsStats />
       <EcosystemGrants />
       <CommunityGrant />
-      <CompletedGrants view="reduced" />
+      <CompletedGrants reducedView={true} />
       <ActiveGrants />
     </>
   );
