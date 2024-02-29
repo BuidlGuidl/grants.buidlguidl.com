@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { mutate } from "swr";
 import useSWRMutation from "swr/mutation";
-import { useAccount } from "wagmi";
+import { useAccount, useSignTypedData } from "wagmi";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
+import { GrantData } from "~~/services/database/schema";
+import { EIP_712_DOMAIN, EIP_712_TYPES__SUBMIT_GRANT } from "~~/utils/eip712";
+import { PROPOSAL_STATUS } from "~~/utils/grants";
 import { notification } from "~~/utils/scaffold-eth";
 import { postMutationFetcher } from "~~/utils/swr";
 
@@ -11,20 +14,15 @@ type ReqBody = {
   status?: string;
   signer?: string;
   link?: string;
+  signature?: `0x${string}`;
 };
 
-export const SubmitModal = ({
-  grantTitle,
-  grantId,
-  closeModal,
-}: {
-  grantTitle: string;
-  grantId: string;
-  closeModal: () => void;
-}) => {
+export const SubmitModal = ({ grant, closeModal }: { grant: GrantData; closeModal: () => void }) => {
   const { address: connectedAddress } = useAccount();
   const [buildUrl, setBuildUrl] = useState("");
   const { trigger: submitBuildLink } = useSWRMutation("/api/grants/submit", postMutationFetcher<ReqBody>);
+
+  const { signTypedDataAsync } = useSignTypedData();
 
   const handleSubmit = async () => {
     const urlPattern = new RegExp("^(https://app\\.buidlguidl\\.com/build/)[a-z0-9-]+$");
@@ -32,10 +30,21 @@ export const SubmitModal = ({
     if (!urlPattern.test(buildUrl.toLowerCase()))
       return notification.error("You must submit a valid build URL (https://app.buidlguidl.com/build/...)");
 
+    const signature = await signTypedDataAsync({
+      domain: EIP_712_DOMAIN,
+      types: EIP_712_TYPES__SUBMIT_GRANT,
+      primaryType: "Message",
+      message: {
+        grantId: grant.id,
+        action: PROPOSAL_STATUS.SUBMITTED,
+        link: buildUrl,
+      },
+    });
+
     let notificationId;
     try {
       notificationId = notification.loading("Submitting build URL");
-      await submitBuildLink({ grantId: grantId, link: buildUrl, signer: connectedAddress });
+      await submitBuildLink({ grantId: grant.id, link: buildUrl, signer: connectedAddress, signature });
       await mutate(`/api/builders/${connectedAddress}/grants`);
       closeModal();
       notification.remove(notificationId);
@@ -56,7 +65,7 @@ export const SubmitModal = ({
         <button onClick={closeModal} className="float-right text-xs hover:underline">
           Close
         </button>
-        <h2 className="font-medium text-lg pb-2">{grantTitle}</h2>
+        <h2 className="font-medium text-lg pb-2">{grant.title}</h2>
         <div role="alert" className="alert border-0">
           <span className="text-sm text-gray-400">
             <InformationCircleIcon

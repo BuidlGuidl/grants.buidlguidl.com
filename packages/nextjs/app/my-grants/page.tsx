@@ -22,12 +22,10 @@ const MyGrants: NextPage = () => {
   const { data: builderGrants, isLoading } = useSWR<GrantData[]>(address ? `/api/builders/${address}/grants` : null);
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [currentGrantId, setCurrentGrantId] = useState("");
-  const [currentGrantTitle, setCurrentGrantTitle] = useState("");
+  const [currentGrant, setCurrentGrant] = useState<GrantData | null>(null);
 
-  const openModal = (grantId: string, grantTitle: string) => {
-    setCurrentGrantId(grantId);
-    setCurrentGrantTitle(grantTitle);
+  const openModal = (grant: GrantData) => {
+    setCurrentGrant(grant);
     setModalIsOpen(true);
   };
 
@@ -45,15 +43,15 @@ const MyGrants: NextPage = () => {
           <p>{grant.description}</p>
           <p className={`badge ${badgeBgColor[grant.status]}`}>{grant.status}</p>
           {grant.status === PROPOSAL_STATUS.APPROVED && (
-            <button onClick={() => openModal(grant.id, grant.title)} className="btn btn-primary float-right">
+            <button onClick={() => openModal(grant)} className="btn btn-primary float-right">
               Submit build
             </button>
           )}
         </div>
       ))}
 
-      {modalIsOpen && (
-        <SubmitModal grantTitle={currentGrantTitle} grantId={currentGrantId} closeModal={() => setModalIsOpen(false)} />
+      {modalIsOpen && currentGrant !== null && (
+        <SubmitModal grant={currentGrant} closeModal={() => setModalIsOpen(false)} />
       )}
     </div>
   );
