@@ -49,9 +49,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Grant is not approved" }, { status: 400 });
     }
 
-    const submitBuild = await submitGrantBuild(grantId, link);
+    await submitGrantBuild(grantId, link);
 
-    return NextResponse.json({ submitBuild }, { status: 201 });
+    return NextResponse.json({}, { status: 201 });
   } catch (e) {
     console.error(e);
     return NextResponse.json({ error: "Error processing form" }, { status: 500 });
