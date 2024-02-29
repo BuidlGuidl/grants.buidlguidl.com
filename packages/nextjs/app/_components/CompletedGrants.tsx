@@ -46,7 +46,7 @@ export const CompletedGrants = async ({ view = "full" }) => {
         </div>
         <div
           className={`${
-            view === "reduced" ? "grant-container" : ""
+            view === "reduced" ? "grant-container-rwd" : ""
           } flex flex-col items-center justify-center md:flex-row md:flex-wrap md:items-start gap-6`}
         >
           {grantsToShow.map(grant => (
