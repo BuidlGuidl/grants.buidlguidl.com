@@ -30,3 +30,24 @@ p {
 .btn.btn-ghost {
   @apply shadow-none;
 }
+
+/* Hide elements past the 3rd on screens smaller than 768px */
+@media (max-width: 767px) {
+  .grant-container > :nth-child(n + 4) {
+    display: none;
+  }
+}
+
+/* Hide elements past the 4th on screens between 768px and 1024px */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .grant-container > :nth-child(n + 5) {
+    display: none;
+  }
+}
+
+/* Hide elements past the 6th on screens between 1024px and 1284px */
+@media (min-width: 1024px) and (max-width: 1284px) {
+  .grant-container > :nth-child(n + 7) {
+    display: none;
+  }
+}
