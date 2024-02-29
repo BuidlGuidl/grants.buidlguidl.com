@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { recoverTypedDataAddress } from "viem";
-import { submitGrantBuild } from "~~/services/database/grants";
-import { findUserByAddress } from "~~/services/database/users";
+import { getGrantById, submitGrantBuild } from "~~/services/database/grants";
 import { EIP_712_DOMAIN, EIP_712_TYPES__SUBMIT_GRANT } from "~~/utils/eip712";
 import { PROPOSAL_STATUS } from "~~/utils/grants";
 
@@ -12,12 +11,9 @@ type ReqBody = {
   signature?: `0x${string}`;
 };
 
-// TODO: Check if the grants is owned by the builder
-// TODO: Check if the grant status is accepted
 export async function POST(req: Request) {
   try {
     const { grantId, link, signer, signature } = (await req.json()) as ReqBody;
-
     if (!grantId || !signer || !link || !signature) {
       return NextResponse.json({ error: "Invalid form details submitted" }, { status: 400 });
     }
@@ -29,24 +25,26 @@ export async function POST(req: Request) {
       primaryType: "Message",
       message: {
         grantId: grantId,
-        action: PROPOSAL_STATUS.SUBMITTED,
+        action: "submit",
         link,
       },
       signature,
     });
-
     if (recoveredAddress !== signer) {
       console.error("Signature error", recoveredAddress, signer);
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Verify if the builder is present
-    const builder = await findUserByAddress(signer);
-    if (!builder.exists) {
-      return NextResponse.json(
-        { error: "Only buidlguild builders can submit their builds for active grants" },
-        { status: 401 },
-      );
+    // Validate if the grant is approved and owned by the builder
+    const grant = await getGrantById(grantId);
+    if (!grant) {
+      return NextResponse.json({ error: "Invalid grant" }, { status: 400 });
+    }
+    if (grant.builder !== signer) {
+      return NextResponse.json({ error: "Builder does not own this grant" }, { status: 401 });
+    }
+    if (grant.status !== PROPOSAL_STATUS.APPROVED) {
+      return NextResponse.json({ error: "Grant is not approved" }, { status: 400 });
     }
 
     const submitBuild = await submitGrantBuild(grantId, link);

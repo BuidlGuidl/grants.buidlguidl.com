@@ -5,7 +5,6 @@ import { useAccount, useSignTypedData } from "wagmi";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { GrantData } from "~~/services/database/schema";
 import { EIP_712_DOMAIN, EIP_712_TYPES__SUBMIT_GRANT } from "~~/utils/eip712";
-import { PROPOSAL_STATUS } from "~~/utils/grants";
 import { notification } from "~~/utils/scaffold-eth";
 import { postMutationFetcher } from "~~/utils/swr";
 
@@ -20,9 +19,12 @@ type ReqBody = {
 export const SubmitModal = ({ grant, closeModal }: { grant: GrantData; closeModal: () => void }) => {
   const { address: connectedAddress } = useAccount();
   const [buildUrl, setBuildUrl] = useState("");
-  const { trigger: submitBuildLink } = useSWRMutation("/api/grants/submit", postMutationFetcher<ReqBody>);
+  const { trigger: submitBuildLink, isMutating: isSubmittingLink } = useSWRMutation(
+    "/api/grants/submit",
+    postMutationFetcher<ReqBody>,
+  );
 
-  const { signTypedDataAsync } = useSignTypedData();
+  const { signTypedDataAsync, isLoading: isSigningMessage } = useSignTypedData();
 
   const handleSubmit = async () => {
     const urlPattern = new RegExp("^(https://app\\.buidlguidl\\.com/build/)[a-z0-9-]+$");
@@ -30,16 +32,23 @@ export const SubmitModal = ({ grant, closeModal }: { grant: GrantData; closeModa
     if (!urlPattern.test(buildUrl.toLowerCase()))
       return notification.error("You must submit a valid build URL (https://app.buidlguidl.com/build/...)");
 
-    const signature = await signTypedDataAsync({
-      domain: EIP_712_DOMAIN,
-      types: EIP_712_TYPES__SUBMIT_GRANT,
-      primaryType: "Message",
-      message: {
-        grantId: grant.id,
-        action: PROPOSAL_STATUS.SUBMITTED,
-        link: buildUrl,
-      },
-    });
+    let signature;
+    try {
+      signature = await signTypedDataAsync({
+        domain: EIP_712_DOMAIN,
+        types: EIP_712_TYPES__SUBMIT_GRANT,
+        primaryType: "Message",
+        message: {
+          grantId: grant.id,
+          action: "submit",
+          link: buildUrl,
+        },
+      });
+    } catch (error) {
+      console.error("Error signing message", error);
+      notification.error("Error signing message");
+      return;
+    }
 
     let notificationId;
     try {
@@ -97,7 +106,11 @@ export const SubmitModal = ({ grant, closeModal }: { grant: GrantData; closeModa
           placeholder="https://app.buidlguidl.com/build/..."
           className="placeholder: pl-[14px] mt-4 w-full p-1 rounded-lg"
         />
-        <button className="mt-8 btn btn-sm btn-secondary" onClick={handleSubmit}>
+        <button
+          className="mt-8 btn btn-sm btn-secondary"
+          disabled={isSigningMessage || isSubmittingLink}
+          onClick={handleSubmit}
+        >
           Submit
         </button>
       </div>

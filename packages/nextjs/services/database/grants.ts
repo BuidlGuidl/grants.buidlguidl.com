@@ -5,8 +5,8 @@ import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";
 
 const firestoreDB = getFirestoreConnector();
 const grantsCollection = firestoreDB.collection("grants");
-// const getGrantsDoc = (id: string) => grantsCollection.doc(id);
-// const getGrantSnapshotById = (id: string) => getGrantsDoc(id).get();
+const getGrantsDoc = (id: string) => grantsCollection.doc(id);
+const getGrantSnapshotById = (id: string) => getGrantsDoc(id).get();
 
 export const createGrant = async (grantData: Omit<GrantData, "id" | "proposedAt" | "status">) => {
   try {
@@ -146,13 +146,27 @@ export const getGrantsStats = async () => {
   }
 };
 
+export const getGrantById = async (grantId: string) => {
+  try {
+    const grantSnapshot = await getGrantSnapshotById(grantId);
+    // TODO: Verify if `exists` value is really provided by firebase
+    if (!grantSnapshot.exists) {
+      return null;
+    }
+    return { id: grantSnapshot.id, ...grantSnapshot.data() } as GrantData;
+  } catch (error) {
+    console.error("Error getting grant by id:", error);
+    throw error;
+  }
+};
+
 export const submitGrantBuild = async (grantId: string, link: string) => {
   const status = PROPOSAL_STATUS.SUBMITTED;
   const grantActionTimeStamp = new Date().getTime();
   const grantActionTimeStampKey = (status + "At") as `${typeof status}At`;
 
   try {
-    await grantsCollection.doc(grantId).update({ status, link, [grantActionTimeStampKey]: grantActionTimeStamp });
+    await getGrantsDoc(grantId).update({ status, link, [grantActionTimeStampKey]: grantActionTimeStamp });
   } catch (error) {
     console.error("Error updating the grant status:", error);
     throw error;
