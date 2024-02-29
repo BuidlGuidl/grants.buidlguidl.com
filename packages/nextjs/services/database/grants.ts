@@ -149,7 +149,6 @@ export const getGrantsStats = async () => {
 export const getGrantById = async (grantId: string) => {
   try {
     const grantSnapshot = await getGrantSnapshotById(grantId);
-    // TODO: Verify if `exists` value is really provided by firebase
     if (!grantSnapshot.exists) {
       return null;
     }
