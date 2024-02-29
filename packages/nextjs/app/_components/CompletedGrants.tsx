@@ -32,21 +32,36 @@ const CompletedGrantCard = ({ title, description, askAmount, builder, link, comp
     </div>
   );
 };
-export const CompletedGrants = async () => {
+
+export const CompletedGrants = async ({ view = "full" }) => {
   const completedGrants = await getAllCompletedGrants();
+  const grantsToShow = view === "reduced" ? completedGrants.slice(0, 8) : completedGrants;
 
   return (
     <div className="bg-base-100">
-      <div className="container flex flex-col justify-center max-w-[95%] lg:max-w-7xl mx-auto py-12 gap-4">
-        <div className="self-center lg:self-start w-fit relative">
-          <h2 className="text-4xl lg:text-6xl text-center lg:text-left font-ppEditorial">Completed grants</h2>
-          <Image className="absolute -top-3 -right-7" src="/assets/sparkle.png" alt="sparkle" width={32} height={32} />
+      <div className="container max-w-[95%] lg:max-w-7xl mx-auto py-12 px-4 lg:px-0">
+        <div className="flex flex-col items-center lg:items-start">
+          <div className="text-4xl lg:text-6xl font-ppEditorial mb-6 text-center lg:text-left">
+            Completed grants
+            <Image src="/assets/sparkle.png" alt="sparkle" width={32} height={32} className="inline-block ml-4" />
+          </div>
         </div>
-        <div className="flex flex-col items-center justify-center md:flex-row md:flex-wrap md:items-start gap-6">
-          {completedGrants.map(grant => (
+        <div
+          className={`${
+            view === "reduced" ? "grant-container" : ""
+          } flex flex-col items-center justify-center md:flex-row md:flex-wrap md:items-start gap-6`}
+        >
+          {grantsToShow.map(grant => (
             <CompletedGrantCard key={grant.id} {...grant} />
           ))}
         </div>
+        {view === "reduced" && (
+          <div className="link w-full text-center mt-8 text-lg lg:text-xl">
+            <a href="/completed-grants" className="">
+              See all completed grants ({completedGrants.length})
+            </a>
+          </div>
+        )}
       </div>
     </div>
   );
