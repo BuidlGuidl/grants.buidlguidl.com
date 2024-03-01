@@ -11,8 +11,6 @@ type ReqBody = {
   signature?: `0x${string}`;
 };
 
-// TODO: Maybe we could fetch submmited build on BG app from firebase and check if its really present,
-// also check that build was actually submitted by the same builder
 export async function POST(req: Request) {
   try {
     const { grantId, link, signer, signature } = (await req.json()) as ReqBody;
