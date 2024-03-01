@@ -1,3 +1,5 @@
+import { useRef } from "react";
+import { ActionModal } from "./ActionModal";
 import { useSWRConfig } from "swr";
 import useSWRMutation from "swr/mutation";
 import { useAccount, useSignTypedData } from "wagmi";
@@ -53,6 +55,8 @@ export const GrantReview = ({ grant }: { grant: GrantDataWithBuilder }) => {
     postMutationFetcher<ReqBody>,
   );
   const { mutate } = useSWRConfig();
+  const modalRef = useRef<HTMLDialogElement>(null);
+
   const isLoading = isSigningMessage || isPostingNewGrant;
 
   const handleReviewGrant = async (grant: GrantData, action: ProposalStatusType) => {
@@ -128,6 +132,7 @@ export const GrantReview = ({ grant }: { grant: GrantDataWithBuilder }) => {
           {acceptLabel}
         </button>
       </div>
+      <ActionModal ref={modalRef} grant={grant} />
     </div>
   );
 };
