@@ -29,7 +29,7 @@ module.exports = {
             "--tooltip-tail": "6px",
           },
           ".link": {
-            textUnderlineOffset: "2px",
+            textUnderlineOffset: "6px",
           },
           ".link:hover": {
             opacity: "80%",

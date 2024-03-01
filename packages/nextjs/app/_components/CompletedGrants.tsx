@@ -32,8 +32,9 @@ const CompletedGrantCard = ({ title, description, askAmount, builder, link, comp
     </div>
   );
 };
-export const CompletedGrants = async () => {
-  const completedGrants = await getAllCompletedGrants();
+
+export const CompletedGrants = async ({ limit }: { limit?: number }) => {
+  const completedGrants = await getAllCompletedGrants(limit);
 
   return (
     <div className="bg-base-100">
@@ -42,11 +43,22 @@ export const CompletedGrants = async () => {
           <h2 className="text-4xl lg:text-6xl text-center lg:text-left font-ppEditorial">Completed grants</h2>
           <Image className="absolute -top-3 -right-7" src="/assets/sparkle.png" alt="sparkle" width={32} height={32} />
         </div>
-        <div className="flex flex-col items-center justify-center md:flex-row md:flex-wrap md:items-start gap-6">
+        <div
+          className={`${
+            limit ? "grant-container-rwd" : ""
+          } flex flex-col items-center justify-center md:flex-row md:flex-wrap md:items-start gap-6`}
+        >
           {completedGrants.map(grant => (
             <CompletedGrantCard key={grant.id} {...grant} />
           ))}
         </div>
+        {limit && (
+          <div className="link w-full text-center mt-8 text-lg lg:text-xl">
+            <a href="/completed-grants" className="">
+              See all completed grants
+            </a>
+          </div>
+        )}
       </div>
     </div>
   );
