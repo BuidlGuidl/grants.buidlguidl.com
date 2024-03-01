@@ -19,3 +19,11 @@ export const EIP_712_TYPES__REVIEW_GRANT = {
     { name: "action", type: "string" },
   ],
 } as const;
+
+export const EIP_712_TYPES__SUBMIT_GRANT = {
+  Message: [
+    { name: "grantId", type: "string" },
+    { name: "action", type: "string" },
+    { name: "link", type: "string" },
+  ],
+} as const;

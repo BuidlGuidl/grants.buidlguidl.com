@@ -5,8 +5,8 @@ import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";
 
 const firestoreDB = getFirestoreConnector();
 const grantsCollection = firestoreDB.collection("grants");
-// const getGrantsDoc = (id: string) => grantsCollection.doc(id);
-// const getGrantSnapshotById = (id: string) => getGrantsDoc(id).get();
+const getGrantsDoc = (id: string) => grantsCollection.doc(id);
+const getGrantSnapshotById = (id: string) => getGrantsDoc(id).get();
 
 export const createGrant = async (grantData: Omit<GrantData, "id" | "proposedAt" | "status">) => {
   try {
@@ -75,12 +75,15 @@ export const getAllGrantsForReview = async () => {
   }
 };
 
-export const getAllCompletedGrants = async () => {
+export const getAllCompletedGrants = async (limit?: number) => {
   try {
-    const grantsSnapshot = await grantsCollection
-      .where("status", "==", PROPOSAL_STATUS.COMPLETED)
-      .orderBy("completedAt", "desc")
-      .get();
+    let query = grantsCollection.where("status", "==", PROPOSAL_STATUS.COMPLETED).orderBy("completedAt", "desc");
+
+    if (limit) {
+      query = query.limit(limit);
+    }
+
+    const grantsSnapshot = await query.get();
     const grants: GrantData[] = [];
     grantsSnapshot.forEach(doc => {
       grants.push({ id: doc.id, ...doc.data() } as GrantData);
@@ -142,6 +145,32 @@ export const getGrantsStats = async () => {
     };
   } catch (error) {
     console.error("Error getting grants stats:", error);
+    throw error;
+  }
+};
+
+export const getGrantById = async (grantId: string) => {
+  try {
+    const grantSnapshot = await getGrantSnapshotById(grantId);
+    if (!grantSnapshot.exists) {
+      return null;
+    }
+    return { id: grantSnapshot.id, ...grantSnapshot.data() } as GrantData;
+  } catch (error) {
+    console.error("Error getting grant by id:", error);
+    throw error;
+  }
+};
+
+export const submitGrantBuild = async (grantId: string, link: string) => {
+  const status = PROPOSAL_STATUS.SUBMITTED;
+  const grantActionTimeStamp = new Date().getTime();
+  const grantActionTimeStampKey = (status + "At") as `${typeof status}At`;
+
+  try {
+    await getGrantsDoc(grantId).update({ status, link, [grantActionTimeStampKey]: grantActionTimeStamp });
+  } catch (error) {
+    console.error("Error updating the grant status:", error);
     throw error;
   }
 };
