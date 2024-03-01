@@ -1,5 +1,6 @@
 import { getFirestoreConnector } from "./firestoreDB";
 import { BuilderData, GrantData, GrantDataWithBuilder } from "./schema";
+import { AggregateField } from "firebase-admin/firestore";
 import { findUserByAddress } from "~~/services/database/users";
 import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";
 
@@ -129,12 +130,19 @@ export const getGrantsStats = async () => {
   // total_active_grants is the count of grants with status "approved"
   // total_grants is the summation of completed and active grants
   try {
-    const completedGrants = await getAllCompletedGrants();
-    const total_eth_granted = completedGrants.reduce((acc, grant) => acc + grant.askAmount, 0);
-    const total_completed_grants = completedGrants.length;
+    const completedGrantsQuery = grantsCollection.where("status", "==", PROPOSAL_STATUS.COMPLETED);
+    const completedGrantsSnapshot = await completedGrantsQuery.count().get();
+    const total_completed_grants = completedGrantsSnapshot.data().count;
 
-    const approvedGrantsSnapshot = await grantsCollection.where("status", "==", PROPOSAL_STATUS.APPROVED).get();
-    const total_active_grants = approvedGrantsSnapshot.size;
+    const totalEthGrantedQuery = completedGrantsQuery.aggregate({
+      totalEthGranted: AggregateField.sum("askAmount"),
+    });
+    const totalEthGrantedSnapshot = await totalEthGrantedQuery.get();
+    const total_eth_granted = totalEthGrantedSnapshot.data().totalEthGranted;
+
+    const approvedGrantsQuery = grantsCollection.where("status", "==", PROPOSAL_STATUS.APPROVED);
+    const approvedGrantsSnapshot = await approvedGrantsQuery.count().get();
+    const total_active_grants = approvedGrantsSnapshot.data().count;
 
     const total_grants = total_completed_grants + total_active_grants;
 
