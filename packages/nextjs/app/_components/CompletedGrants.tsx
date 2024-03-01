@@ -33,9 +33,8 @@ const CompletedGrantCard = ({ title, description, askAmount, builder, link, comp
   );
 };
 
-export const CompletedGrants = async ({ reducedView = false }) => {
-  const completedGrants = await getAllCompletedGrants();
-  const grantsToShow = reducedView ? completedGrants.slice(0, 8) : completedGrants;
+export const CompletedGrants = async ({ limit }: { limit?: number }) => {
+  const completedGrants = await getAllCompletedGrants(limit);
 
   return (
     <div className="bg-base-100">
@@ -46,17 +45,17 @@ export const CompletedGrants = async ({ reducedView = false }) => {
         </div>
         <div
           className={`${
-            reducedView ? "grant-container-rwd" : ""
+            limit ? "grant-container-rwd" : ""
           } flex flex-col items-center justify-center md:flex-row md:flex-wrap md:items-start gap-6`}
         >
-          {grantsToShow.map(grant => (
+          {completedGrants.map(grant => (
             <CompletedGrantCard key={grant.id} {...grant} />
           ))}
         </div>
-        {reducedView && (
+        {limit && (
           <div className="link w-full text-center mt-8 text-lg lg:text-xl">
             <a href="/completed-grants" className="">
-              See all completed grants ({completedGrants.length})
+              See all completed grants
             </a>
           </div>
         )}
