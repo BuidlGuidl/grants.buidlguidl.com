@@ -2,10 +2,12 @@ import { useRef } from "react";
 import { ActionModal } from "./ActionModal";
 import { useSWRConfig } from "swr";
 import useSWRMutation from "swr/mutation";
-import { useAccount, useSignTypedData } from "wagmi";
+import { parseEther } from "viem";
+import { useAccount, useSendTransaction, useSignTypedData } from "wagmi";
 import TelegramIcon from "~~/components/assets/TelegramIcon";
 import TwitterIcon from "~~/components/assets/TwitterIcon";
 import { Address } from "~~/components/scaffold-eth";
+import { useTransactor } from "~~/hooks/scaffold-eth";
 import { GrantData, GrantDataWithBuilder, SocialLinks } from "~~/services/database/schema";
 import { EIP_712_DOMAIN, EIP_712_TYPES__REVIEW_GRANT } from "~~/utils/eip712";
 import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";
@@ -57,7 +59,17 @@ export const GrantReview = ({ grant }: { grant: GrantDataWithBuilder }) => {
   const { mutate } = useSWRConfig();
   const modalRef = useRef<HTMLDialogElement>(null);
 
-  const isLoading = isSigningMessage || isPostingNewGrant;
+  const {
+    data: txnHash,
+    isLoading: isSendingTxn,
+    sendTransactionAsync,
+  } = useSendTransaction({
+    to: grant.builder,
+    value: parseEther((grant.askAmount / 2).toString()),
+  });
+  const sendTx = useTransactor();
+
+  const isLoading = isSigningMessage || isPostingNewGrant || isSendingTxn;
 
   const handleReviewGrant = async (grant: GrantData, action: ProposalStatusType) => {
     if (!address) {
@@ -74,6 +86,7 @@ export const GrantReview = ({ grant }: { grant: GrantDataWithBuilder }) => {
         message: {
           grantId: grant.id,
           action: action,
+          txHash: "",
         },
       });
     } catch (e) {
@@ -98,7 +111,6 @@ export const GrantReview = ({ grant }: { grant: GrantDataWithBuilder }) => {
 
   if (grant.status !== PROPOSAL_STATUS.PROPOSED && grant.status !== PROPOSAL_STATUS.SUBMITTED) return null;
 
-  const acceptStatus = grant.status === PROPOSAL_STATUS.PROPOSED ? PROPOSAL_STATUS.APPROVED : PROPOSAL_STATUS.COMPLETED;
   const acceptLabel = grant.status === PROPOSAL_STATUS.PROPOSED ? "Approve" : "Complete";
   return (
     <div className="border p-4 my-4">
@@ -126,13 +138,25 @@ export const GrantReview = ({ grant }: { grant: GrantDataWithBuilder }) => {
         </button>
         <button
           className={`btn btn-sm btn-success ${isLoading ? "opacity-50" : ""}`}
-          onClick={() => handleReviewGrant(grant, acceptStatus)}
+          onClick={() => {
+            if (modalRef.current) modalRef.current.showModal();
+          }}
           disabled={isLoading}
         >
           {acceptLabel}
         </button>
+        <button
+          className={`btn btn-sm btn-ghost ${isLoading ? "opacity-50" : ""}`}
+          onClick={async () => {
+            await sendTx(sendTransactionAsync);
+            if (modalRef.current) modalRef.current.showModal();
+          }}
+          disabled={isLoading}
+        >
+          Send 50%
+        </button>
       </div>
-      <ActionModal ref={modalRef} grant={grant} />
+      <ActionModal ref={modalRef} grant={grant} initialTxLink={txnHash?.hash} />
     </div>
   );
 };

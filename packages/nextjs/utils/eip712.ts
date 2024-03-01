@@ -1,7 +1,9 @@
+import scaffoldConfig from "~~/scaffold.config";
+
 export const EIP_712_DOMAIN = {
   name: "BuidlGuidl Grants",
   version: "1",
-  chainId: 10,
+  chainId: scaffoldConfig.targetNetworks[0].id,
 } as const;
 
 export const EIP_712_TYPES__APPLY_FOR_GRANT = {
@@ -17,6 +19,7 @@ export const EIP_712_TYPES__REVIEW_GRANT = {
   Message: [
     { name: "grantId", type: "string" },
     { name: "action", type: "string" },
+    { name: "txHash", type: "string" },
   ],
 } as const;
 
