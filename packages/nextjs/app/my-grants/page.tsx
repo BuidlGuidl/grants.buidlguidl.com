@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { SubmitModal } from "./_components/SubmitModal";
 import { NextPage } from "next";
 import useSWR from "swr";
 import { useAccount } from "wagmi";
@@ -14,10 +16,17 @@ const badgeBgColor = {
   [PROPOSAL_STATUS.REJECTED]: "bg-error",
 };
 
-// ToDo. Action (v1.0 = submit grant after completion)
 const MyGrants: NextPage = () => {
   const { address } = useAccount();
   const { data: builderGrants, isLoading } = useSWR<GrantData[]>(address ? `/api/builders/${address}/grants` : null);
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [currentGrant, setCurrentGrant] = useState<GrantData | null>(null);
+
+  const openModal = (grant: GrantData) => {
+    setCurrentGrant(grant);
+    setModalIsOpen(true);
+  };
 
   return (
     <div className="container mx-auto max-w-screen-md mt-12">
@@ -32,8 +41,17 @@ const MyGrants: NextPage = () => {
           </h3>
           <p>{grant.description}</p>
           <p className={`badge ${badgeBgColor[grant.status]}`}>{grant.status}</p>
+          {grant.status === PROPOSAL_STATUS.APPROVED && (
+            <button onClick={() => openModal(grant)} className="btn btn-primary float-right">
+              Submit build
+            </button>
+          )}
         </div>
       ))}
+
+      {modalIsOpen && currentGrant !== null && (
+        <SubmitModal grant={currentGrant} closeModal={() => setModalIsOpen(false)} />
+      )}
     </div>
   );
 };
