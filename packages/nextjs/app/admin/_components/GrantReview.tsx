@@ -48,7 +48,7 @@ export const GrantReview = ({ grant }: { grant: GrantDataWithBuilder }) => {
   });
   const sendTx = useTransactor();
 
-  const { handleReviewGrant, isLoading } = useReviewGrant(grant);
+  const { handleReviewGrant: handleRejectGrant, isLoading } = useReviewGrant(grant);
 
   if (grant.status !== PROPOSAL_STATUS.PROPOSED && grant.status !== PROPOSAL_STATUS.SUBMITTED) return null;
 
@@ -72,7 +72,7 @@ export const GrantReview = ({ grant }: { grant: GrantDataWithBuilder }) => {
       <div className="flex gap-4 mt-4 justify-between">
         <button
           className={`btn btn-sm btn-error ${isLoading ? "opacity-50" : ""}`}
-          onClick={() => handleReviewGrant(PROPOSAL_STATUS.REJECTED)}
+          onClick={() => handleRejectGrant(PROPOSAL_STATUS.REJECTED)}
           disabled={isLoading}
         >
           Reject
