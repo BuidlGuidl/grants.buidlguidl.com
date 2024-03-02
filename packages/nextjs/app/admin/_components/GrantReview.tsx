@@ -69,7 +69,7 @@ export const GrantReview = ({ grant }: { grant: GrantDataWithBuilder }) => {
         <BuilderSocials socialLinks={grant.builderData?.socialLinks} />
       </div>
       <p>{grant.description}</p>
-      <div className="flex gap-4 mt-4 justify-end">
+      <div className="flex gap-4 mt-4 justify-between">
         <button
           className={`btn btn-sm btn-error ${isLoading ? "opacity-50" : ""}`}
           onClick={() => handleReviewGrant(PROPOSAL_STATUS.REJECTED)}
@@ -77,26 +77,28 @@ export const GrantReview = ({ grant }: { grant: GrantDataWithBuilder }) => {
         >
           Reject
         </button>
-        <button
-          className={`btn btn-sm btn-success ${isLoading ? "opacity-50" : ""}`}
-          onClick={() => {
-            if (modalRef.current) modalRef.current.showModal();
-          }}
-          disabled={isLoading}
-        >
-          {acceptLabel}
-        </button>
-        <button
-          className={`btn btn-sm btn-neutral ${isLoading ? "opacity-50" : ""}`}
-          onClick={async () => {
-            const resHash = await sendTx(sendTransactionAsync);
-            // Transactor eats the error, so we need to handle by checking resHash
-            if (resHash && modalRef.current) modalRef.current.showModal();
-          }}
-          disabled={isLoading}
-        >
-          Send 50%
-        </button>
+        <div className="flex gap-4">
+          <button
+            className={`btn btn-sm btn-success ${isLoading ? "opacity-50" : ""}`}
+            onClick={() => {
+              if (modalRef.current) modalRef.current.showModal();
+            }}
+            disabled={isLoading}
+          >
+            {acceptLabel}
+          </button>
+          <button
+            className={`btn btn-sm btn-neutral ${isLoading ? "opacity-50" : ""}`}
+            onClick={async () => {
+              const resHash = await sendTx(sendTransactionAsync);
+              // Transactor eats the error, so we need to handle by checking resHash
+              if (resHash && modalRef.current) modalRef.current.showModal();
+            }}
+            disabled={isLoading}
+          >
+            Send 50%
+          </button>
+        </div>
       </div>
       <ActionModal ref={modalRef} grant={grant} initialTxLink={txnHash?.hash} />
     </div>
