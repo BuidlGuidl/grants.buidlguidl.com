@@ -1,24 +1,14 @@
 import { useRef } from "react";
+import { useReviewGrant } from "../hooks/useReviewGrant";
 import { ActionModal } from "./ActionModal";
-import { useSWRConfig } from "swr";
-import useSWRMutation from "swr/mutation";
 import { parseEther } from "viem";
-import { useAccount, useSendTransaction, useSignTypedData } from "wagmi";
+import { useSendTransaction } from "wagmi";
 import TelegramIcon from "~~/components/assets/TelegramIcon";
 import TwitterIcon from "~~/components/assets/TwitterIcon";
 import { Address } from "~~/components/scaffold-eth";
 import { useTransactor } from "~~/hooks/scaffold-eth";
-import { GrantData, GrantDataWithBuilder, SocialLinks } from "~~/services/database/schema";
-import { EIP_712_DOMAIN, EIP_712_TYPES__REVIEW_GRANT } from "~~/utils/eip712";
-import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";
-import { notification } from "~~/utils/scaffold-eth";
-import { postMutationFetcher } from "~~/utils/swr";
-
-type ReqBody = {
-  signer: string;
-  signature: `0x${string}`;
-  action: ProposalStatusType;
-};
+import { GrantDataWithBuilder, SocialLinks } from "~~/services/database/schema";
+import { PROPOSAL_STATUS } from "~~/utils/grants";
 
 const BuilderSocials = ({ socialLinks }: { socialLinks?: SocialLinks }) => {
   if (!socialLinks) return null;
@@ -50,64 +40,15 @@ const BuilderSocials = ({ socialLinks }: { socialLinks?: SocialLinks }) => {
 };
 
 export const GrantReview = ({ grant }: { grant: GrantDataWithBuilder }) => {
-  const { address } = useAccount();
-  const { signTypedDataAsync, isLoading: isSigningMessage } = useSignTypedData();
-  const { trigger: postReviewGrant, isMutating: isPostingNewGrant } = useSWRMutation(
-    `/api/grants/${grant.id}/review`,
-    postMutationFetcher<ReqBody>,
-  );
-  const { mutate } = useSWRConfig();
   const modalRef = useRef<HTMLDialogElement>(null);
 
-  const {
-    data: txnHash,
-    isLoading: isSendingTxn,
-    sendTransactionAsync,
-  } = useSendTransaction({
+  const { data: txnHash, sendTransactionAsync } = useSendTransaction({
     to: grant.builder,
     value: parseEther((grant.askAmount / 2).toString()),
   });
   const sendTx = useTransactor();
 
-  const isLoading = isSigningMessage || isPostingNewGrant || isSendingTxn;
-
-  const handleReviewGrant = async (grant: GrantData, action: ProposalStatusType) => {
-    if (!address) {
-      notification.error("Please connect your wallet");
-      return;
-    }
-
-    let signature;
-    try {
-      signature = await signTypedDataAsync({
-        domain: EIP_712_DOMAIN,
-        types: EIP_712_TYPES__REVIEW_GRANT,
-        primaryType: "Message",
-        message: {
-          grantId: grant.id,
-          action: action,
-          txHash: "",
-        },
-      });
-    } catch (e) {
-      console.error("Error signing message", e);
-      notification.error("Error signing message");
-      return;
-    }
-
-    let notificationId;
-    try {
-      notificationId = notification.loading("Submitting review");
-      await postReviewGrant({ signer: address, signature, action });
-      await mutate("/api/grants/review");
-      notification.remove(notificationId);
-      notification.success(`Grant reviewed: ${action}`);
-    } catch (error) {
-      notification.error("Error reviewing grant");
-    } finally {
-      if (notificationId) notification.remove(notificationId);
-    }
-  };
+  const { handleReviewGrant, isLoading } = useReviewGrant(grant);
 
   if (grant.status !== PROPOSAL_STATUS.PROPOSED && grant.status !== PROPOSAL_STATUS.SUBMITTED) return null;
 
@@ -131,7 +72,7 @@ export const GrantReview = ({ grant }: { grant: GrantDataWithBuilder }) => {
       <div className="flex gap-4 mt-4 justify-end">
         <button
           className={`btn btn-sm btn-error ${isLoading ? "opacity-50" : ""}`}
-          onClick={() => handleReviewGrant(grant, PROPOSAL_STATUS.REJECTED)}
+          onClick={() => handleReviewGrant(PROPOSAL_STATUS.REJECTED)}
           disabled={isLoading}
         >
           Reject
