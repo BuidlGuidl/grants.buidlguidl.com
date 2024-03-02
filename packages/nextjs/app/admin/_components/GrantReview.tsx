@@ -148,8 +148,9 @@ export const GrantReview = ({ grant }: { grant: GrantDataWithBuilder }) => {
         <button
           className={`btn btn-sm btn-ghost ${isLoading ? "opacity-50" : ""}`}
           onClick={async () => {
-            await sendTx(sendTransactionAsync);
-            if (modalRef.current) modalRef.current.showModal();
+            const resHash = await sendTx(sendTransactionAsync);
+            // Transactor eats the error, so we need to handle by checking resHash
+            if (resHash && modalRef.current) modalRef.current.showModal();
           }}
           disabled={isLoading}
         >
