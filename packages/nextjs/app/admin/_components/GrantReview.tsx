@@ -146,7 +146,7 @@ export const GrantReview = ({ grant }: { grant: GrantDataWithBuilder }) => {
           {acceptLabel}
         </button>
         <button
-          className={`btn btn-sm btn-ghost ${isLoading ? "opacity-50" : ""}`}
+          className={`btn btn-sm btn-neutral ${isLoading ? "opacity-50" : ""}`}
           onClick={async () => {
             const resHash = await sendTx(sendTransactionAsync);
             // Transactor eats the error, so we need to handle by checking resHash
