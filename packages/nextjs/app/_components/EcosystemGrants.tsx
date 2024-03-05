@@ -20,7 +20,7 @@ const EcosystemGrantsCard = ({
         <Image src={imageLink} alt={title} fill={true} className="rounded-tl-2xl rounded-tr-2xl" />
         <p className="m-0 absolute bottom-4 left-4 text-2xl md:text-3xl lg:text-4xl font-ppEditorial">{title}</p>
       </div>
-      <div className="flex-1 flex flex-col items-start justify-between space-y-4 p-4">
+      <div className="flex-1 flex flex-col items-start justify-between space-y-4 p-5">
         <p className="text-sm lg:text-base m-0 font-spaceMono font-normal leading-5">
           {description ||
             "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.Lorem ipsum dolor sit amet, qui minim labore adipisicing."}
@@ -42,9 +42,11 @@ const EcosystemGrantsCard = ({
 export const EcosystemGrants = () => {
   return (
     <div>
-      <div className="container flex flex-col justify-center max-w-[90%] lg:max-w-7xl mx-auto py-12 lg:pt-20 lg:pb-28 lg:px-4 gap-10">
+      <div className="container flex flex-col justify-center max-w-[90%] lg:max-w-7xl mx-auto py-12 lg:pt-20 lg:pb-28 lg:px-4 gap-6">
         <div className="self-center lg:self-start w-fit relative">
-          <h2 className="text-4xl lg:text-6xl text-center lg:text-left font-ppEditorial">Ecosystem impact grants</h2>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl text-center lg:text-left font-ppEditorial">
+            Ecosystem impact grants
+          </h2>
           <Image className="absolute -top-3 -right-7" src="/assets/sparkle.png" alt="sparkle" width={32} height={32} />
         </div>
 

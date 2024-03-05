@@ -27,7 +27,7 @@ export const CommunityGrant = () => {
           </div>
           {/* Description */}
           <div className="text-center font-spaceMono px-1 max-w-xs sm:max-w-lg lg:max-w-none lg:w-11/12 lg:px-0 lg:text-left space-y-5">
-            <p className="m-0 text-xs md:text-sm lg:text-lg">
+            <p className="m-0 text-xs md:text-sm lg:text-base">
               Are you a BG member eager to make impact in the ecosystem? At BuidlGuidl, we&apos;re excited to support
               your builds. We offer sponsorship of up to 1 ETH for projects that drive the community forward.
             </p>
