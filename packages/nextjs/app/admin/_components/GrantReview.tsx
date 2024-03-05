@@ -53,8 +53,7 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
     value: parseEther((grant.askAmount / 2).toString()),
   });
   const sendTx = useTransactor();
-
-  const { handleReviewGrant: handleRejectGrant, isLoading } = useReviewGrant(grant);
+  const { handleReviewGrant, isLoading } = useReviewGrant(grant);
 
   if (grant.status !== PROPOSAL_STATUS.PROPOSED && grant.status !== PROPOSAL_STATUS.SUBMITTED) return null;
 
@@ -81,7 +80,7 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
       <div className="flex gap-4 mt-4 justify-between">
         <button
           className={`btn btn-sm btn-error ${isLoading ? "opacity-50" : ""}`}
-          onClick={() => handleRejectGrant(PROPOSAL_STATUS.REJECTED)}
+          onClick={() => handleReviewGrant(PROPOSAL_STATUS.REJECTED)}
           disabled={isLoading}
         >
           Reject
