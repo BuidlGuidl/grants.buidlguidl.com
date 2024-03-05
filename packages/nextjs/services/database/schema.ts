@@ -48,6 +48,8 @@ export type GrantWithoutTimestamps = {
   builder: string;
   link?: string;
   status: "proposed" | "approved" | "submitted" | "completed" | "rejected";
+  approvedTx?: string;
+  completedTx?: string;
 };
 
 export type GrantData = Simplify<

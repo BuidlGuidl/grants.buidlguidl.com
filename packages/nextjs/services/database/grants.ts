@@ -109,15 +109,26 @@ export const getAllActiveGrants = async () => {
   }
 };
 
-export const reviewGrant = async (grantId: string, action: ProposalStatusType) => {
+export const reviewGrant = async (grantId: string, action: ProposalStatusType, txHash: string) => {
   try {
     const validActions = Object.values(PROPOSAL_STATUS);
     if (!validActions.includes(action)) {
       throw new Error(`Invalid action: ${action}`);
     }
+
+    const updateTxHash: Record<string, string> = {};
+    if (action === PROPOSAL_STATUS.APPROVED) {
+      updateTxHash["approvedTx"] = txHash;
+    }
+    if (action === PROPOSAL_STATUS.COMPLETED) {
+      updateTxHash["completedTx"] = txHash;
+    }
+
     const grantActionTimeStamp = new Date().getTime();
     const grantActionTimeStampKey = (action + "At") as `${typeof action}At`;
-    await grantsCollection.doc(grantId).update({ status: action, [grantActionTimeStampKey]: grantActionTimeStamp });
+    await grantsCollection
+      .doc(grantId)
+      .update({ status: action, [grantActionTimeStampKey]: grantActionTimeStamp, ...updateTxHash });
   } catch (error) {
     console.error("Error approving the grant:", error);
     throw error;
