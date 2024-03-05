@@ -79,15 +79,6 @@ export const GrantReview = ({ grant }: { grant: GrantDataWithBuilder }) => {
         </button>
         <div className="flex gap-4">
           <button
-            className={`btn btn-sm btn-success ${isLoading ? "opacity-50" : ""}`}
-            onClick={() => {
-              if (modalRef.current) modalRef.current.showModal();
-            }}
-            disabled={isLoading}
-          >
-            {acceptLabel}
-          </button>
-          <button
             className={`btn btn-sm btn-neutral ${isLoading ? "opacity-50" : ""}`}
             onClick={async () => {
               const resHash = await sendTx(sendTransactionAsync);
@@ -97,6 +88,15 @@ export const GrantReview = ({ grant }: { grant: GrantDataWithBuilder }) => {
             disabled={isLoading}
           >
             Send 50%
+          </button>
+          <button
+            className={`btn btn-sm btn-success ${isLoading ? "opacity-50" : ""}`}
+            onClick={() => {
+              if (modalRef.current) modalRef.current.showModal();
+            }}
+            disabled={isLoading}
+          >
+            {acceptLabel}
           </button>
         </div>
       </div>
