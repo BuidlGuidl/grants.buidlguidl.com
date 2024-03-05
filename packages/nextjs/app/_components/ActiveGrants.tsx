@@ -25,7 +25,7 @@ export const ActiveGrants = async () => {
   }
 
   return (
-    <div className="container flex flex-col justify-center max-w-[90%] xl:max-w-7xl mx-auto py-16 gap-4">
+    <div className="container flex flex-col justify-center max-w-[90%] xl:max-w-7xl mx-auto py-16 lg:pt-20 lg:pb-28 gap-10">
       <div className="self-center lg:self-start w-fit relative">
         <h2 className="text-4xl lg:text-6xl text-center lg:text-left font-ppEditorial">WIP grants</h2>
         <Image className="absolute -top-3 -right-7" src="/assets/sparkle.png" alt="sparkle" width={32} height={32} />

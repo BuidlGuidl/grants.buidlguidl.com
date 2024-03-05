@@ -4,7 +4,7 @@ import Link from "next/link";
 export const CommunityGrant = () => {
   return (
     <div id="communityGrants" className="bg-secondary">
-      <div className="container max-w-[90%] sm:max-w-md lg:max-w-7xl m-auto xl:pl-18 lg:pl-8 flex flex-col-reverse lg:flex-row gap-5 lg:gap-0 max-h-[30rem] my-6 lg:my-0">
+      <div className="container max-w-[90%] sm:max-w-md lg:max-w-7xl m-auto xl:pl-18 lg:pl-8 lg:pt-10 flex flex-col-reverse lg:flex-row gap-5 lg:gap-0 my-6 lg:my-0">
         {/* Left section(Title, desc and btn) */}
         <div className="my-4 lg:py-16 space-y-2 lg:max-w-[40%] flex flex-col items-center lg:items-start">
           {/* Title  */}
