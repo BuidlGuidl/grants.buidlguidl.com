@@ -3,11 +3,18 @@ import { recoverTypedDataAddress } from "viem";
 import { reviewGrant } from "~~/services/database/grants";
 import { findUserByAddress } from "~~/services/database/users";
 import { EIP_712_DOMAIN, EIP_712_TYPES__REVIEW_GRANT } from "~~/utils/eip712";
-import { PROPOSAL_STATUS } from "~~/utils/grants";
+import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";
+
+type ReqBody = {
+  signer: string;
+  signature: `0x${string}`;
+  action: ProposalStatusType;
+  txHash: string;
+};
 
 export async function POST(req: NextRequest, { params }: { params: { grantId: string } }) {
   const { grantId } = params;
-  const { signature, signer, action } = await req.json();
+  const { signature, signer, action, txHash } = (await req.json()) as ReqBody;
 
   // Validate action is valid
   const validActions = Object.values(PROPOSAL_STATUS);
@@ -24,6 +31,7 @@ export async function POST(req: NextRequest, { params }: { params: { grantId: st
     message: {
       grantId: grantId,
       action: action,
+      txHash,
     },
     signature,
   });
@@ -42,7 +50,7 @@ export async function POST(req: NextRequest, { params }: { params: { grantId: st
   }
 
   try {
-    await reviewGrant(grantId, action);
+    await reviewGrant(grantId, action, txHash);
   } catch (error) {
     console.error("Error approving grant", error);
     return NextResponse.json({ error: "Error approving grant" }, { status: 500 });
