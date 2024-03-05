@@ -2,37 +2,17 @@
 
 import { useState } from "react";
 import { GrantReview } from "./_components/GrantReview";
+import { useBatchReviewGrants } from "./hooks/useBatchReviewGrants";
 import useSWR from "swr";
-import useSWRMutation from "swr/mutation";
-import { useAccount, useSignTypedData } from "wagmi";
 import { GrantDataWithBuilder } from "~~/services/database/schema";
-import { EIP_712_DOMAIN, EIP_712_TYPES__REVIEW_GRANT_BATCH } from "~~/utils/eip712";
-import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";
-import { getParsedError, notification } from "~~/utils/scaffold-eth";
-import { postMutationFetcher } from "~~/utils/swr";
+import { PROPOSAL_STATUS } from "~~/utils/grants";
+import { notification } from "~~/utils/scaffold-eth";
 
-type BatchReqBody = {
-  signer: string;
-  signature: `0x${string}`;
-  reviews: {
-    grantId: string;
-    action: ProposalStatusType;
-    txHash: string;
-  }[];
-};
-
-// ToDo. "Protect" with address header or PROTECT with signing the read.
 const AdminPage = () => {
-  // State to keep track of selected grants
-  const [selectedGrants, setSelectedGrants] = useState<string[]>([]);
+  const [selectedApproveGrants, setSelectedApproveGrants] = useState<string[]>([]);
+  const [selectedCompleteGrants, setSelectedCompleteGrants] = useState<string[]>([]);
 
-  const { signTypedDataAsync, isLoading: isSigningMessage } = useSignTypedData();
-
-  const {
-    data,
-    isLoading,
-    mutate: mutateGetGrantsReivew,
-  } = useSWR<{ data: GrantDataWithBuilder[] }>("/api/grants/review", {
+  const { data, isLoading } = useSWR<{ data: GrantDataWithBuilder[] }>("/api/grants/review", {
     onError: error => {
       console.error("Error fetching grants", error);
       notification.error("Error getting grants data");
@@ -40,67 +20,23 @@ const AdminPage = () => {
   });
   const grants = data?.data;
 
-  const { address: connectedAddress } = useAccount();
-  const { trigger: postBatchReviewGrant, isMutating: isPostingBatchRevewGrant } = useSWRMutation(
-    `/api/grants/review`,
-    postMutationFetcher<BatchReqBody>,
-  );
+  const { handleBatchReview, isLoading: isBatchActionLoading } = useBatchReviewGrants();
 
-  // Toggle grant selection
-  const toggleGrantSelection = (grantId: string) => {
-    if (selectedGrants.includes(grantId)) {
-      setSelectedGrants(selectedGrants.filter(id => id !== grantId));
-    } else {
-      setSelectedGrants([...selectedGrants, grantId]);
+  const toggleGrantSelection = (grantId: string, action: "approve" | "complete") => {
+    if (action === "approve") {
+      if (selectedApproveGrants.includes(grantId)) {
+        setSelectedApproveGrants(selectedApproveGrants.filter(id => id !== grantId));
+      } else {
+        setSelectedApproveGrants([...selectedApproveGrants, grantId]);
+      }
+    } else if (action === "complete") {
+      if (selectedCompleteGrants.includes(grantId)) {
+        setSelectedCompleteGrants(selectedCompleteGrants.filter(id => id !== grantId));
+      } else {
+        setSelectedCompleteGrants([...selectedCompleteGrants, grantId]);
+      }
     }
   };
-
-  const handleBatchAction = async () => {
-    if (!connectedAddress) {
-      notification.error("No connected address");
-      return;
-    }
-
-    let notificationId;
-    try {
-      const grantReviews = selectedGrants.map(grantId => {
-        return {
-          grantId,
-          action: PROPOSAL_STATUS.APPROVED,
-          txHash: "0x12345",
-        };
-      });
-      // Construct the message for EIP-712 signature
-      const message = {
-        reviews: grantReviews,
-      };
-      const signature = await signTypedDataAsync({
-        domain: EIP_712_DOMAIN,
-        types: EIP_712_TYPES__REVIEW_GRANT_BATCH,
-        primaryType: "Message",
-        message: message,
-      });
-
-      notificationId = notification.loading("Submitting review");
-      await postBatchReviewGrant({
-        signature: signature,
-        reviews: grantReviews,
-        signer: connectedAddress,
-      });
-      await mutateGetGrantsReivew();
-
-      notification.remove(notificationId);
-      notification.success(`Grants reviews successfully submitted!`);
-      console.log("Signature", signature);
-    } catch (error) {
-      console.error("Error sending batch action", error);
-      const parsedError = getParsedError(error);
-      notification.error(parsedError);
-    } finally {
-      if (notificationId) notification.remove(notificationId);
-    }
-  };
-  const isBatchBtnLoading = isSigningMessage || isPostingBatchRevewGrant;
 
   const completedGrants = grants?.filter(grant => grant.status === PROPOSAL_STATUS.SUBMITTED);
   const newGrants = grants?.filter(grant => grant.status === PROPOSAL_STATUS.PROPOSED);
@@ -111,21 +47,44 @@ const AdminPage = () => {
       {isLoading && <span className="loading loading-spinner"></span>}
       {grants && (
         <div className="flex flex-col gap-4 mt-4">
-          <h2 className="font-bold">Proposals submitted as completed:</h2>
-          {completedGrants?.length === 0 && <p className="m-0">No completed grants</p>}
-          {completedGrants?.map(grant => (
-            <GrantReview key={grant.id} grant={grant} />
-          ))}
+          <div>
+            <div className="flex justify-between items-center">
+              <h2 className="font-bold">Proposals submitted as completed:</h2>
+              <button
+                className="btn btn-sm btn-primary"
+                onClick={async () => {
+                  await handleBatchReview(selectedCompleteGrants, "completed");
+                  setSelectedCompleteGrants([]);
+                }}
+                disabled={selectedCompleteGrants.length === 0 || isBatchActionLoading}
+              >
+                {isBatchActionLoading && <span className="loading loading-spinner"></span>}
+                Send batch complete
+              </button>
+            </div>
+            {completedGrants?.length === 0 && <p className="m-0">No completed grants</p>}
+            {completedGrants?.map(grant => (
+              <GrantReview
+                key={grant.id}
+                grant={grant}
+                selected={selectedCompleteGrants.includes(grant.id)}
+                toggleSelection={() => toggleGrantSelection(grant.id, "complete")}
+              />
+            ))}
+          </div>
           <div>
             <div className="flex justify-between items-center">
               <h2 className="font-bold">New grant proposal:</h2>
               <button
                 className="btn btn-sm btn-primary"
-                onClick={handleBatchAction}
-                disabled={selectedGrants.length === 0 || isBatchBtnLoading}
+                onClick={async () => {
+                  await handleBatchReview(selectedApproveGrants, "approved");
+                  setSelectedApproveGrants([]);
+                }}
+                disabled={selectedApproveGrants.length === 0 || isBatchActionLoading}
               >
-                {isBatchBtnLoading && <span className="loading loading-spinner"></span>}
-                Send batch action
+                {isBatchActionLoading && <span className="loading loading-spinner"></span>}
+                Send batch approve
               </button>
             </div>
             {newGrants?.length === 0 && <p className="m-0">No new grants</p>}
@@ -133,8 +92,8 @@ const AdminPage = () => {
               <GrantReview
                 key={grant.id}
                 grant={grant}
-                selected={selectedGrants.includes(grant.id)}
-                toggleSelection={() => toggleGrantSelection(grant.id)}
+                selected={selectedApproveGrants.includes(grant.id)}
+                toggleSelection={() => toggleGrantSelection(grant.id, "approve")}
               />
             ))}
           </div>
