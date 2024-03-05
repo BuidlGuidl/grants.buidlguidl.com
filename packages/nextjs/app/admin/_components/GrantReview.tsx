@@ -39,7 +39,13 @@ const BuilderSocials = ({ socialLinks }: { socialLinks?: SocialLinks }) => {
   );
 };
 
-export const GrantReview = ({ grant }: { grant: GrantDataWithBuilder }) => {
+type GrantReviewProps = {
+  grant: GrantDataWithBuilder;
+  // TODO: make this permanent
+  selected?: boolean;
+  toggleSelection?: () => void;
+};
+export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewProps) => {
   const modalRef = useRef<HTMLDialogElement>(null);
 
   const { data: txnHash, sendTransactionAsync } = useSendTransaction({
@@ -55,15 +61,18 @@ export const GrantReview = ({ grant }: { grant: GrantDataWithBuilder }) => {
   const acceptLabel = grant.status === PROPOSAL_STATUS.PROPOSED ? "Approve" : "Complete";
   return (
     <div className="border p-4 my-4">
-      <h3 className="font-bold">
-        {grant.title}
-        <span className="text-sm text-gray-500 ml-2">({grant.id})</span>
-        {grant.link && (
-          <a href={grant.link} className="ml-4 underline" target="_blank" rel="noopener noreferrer">
-            View Build
-          </a>
-        )}
-      </h3>
+      <div className="flex justify-between">
+        <h3 className="font-bold">
+          {grant.title}
+          <span className="text-sm text-gray-500 ml-2">({grant.id})</span>
+          {grant.link && (
+            <a href={grant.link} className="ml-4 underline" target="_blank" rel="noopener noreferrer">
+              View Build
+            </a>
+          )}
+        </h3>
+        <input type="checkbox" className="checkbox checkbox-primary" checked={selected} onChange={toggleSelection} />
+      </div>
       <div className="flex gap-4 items-center">
         <Address address={grant.builder} link={`https://app.buidlguidl.com/builders/${grant.builder}`} />
         <BuilderSocials socialLinks={grant.builderData?.socialLinks} />
