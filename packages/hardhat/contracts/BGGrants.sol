@@ -23,7 +23,7 @@ contract BGGrants is Ownable, ReentrancyGuard {
         uint256 equalAmount = totalAmount / rLength;
         uint256 remainingAmount = totalAmount % rLength;
 
-        if (rLength > 25 || rLength < 2) revert INSUFFICIENT_RECIPIENT_COUNT();
+        if (rLength > 25) revert INSUFFICIENT_RECIPIENT_COUNT();
 
         for (uint256 i = 0; i < rLength; ) {
             if (recipients[i] == address(0)) revert INVALID_RECIPIENT();
