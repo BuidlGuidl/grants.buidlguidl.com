@@ -55,16 +55,18 @@ const AdminPage = () => {
           <div>
             <div className="flex justify-between items-center">
               <h2 className="font-bold">Proposals submitted as completed:</h2>
-              <button
-                className="btn btn-sm btn-primary"
-                onClick={async () => {
-                  setModalBtnLabel("Complete");
-                  if (modalRef.current) modalRef.current.showModal();
-                }}
-                disabled={selectedCompleteGrants.length === 0}
-              >
-                Send batch complete
-              </button>
+              {completedGrants?.length !== 0 && (
+                <button
+                  className="btn btn-sm btn-primary"
+                  onClick={async () => {
+                    setModalBtnLabel("Complete");
+                    if (modalRef.current) modalRef.current.showModal();
+                  }}
+                  disabled={selectedCompleteGrants.length === 0}
+                >
+                  Batch Complete
+                </button>
+              )}
             </div>
             {completedGrants?.length === 0 && <p className="m-0">No completed grants</p>}
             {completedGrants?.map(grant => (
@@ -79,16 +81,18 @@ const AdminPage = () => {
           <div>
             <div className="flex justify-between items-center">
               <h2 className="font-bold">New grant proposal:</h2>
-              <button
-                className="btn btn-sm btn-primary"
-                onClick={async () => {
-                  setModalBtnLabel("Approve");
-                  if (modalRef.current) modalRef.current.showModal();
-                }}
-                disabled={selectedApproveGrants.length === 0}
-              >
-                Send batch approve
-              </button>
+              {newGrants?.length !== 0 && (
+                <button
+                  className="btn btn-sm btn-primary"
+                  onClick={async () => {
+                    setModalBtnLabel("Approve");
+                    if (modalRef.current) modalRef.current.showModal();
+                  }}
+                  disabled={selectedApproveGrants.length === 0}
+                >
+                  Batch Approve
+                </button>
+              )}
             </div>
             {newGrants?.length === 0 && <p className="m-0">No new grants</p>}
             {newGrants?.map(grant => (
