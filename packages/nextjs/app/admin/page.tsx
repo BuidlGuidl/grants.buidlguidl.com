@@ -4,6 +4,8 @@ import { useRef, useState } from "react";
 import { BatchActionModal } from "./_components/BatchActionModal";
 import { GrantReview } from "./_components/GrantReview";
 import useSWR from "swr";
+import { parseEther } from "viem";
+import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import { GrantDataWithBuilder } from "~~/services/database/schema";
 import { PROPOSAL_STATUS } from "~~/utils/grants";
 import { notification } from "~~/utils/scaffold-eth";
@@ -43,6 +45,28 @@ const AdminPage = () => {
     }
   };
 
+  const { data: txResult, writeAsync: splitEqualETH } = useScaffoldContractWrite({
+    contractName: "BGGrants",
+    functionName: "splitEqualETH",
+    args: [undefined],
+  });
+
+  const handleBatchClick = async (filteredGrants: GrantDataWithBuilder[], action: "approve" | "complete") => {
+    const selectedGrantsWithMetaData = filteredGrants.filter(grant => {
+      if (action === "approve") return selectedApproveGrants.includes(grant.id);
+      return selectedCompleteGrants.includes(grant.id);
+    });
+    const builders = selectedGrantsWithMetaData.map(grant => grant.builder);
+    const totalAmount = selectedGrantsWithMetaData.reduce((acc, grant) => acc + grant.askAmount, 0);
+    const value = parseEther((totalAmount / 2).toString());
+    const hash = await splitEqualETH({
+      args: [builders],
+      value,
+    });
+    setModalBtnLabel(action === "approve" ? "Approve" : "Complete");
+    if (hash && modalRef.current) modalRef.current.showModal();
+  };
+
   const completedGrants = grants?.filter(grant => grant.status === PROPOSAL_STATUS.SUBMITTED);
   const newGrants = grants?.filter(grant => grant.status === PROPOSAL_STATUS.PROPOSED);
 
@@ -55,13 +79,10 @@ const AdminPage = () => {
           <div>
             <div className="flex justify-between items-center">
               <h2 className="font-bold">Proposals submitted as completed:</h2>
-              {completedGrants?.length !== 0 && (
+              {completedGrants && completedGrants.length !== 0 && (
                 <button
                   className="btn btn-sm btn-primary"
-                  onClick={async () => {
-                    setModalBtnLabel("Complete");
-                    if (modalRef.current) modalRef.current.showModal();
-                  }}
+                  onClick={() => handleBatchClick(completedGrants, "complete")}
                   disabled={selectedCompleteGrants.length === 0}
                 >
                   Batch Complete
@@ -81,13 +102,10 @@ const AdminPage = () => {
           <div>
             <div className="flex justify-between items-center">
               <h2 className="font-bold">New grant proposal:</h2>
-              {newGrants?.length !== 0 && (
+              {newGrants && newGrants.length !== 0 && (
                 <button
                   className="btn btn-sm btn-primary"
-                  onClick={async () => {
-                    setModalBtnLabel("Approve");
-                    if (modalRef.current) modalRef.current.showModal();
-                  }}
+                  onClick={() => handleBatchClick(newGrants, "approve")}
                   disabled={selectedApproveGrants.length === 0}
                 >
                   Batch Approve
@@ -110,7 +128,7 @@ const AdminPage = () => {
         ref={modalRef}
         selectedGrants={modalBtnLabel === "Approve" ? selectedApproveGrants : selectedCompleteGrants}
         btnLabel={modalBtnLabel}
-        initialTxLink={"0xdummyTransactionHash"}
+        initialTxLink={txResult?.hash}
         closeModal={() => {
           if (modalRef.current) modalRef.current.close();
         }}
