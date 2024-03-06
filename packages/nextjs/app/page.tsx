@@ -5,6 +5,8 @@ import { EcosystemGrants } from "./_components/EcosystemGrants";
 import { GrantsStats } from "./_components/GrantsStats";
 import { HomepageHero } from "./_components/HomepageHero";
 
+export const revalidate = 21600; // 6 hours
+
 const Home = () => {
   return (
     <>

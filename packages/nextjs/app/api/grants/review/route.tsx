@@ -5,6 +5,8 @@ import { findUserByAddress } from "~~/services/database/users";
 import { EIP_712_DOMAIN, EIP_712_TYPES__REVIEW_GRANT_BATCH } from "~~/utils/eip712";
 import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     const grants = await getAllGrantsForReview();
