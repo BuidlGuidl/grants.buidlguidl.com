@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { BatchActionModal } from "./_components/BatchActionModal";
 import { GrantReview } from "./_components/GrantReview";
-import { useBatchReviewGrants } from "./hooks/useBatchReviewGrants";
 import useSWR from "swr";
 import { GrantDataWithBuilder } from "~~/services/database/schema";
 import { PROPOSAL_STATUS } from "~~/utils/grants";
@@ -11,16 +11,21 @@ import { notification } from "~~/utils/scaffold-eth";
 const AdminPage = () => {
   const [selectedApproveGrants, setSelectedApproveGrants] = useState<string[]>([]);
   const [selectedCompleteGrants, setSelectedCompleteGrants] = useState<string[]>([]);
+  const [modalBtnLabel, setModalBtnLabel] = useState<"Approve" | "Complete">("Approve");
+  const modalRef = useRef<HTMLDialogElement>(null);
 
   const { data, isLoading } = useSWR<{ data: GrantDataWithBuilder[] }>("/api/grants/review", {
     onError: error => {
       console.error("Error fetching grants", error);
       notification.error("Error getting grants data");
     },
+    onSuccess: () => {
+      // reset states whenver any of action is performed
+      setSelectedApproveGrants([]);
+      setSelectedCompleteGrants([]);
+    },
   });
   const grants = data?.data;
-
-  const { handleBatchReview, isLoading: isBatchActionLoading } = useBatchReviewGrants();
 
   const toggleGrantSelection = (grantId: string, action: "approve" | "complete") => {
     if (action === "approve") {
@@ -53,12 +58,11 @@ const AdminPage = () => {
               <button
                 className="btn btn-sm btn-primary"
                 onClick={async () => {
-                  await handleBatchReview(selectedCompleteGrants, "completed");
-                  setSelectedCompleteGrants([]);
+                  setModalBtnLabel("Complete");
+                  if (modalRef.current) modalRef.current.showModal();
                 }}
-                disabled={selectedCompleteGrants.length === 0 || isBatchActionLoading}
+                disabled={selectedCompleteGrants.length === 0}
               >
-                {isBatchActionLoading && <span className="loading loading-spinner"></span>}
                 Send batch complete
               </button>
             </div>
@@ -78,12 +82,11 @@ const AdminPage = () => {
               <button
                 className="btn btn-sm btn-primary"
                 onClick={async () => {
-                  await handleBatchReview(selectedApproveGrants, "approved");
-                  setSelectedApproveGrants([]);
+                  setModalBtnLabel("Approve");
+                  if (modalRef.current) modalRef.current.showModal();
                 }}
-                disabled={selectedApproveGrants.length === 0 || isBatchActionLoading}
+                disabled={selectedApproveGrants.length === 0}
               >
-                {isBatchActionLoading && <span className="loading loading-spinner"></span>}
                 Send batch approve
               </button>
             </div>
@@ -99,6 +102,15 @@ const AdminPage = () => {
           </div>
         </div>
       )}
+      <BatchActionModal
+        ref={modalRef}
+        selectedGrants={modalBtnLabel === "Approve" ? selectedApproveGrants : selectedCompleteGrants}
+        btnLabel={modalBtnLabel}
+        initialTxLink={"0xdummyTransactionHash"}
+        closeModal={() => {
+          if (modalRef.current) modalRef.current.close();
+        }}
+      />
     </div>
   );
 };
