@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { getAllGrantsForReview } from "~~/services/database/grants";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     const grants = await getAllGrantsForReview();
