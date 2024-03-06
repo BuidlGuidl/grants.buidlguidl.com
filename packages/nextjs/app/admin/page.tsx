@@ -51,7 +51,7 @@ const AdminPage = () => {
     args: [undefined],
   });
 
-  const handleBatchClick = async (filteredGrants: GrantDataWithBuilder[], action: "approve" | "complete") => {
+  const handleBatchAction = async (filteredGrants: GrantDataWithBuilder[], action: "approve" | "complete") => {
     const selectedGrantsWithMetaData = filteredGrants.filter(grant => {
       if (action === "approve") return selectedApproveGrants.includes(grant.id);
       return selectedCompleteGrants.includes(grant.id);
@@ -82,7 +82,7 @@ const AdminPage = () => {
               {completedGrants && completedGrants.length !== 0 && (
                 <button
                   className="btn btn-sm btn-primary"
-                  onClick={() => handleBatchClick(completedGrants, "complete")}
+                  onClick={() => handleBatchAction(completedGrants, "complete")}
                   disabled={selectedCompleteGrants.length === 0}
                 >
                   Batch Complete
@@ -105,7 +105,7 @@ const AdminPage = () => {
               {newGrants && newGrants.length !== 0 && (
                 <button
                   className="btn btn-sm btn-primary"
-                  onClick={() => handleBatchClick(newGrants, "approve")}
+                  onClick={() => handleBatchAction(newGrants, "approve")}
                   disabled={selectedApproveGrants.length === 0}
                 >
                   Batch Approve
