@@ -29,7 +29,6 @@ type BatchReqBody = {
   }[];
 };
 
-// Updated for batch processing
 export async function POST(req: NextRequest) {
   const { signer, signature, reviews } = (await req.json()) as BatchReqBody;
 
@@ -47,7 +46,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // Assuming you have a method to recover the address for the entire batch
   const recoveredAddress = await recoverTypedDataAddress({
     domain: EIP_712_DOMAIN,
     types: EIP_712_TYPES__REVIEW_GRANT_BATCH,

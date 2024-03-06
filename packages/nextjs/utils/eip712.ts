@@ -37,7 +37,5 @@ export const EIP_712_TYPES__REVIEW_GRANT_BATCH = {
     { name: "action", type: "string" },
     { name: "txHash", type: "string" },
   ],
-  Message: [
-    { name: "reviews", type: "GrantReview[]" }, // Array of grant review actions
-  ],
+  Message: [{ name: "reviews", type: "GrantReview[]" }],
 } as const;

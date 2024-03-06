@@ -41,9 +41,8 @@ const BuilderSocials = ({ socialLinks }: { socialLinks?: SocialLinks }) => {
 
 type GrantReviewProps = {
   grant: GrantDataWithBuilder;
-  // TODO: make this permanent
-  selected?: boolean;
-  toggleSelection?: () => void;
+  selected: boolean;
+  toggleSelection: () => void;
 };
 export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewProps) => {
   const modalRef = useRef<HTMLDialogElement>(null);
