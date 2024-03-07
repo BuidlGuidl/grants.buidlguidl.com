@@ -116,19 +116,31 @@ export const reviewGrant = async (grantId: string, action: ProposalStatusType, t
       throw new Error(`Invalid action: ${action}`);
     }
 
-    const updateTxHash: Record<string, string> = {};
-    if (action === PROPOSAL_STATUS.APPROVED) {
-      updateTxHash["approvedTx"] = txHash;
+    const grantDoc = await getGrantSnapshotById(grantId);
+    if (!grantDoc.exists) {
+      throw new Error(`Grant document not found for ID: ${grantId}`);
     }
+
+    const grantData = grantDoc.data() as GrantData;
+
+    const updateTx: Record<string, string> = {};
+    if (action === PROPOSAL_STATUS.APPROVED) {
+      updateTx["approvedTx"] = txHash;
+      updateTx["txChainId"] = txChainId;
+    }
+
     if (action === PROPOSAL_STATUS.COMPLETED) {
-      updateTxHash["completedTx"] = txHash;
+      updateTx["completedTx"] = txHash;
+      if (grantData.txChainId !== txChainId) {
+        throw new Error("Transaction does not match the chain ID of approved transaction");
+      }
     }
 
     const grantActionTimeStamp = new Date().getTime();
     const grantActionTimeStampKey = (action + "At") as `${typeof action}At`;
     await grantsCollection
       .doc(grantId)
-      .update({ status: action, [grantActionTimeStampKey]: grantActionTimeStamp, ...updateTxHash, txChainId });
+      .update({ status: action, [grantActionTimeStampKey]: grantActionTimeStamp, ...updateTx });
   } catch (error) {
     console.error("Error approving the grant:", error);
     throw error;
