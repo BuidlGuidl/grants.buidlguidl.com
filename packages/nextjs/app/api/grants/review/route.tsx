@@ -28,6 +28,7 @@ type BatchReqBody = {
     grantId: string;
     action: ProposalStatusType;
     txHash: string;
+    txChainId: string;
   }[];
 };
 
@@ -63,7 +64,7 @@ export async function POST(req: NextRequest) {
 
   try {
     for (const review of reviews) {
-      await reviewGrant(review.grantId, review.action, review.txHash);
+      await reviewGrant(review.grantId, review.action, review.txHash, review.txChainId);
     }
   } catch (error) {
     console.error("Error processing batch grant review", error);
