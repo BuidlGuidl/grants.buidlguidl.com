@@ -52,7 +52,12 @@ export async function POST(req: NextRequest, { params }: { params: { grantId: st
   }
 
   try {
-    await reviewGrant(grantId, action, txHash, txChainId);
+    await reviewGrant({
+      grantId,
+      action,
+      txHash,
+      txChainId,
+    });
   } catch (error) {
     console.error("Error approving grant", error);
     return NextResponse.json({ error: "Error approving grant" }, { status: 500 });

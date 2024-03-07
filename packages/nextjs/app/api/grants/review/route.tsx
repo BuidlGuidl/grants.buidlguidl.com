@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
 
   try {
     for (const review of reviews) {
-      await reviewGrant(review.grantId, review.action, review.txHash, review.txChainId);
+      await reviewGrant(review);
     }
   } catch (error) {
     console.error("Error processing batch grant review", error);

@@ -109,28 +109,38 @@ export const getAllActiveGrants = async () => {
   }
 };
 
-export const reviewGrant = async (grantId: string, action: ProposalStatusType, txHash: string, txChainId: string) => {
+type ReviewGrantParams = {
+  grantId: string;
+  action: ProposalStatusType;
+  txHash: string;
+  txChainId: string;
+};
+export const reviewGrant = async ({ grantId, action, txHash, txChainId }: ReviewGrantParams) => {
   try {
     const validActions = Object.values(PROPOSAL_STATUS);
     if (!validActions.includes(action)) {
       throw new Error(`Invalid action: ${action}`);
     }
 
-    const updateTxHash: Record<string, string> = {};
+    // Prepare the data to update based on the action
+    const updateData: Record<string, any> = { status: action };
+
+    // Add/update the transaction hash based on the action
     if (action === PROPOSAL_STATUS.APPROVED) {
-      updateTxHash["approvedTx"] = txHash;
-    }
-    if (action === PROPOSAL_STATUS.COMPLETED) {
-      updateTxHash["completedTx"] = txHash;
+      updateData["approvedTx"] = txHash;
+      updateData["txChainId"] = txChainId; // Add txChainId when the grant is approved
+    } else if (action === PROPOSAL_STATUS.COMPLETED) {
+      updateData["completedTx"] = txHash;
     }
 
+    // Update timestamp based on the action
     const grantActionTimeStamp = new Date().getTime();
-    const grantActionTimeStampKey = (action + "At") as `${typeof action}At`;
-    await grantsCollection
-      .doc(grantId)
-      .update({ status: action, [grantActionTimeStampKey]: grantActionTimeStamp, ...updateTxHash, txChainId });
+    const grantActionTimeStampKey = `${action}At`;
+    updateData[grantActionTimeStampKey] = grantActionTimeStamp;
+
+    await grantsCollection.doc(grantId).update(updateData);
   } catch (error) {
-    console.error("Error approving the grant:", error);
+    console.error("Error processing the grant:", error);
     throw error;
   }
 };
