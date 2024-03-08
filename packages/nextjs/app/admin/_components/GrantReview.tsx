@@ -1,8 +1,10 @@
 import { useRef } from "react";
+import Image from "next/image";
 import { useReviewGrant } from "../hooks/useReviewGrant";
 import { ActionModal } from "./ActionModal";
 import { parseEther } from "viem";
 import { useSendTransaction } from "wagmi";
+import { ArrowTopRightOnSquareIcon } from "@heroicons/react/20/solid";
 import TelegramIcon from "~~/components/assets/TelegramIcon";
 import TwitterIcon from "~~/components/assets/TwitterIcon";
 import { Address } from "~~/components/scaffold-eth";
@@ -61,15 +63,21 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
     <div className="border p-4 my-4">
       <div className="flex justify-between">
         <h3 className="font-bold">
-          {grant.title}
+          <span className="text-lg">{grant.title}</span>
           <span className="text-sm text-gray-500 ml-2">({grant.id})</span>
           {grant.link && (
-            <a href={grant.link} className="ml-4 underline" target="_blank" rel="noopener noreferrer">
-              View Build
+            <a href={grant.link} className="ml-4 underline text-sm" target="_blank" rel="noopener noreferrer">
+              View Build <ArrowTopRightOnSquareIcon className="h-4 w-4 inline" />
             </a>
           )}
         </h3>
         <input type="checkbox" className="checkbox checkbox-primary" checked={selected} onChange={toggleSelection} />
+      </div>
+      <div className="flex mb-2 items-center">
+        <Image src="/assets/eth-completed-grant.png" alt="ETH Icon" width={10} height={10} />
+        <span className="ml-1 tooltip" data-tip="Total amount of the grant">
+          {grant.askAmount} ETH
+        </span>
       </div>
       <div className="flex gap-4 items-center">
         <Address address={grant.builder} link={`https://app.buidlguidl.com/builders/${grant.builder}`} />
