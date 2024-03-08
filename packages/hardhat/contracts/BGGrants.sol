@@ -10,35 +10,53 @@ contract BGGrants is Ownable, ReentrancyGuard {
     error INVALID_RECIPIENT();
     error INSUFFICIENT_RECIPIENT_COUNT();
     error TRANSFER_FAILED();
+    error INSUFFICIENT_SPLIT_AMOUNT();
+    error INVALID_INPUT();
 
-    event EthSplitEqual(address indexed sender, uint256 totalAmount, address payable[] recipients);
+    event EthSplit(address indexed sender, uint256 totalAmount, address payable[] recipients, uint256[] amounts);
 
     constructor(address _owner) {
         super.transferOwnership(_owner);
     }
 
-    function splitEqualETH(address payable[] calldata recipients) external payable nonReentrant {
-        uint256 totalAmount = msg.value;
-        uint256 rLength = recipients.length;
-        uint256 equalAmount = totalAmount / rLength;
-        uint256 remainingAmount = totalAmount % rLength;
+    function splitETH(
+        address payable[] calldata recipients,
+        uint256[] calldata amounts
+    ) external payable nonReentrant {
+        uint256 remainingAmount = _splitETH(recipients, amounts, msg.value);
+        emit EthSplit(msg.sender, msg.value, recipients, amounts);
 
-        if (rLength > 25) revert INSUFFICIENT_RECIPIENT_COUNT();
+        if (remainingAmount > 0) {
+            (bool success, ) = msg.sender.call{value: remainingAmount, gas: 20000}("");
+            if (!success) revert TRANSFER_FAILED();
+        }
+    }
 
-        for (uint256 i = 0; i < rLength; ) {
+    function _splitETH(
+        address payable[] calldata recipients,
+        uint256[] calldata amounts,
+        uint256 totalAvailable
+    ) internal returns (uint256 remainingAmount) {
+        uint256 length = recipients.length;
+        if (length != amounts.length) revert INVALID_INPUT();
+
+        if (length > 25) revert INSUFFICIENT_RECIPIENT_COUNT();
+
+        uint256 totalAmount = 0;
+        for (uint256 i = 0; i < length; ) {
             if (recipients[i] == address(0)) revert INVALID_RECIPIENT();
-            uint256 amountToSend = equalAmount;
-            if (i == 0) {
-                amountToSend = amountToSend + remainingAmount;
-            }
-            (bool success, ) = recipients[i].call{value: amountToSend, gas: 20000}("");
+            if (amounts[i] == 0) revert INSUFFICIENT_SPLIT_AMOUNT();
+
+            totalAmount = totalAmount + amounts[i];
+
+            (bool success, ) = recipients[i].call{value: amounts[i], gas: 20000}("");
             if (!success) revert TRANSFER_FAILED();
             unchecked {
                 ++i;
             }
         }
 
-        emit EthSplitEqual(msg.sender, msg.value, recipients);
+        return totalAvailable - totalAmount;
     }
 
     /**
