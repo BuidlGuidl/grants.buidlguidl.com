@@ -1,8 +1,10 @@
 import { useRef } from "react";
+import Image from "next/image";
 import { useReviewGrant } from "../hooks/useReviewGrant";
 import { ActionModal } from "./ActionModal";
 import { parseEther } from "viem";
 import { useSendTransaction } from "wagmi";
+import { ArrowTopRightOnSquareIcon } from "@heroicons/react/20/solid";
 import TelegramIcon from "~~/components/assets/TelegramIcon";
 import TwitterIcon from "~~/components/assets/TwitterIcon";
 import { Address } from "~~/components/scaffold-eth";
@@ -59,24 +61,30 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
   const acceptLabel = grant.status === PROPOSAL_STATUS.PROPOSED ? "Approve" : "Complete";
   return (
     <div className="border p-4 my-4">
-      <div className="flex justify-between">
-        <h3 className="font-bold">
-          {grant.title}
-          <span className="text-sm text-gray-500 ml-2">({grant.id})</span>
+      <div className="flex justify-between mb-2">
+        <div className="font-bold flex flex-col gap-1 lg:gap-2 lg:flex-row items-baseline">
+          <h1 className="text-lg m-0">{grant.title}</h1>
+          <span className="text-sm text-gray-500">({grant.id})</span>
           {grant.link && (
-            <a href={grant.link} className="ml-4 underline" target="_blank" rel="noopener noreferrer">
-              View Build
+            <a href={grant.link} className="underline text-sm" target="_blank" rel="noopener noreferrer">
+              View Build <ArrowTopRightOnSquareIcon className="h-4 w-4 inline" />
             </a>
           )}
-        </h3>
+        </div>
         <input type="checkbox" className="checkbox checkbox-primary" checked={selected} onChange={toggleSelection} />
+      </div>
+      <div className="flex mb-2 items-center">
+        <Image src="/assets/eth-completed-grant.png" alt="ETH Icon" width={10} height={10} />
+        <span className="ml-1 tooltip" data-tip="Total amount of the grant">
+          {grant.askAmount} ETH
+        </span>
       </div>
       <div className="flex gap-4 items-center">
         <Address address={grant.builder} link={`https://app.buidlguidl.com/builders/${grant.builder}`} />
         <BuilderSocials socialLinks={grant.builderData?.socialLinks} />
       </div>
       <p>{grant.description}</p>
-      <div className="flex gap-4 mt-4 justify-between">
+      <div className="flex gap-2 lg:gap-4 mt-4 justify-between">
         <button
           className={`btn btn-sm btn-error ${isLoading ? "opacity-50" : ""}`}
           onClick={() => handleReviewGrant(PROPOSAL_STATUS.REJECTED)}
@@ -84,7 +92,7 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
         >
           Reject
         </button>
-        <div className="flex gap-4">
+        <div className="flex gap-2 lg:gap-4">
           <button
             className={`btn btn-sm btn-neutral ${isLoading ? "opacity-50" : ""}`}
             onClick={async () => {
