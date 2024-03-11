@@ -81,7 +81,14 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
             </a>
           )}
         </div>
-        <input type="checkbox" className="checkbox checkbox-primary" checked={selected} onChange={toggleSelection} />
+        <input
+          type="checkbox"
+          className={`checkbox checkbox-primary ${completeActionDisableClassName}`}
+          data-tip={completeActionDisableToolTip}
+          disabled={isCompleteActionDisabled}
+          checked={selected}
+          onChange={toggleSelection}
+        />
       </div>
       <div className="flex mb-2 items-center">
         <Image src="/assets/eth-completed-grant.png" alt="ETH Icon" width={10} height={10} />
