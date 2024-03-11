@@ -26,7 +26,7 @@ export async function POST(req: NextRequest, { params }: { params: { grantId: st
 
   // Validate Signature
   const recoveredAddress = await recoverTypedDataAddress({
-    domain: EIP_712_DOMAIN,
+    domain: { ...EIP_712_DOMAIN, chainId: Number(txChainId) },
     types: EIP_712_TYPES__REVIEW_GRANT,
     primaryType: "Message",
     message: {
