@@ -28,11 +28,20 @@ type BatchReqBody = {
     grantId: string;
     action: ProposalStatusType;
     txHash: string;
+    txChainId: string;
   }[];
 };
 
 export async function POST(req: NextRequest) {
   const { signer, signature, reviews } = (await req.json()) as BatchReqBody;
+
+  if (!reviews.length) {
+    console.error("No reviews in batch");
+    return NextResponse.json({ error: "No reviews in batch" }, { status: 400 });
+  }
+
+  // Assuming all reviews are for the same chain
+  const txChainId = reviews[0].txChainId;
 
   // Ensure all actions are valid
   const validActions = Object.values(PROPOSAL_STATUS);
@@ -49,7 +58,7 @@ export async function POST(req: NextRequest) {
   }
 
   const recoveredAddress = await recoverTypedDataAddress({
-    domain: EIP_712_DOMAIN,
+    domain: { ...EIP_712_DOMAIN, chainId: Number(txChainId) },
     types: EIP_712_TYPES__REVIEW_GRANT_BATCH,
     primaryType: "Message",
     message: { reviews },
@@ -63,7 +72,7 @@ export async function POST(req: NextRequest) {
 
   try {
     for (const review of reviews) {
-      await reviewGrant(review.grantId, review.action, review.txHash);
+      await reviewGrant(review);
     }
   } catch (error) {
     console.error("Error processing batch grant review", error);

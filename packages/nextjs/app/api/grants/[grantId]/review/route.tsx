@@ -10,11 +10,12 @@ type ReqBody = {
   signature: `0x${string}`;
   action: ProposalStatusType;
   txHash: string;
+  txChainId: string;
 };
 
 export async function POST(req: NextRequest, { params }: { params: { grantId: string } }) {
   const { grantId } = params;
-  const { signature, signer, action, txHash } = (await req.json()) as ReqBody;
+  const { signature, signer, action, txHash, txChainId } = (await req.json()) as ReqBody;
 
   // Validate action is valid
   const validActions = Object.values(PROPOSAL_STATUS);
@@ -25,13 +26,14 @@ export async function POST(req: NextRequest, { params }: { params: { grantId: st
 
   // Validate Signature
   const recoveredAddress = await recoverTypedDataAddress({
-    domain: EIP_712_DOMAIN,
+    domain: { ...EIP_712_DOMAIN, chainId: Number(txChainId) },
     types: EIP_712_TYPES__REVIEW_GRANT,
     primaryType: "Message",
     message: {
       grantId: grantId,
       action: action,
       txHash,
+      txChainId,
     },
     signature,
   });
@@ -50,7 +52,12 @@ export async function POST(req: NextRequest, { params }: { params: { grantId: st
   }
 
   try {
-    await reviewGrant(grantId, action, txHash);
+    await reviewGrant({
+      grantId,
+      action,
+      txHash,
+      txChainId,
+    });
   } catch (error) {
     console.error("Error approving grant", error);
     return NextResponse.json({ error: "Error approving grant" }, { status: 500 });
