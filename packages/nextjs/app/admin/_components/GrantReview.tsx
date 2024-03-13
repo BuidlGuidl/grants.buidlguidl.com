@@ -3,12 +3,11 @@ import Image from "next/image";
 import { useReviewGrant } from "../hooks/useReviewGrant";
 import { ActionModal } from "./ActionModal";
 import { parseEther } from "viem";
-import { useSendTransaction } from "wagmi";
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/20/solid";
 import TelegramIcon from "~~/components/assets/TelegramIcon";
 import TwitterIcon from "~~/components/assets/TwitterIcon";
 import { Address } from "~~/components/scaffold-eth";
-import { useTransactor } from "~~/hooks/scaffold-eth";
+import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import { GrantDataWithBuilder, SocialLinks } from "~~/services/database/schema";
 import { PROPOSAL_STATUS } from "~~/utils/grants";
 
@@ -49,11 +48,12 @@ type GrantReviewProps = {
 export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewProps) => {
   const modalRef = useRef<HTMLDialogElement>(null);
 
-  const { data: txnHash, sendTransactionAsync } = useSendTransaction({
-    to: grant.builder,
-    value: parseEther((grant.askAmount / 2).toString()),
+  const { data: txResult, writeAsync: splitEqualETH } = useScaffoldContractWrite({
+    contractName: "BGGrants",
+    functionName: "splitETH",
+    args: [undefined, undefined],
   });
-  const sendTx = useTransactor();
+
   const { handleReviewGrant, isLoading } = useReviewGrant(grant);
 
   if (grant.status !== PROPOSAL_STATUS.PROPOSED && grant.status !== PROPOSAL_STATUS.SUBMITTED) return null;
@@ -96,7 +96,10 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
           <button
             className={`btn btn-sm btn-neutral ${isLoading ? "opacity-50" : ""}`}
             onClick={async () => {
-              const resHash = await sendTx(sendTransactionAsync);
+              const resHash = await splitEqualETH({
+                args: [[grant.builder], [parseEther((grant.askAmount / 2).toString())]],
+                value: parseEther((grant.askAmount / 2).toString()),
+              });
               // Transactor eats the error, so we need to handle by checking resHash
               if (resHash && modalRef.current) modalRef.current.showModal();
             }}
@@ -115,7 +118,7 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
           </button>
         </div>
       </div>
-      <ActionModal ref={modalRef} grant={grant} initialTxLink={txnHash?.hash} />
+      <ActionModal ref={modalRef} grant={grant} initialTxLink={txResult?.hash} />
     </div>
   );
 };
