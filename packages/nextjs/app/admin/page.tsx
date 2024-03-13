@@ -47,8 +47,8 @@ const AdminPage = () => {
 
   const { data: txResult, writeAsync: splitEqualETH } = useScaffoldContractWrite({
     contractName: "BGGrants",
-    functionName: "splitEqualETH",
-    args: [undefined],
+    functionName: "splitETH",
+    args: [undefined, undefined],
   });
 
   const handleBatchAction = async (filteredGrants: GrantDataWithBuilder[], action: "approve" | "complete") => {
@@ -57,11 +57,13 @@ const AdminPage = () => {
       return selectedCompleteGrants.includes(grant.id);
     });
     const builders = selectedGrantsWithMetaData.map(grant => grant.builder);
+    const buildersAmount = selectedGrantsWithMetaData.map(grant => parseEther((grant.askAmount / 2).toString()));
     const totalAmount = selectedGrantsWithMetaData.reduce((acc, grant) => acc + grant.askAmount, 0);
+    console.log("totalAmount amount is :", totalAmount);
     const value = parseEther((totalAmount / 2).toString());
     const hash = await splitEqualETH({
-      args: [builders],
-      value,
+      args: [builders, buildersAmount],
+      value: value,
     });
     setModalBtnLabel(action === "approve" ? "Approve" : "Complete");
     if (hash && modalRef.current) modalRef.current.showModal();
@@ -71,37 +73,13 @@ const AdminPage = () => {
   const newGrants = grants?.filter(grant => grant.status === PROPOSAL_STATUS.PROPOSED);
 
   return (
-    <div className="container mx-auto max-w-screen-md mt-12">
-      <h1 className="text-4xl font-bold">Admin page</h1>
+    <div className="container mx-auto mt-12 max-w-[95%]">
       {isLoading && <span className="loading loading-spinner"></span>}
       {grants && (
-        <div className="flex flex-col gap-4 mt-4">
-          <div>
+        <div className="flex flex-col lg:flex-row gap-12 mt-4">
+          <div className="p-8 bg-warning/5 lg:w-1/2">
             <div className="flex justify-between items-center">
-              <h2 className="font-bold">Proposals submitted as completed:</h2>
-              {completedGrants && completedGrants.length !== 0 && (
-                <button
-                  className="btn btn-sm btn-primary"
-                  onClick={() => handleBatchAction(completedGrants, "complete")}
-                  disabled={selectedCompleteGrants.length === 0}
-                >
-                  Batch Complete
-                </button>
-              )}
-            </div>
-            {completedGrants?.length === 0 && <p className="m-0">No completed grants</p>}
-            {completedGrants?.map(grant => (
-              <GrantReview
-                key={grant.id}
-                grant={grant}
-                selected={selectedCompleteGrants.includes(grant.id)}
-                toggleSelection={() => toggleGrantSelection(grant.id, "complete")}
-              />
-            ))}
-          </div>
-          <div>
-            <div className="flex justify-between items-center">
-              <h2 className="font-bold">New grant proposal:</h2>
+              <h2 className="font-bold text-xl">New Grant Proposals</h2>
               {newGrants && newGrants.length !== 0 && (
                 <button
                   className="btn btn-sm btn-primary"
@@ -119,6 +97,29 @@ const AdminPage = () => {
                 grant={grant}
                 selected={selectedApproveGrants.includes(grant.id)}
                 toggleSelection={() => toggleGrantSelection(grant.id, "approve")}
+              />
+            ))}
+          </div>
+          <div className="p-8 bg-success/5 lg:w-1/2">
+            <div className="flex justify-between items-center">
+              <h2 className="font-bold text-xl">Completed Grants</h2>
+              {completedGrants && completedGrants.length !== 0 && (
+                <button
+                  className="btn btn-sm btn-primary"
+                  onClick={() => handleBatchAction(completedGrants, "complete")}
+                  disabled={selectedCompleteGrants.length === 0}
+                >
+                  Batch Complete
+                </button>
+              )}
+            </div>
+            {completedGrants?.length === 0 && <p className="m-0">No completed grants</p>}
+            {completedGrants?.map(grant => (
+              <GrantReview
+                key={grant.id}
+                grant={grant}
+                selected={selectedCompleteGrants.includes(grant.id)}
+                toggleSelection={() => toggleGrantSelection(grant.id, "complete")}
               />
             ))}
           </div>
