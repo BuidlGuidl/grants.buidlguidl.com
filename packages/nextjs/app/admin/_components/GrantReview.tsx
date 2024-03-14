@@ -71,7 +71,7 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
   const completeActionDisableToolTip = isCompleteActionDisabled && `Please switch to chain: ${grant.txChainId}`;
 
   return (
-    <div className="border p-4 my-4">
+    <div className="border border-4 rounded-lg p-4 my-4">
       <div className="flex justify-between mb-2">
         <div className="font-bold flex flex-col gap-1 lg:gap-2 lg:flex-row items-baseline">
           <h1 className="text-lg m-0">{grant.title}</h1>
@@ -100,6 +100,9 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
       <div className="flex gap-4 items-center">
         <Address address={grant.builder} link={`https://app.buidlguidl.com/builders/${grant.builder}`} />
         <BuilderSocials socialLinks={grant.builderData?.socialLinks} />
+        {grant.builderData?.builderBatch && (
+          <div className="badge badge-outline">Batch #{grant.builderData.builderBatch}</div>
+        )}
       </div>
       <p>{grant.description}</p>
       <div className="flex gap-2 lg:gap-4 mt-4 justify-between">
@@ -112,7 +115,9 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
         </button>
         <div className="flex gap-2 lg:gap-4">
           <button
-            className={`btn btn-sm btn-neutral ${isLoading ? "opacity-50" : ""} ${completeActionDisableClassName}`}
+            className={`btn btn-sm btn-success border-2 bg-transparent ${
+              isLoading ? "opacity-50" : ""
+            } ${completeActionDisableClassName}`}
             data-tip={completeActionDisableToolTip}
             onClick={async () => {
               const resHash = await splitEqualETH({

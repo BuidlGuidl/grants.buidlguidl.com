@@ -86,7 +86,7 @@ const AdminPage = () => {
                   onClick={() => handleBatchAction(newGrants, "approve")}
                   disabled={selectedApproveGrants.length === 0}
                 >
-                  Batch Approve
+                  Batch Send + Approve
                 </button>
               )}
             </div>
@@ -109,7 +109,7 @@ const AdminPage = () => {
                   onClick={() => handleBatchAction(completedGrants, "complete")}
                   disabled={selectedCompleteGrants.length === 0}
                 >
-                  Batch Complete
+                  Batch Send + Complete
                 </button>
               )}
             </div>
