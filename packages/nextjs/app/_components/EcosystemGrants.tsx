@@ -1,5 +1,5 @@
 import Image from "next/image";
-import ecosystemGrants from "~~/services/database/ecosystemGrants.json";
+import { getAllEcosystemGrants } from "~~/services/database/grants";
 
 const EcosystemGrantsCard = ({
   title,
@@ -28,7 +28,7 @@ const EcosystemGrantsCard = ({
         <div className="flex justify-between items-baseline w-full">
           <div className="bg-primary rounded-lg py-1 px-2 text-xs font-bold">
             Amount:
-            <span className="text-sm"> {amountGranted} ETH</span>
+            <span className="text-sm"> {Number(amountGranted).toFixed(2)} ETH</span>
           </div>
           <a href={twitterLink} target="_blank" className="text-sm underline underline-offset-1">
             Twitter
@@ -39,7 +39,8 @@ const EcosystemGrantsCard = ({
   );
 };
 
-export const EcosystemGrants = () => {
+export const EcosystemGrants = async () => {
+  const ecosystemGrants = await getAllEcosystemGrants();
   return (
     <div>
       <div className="container flex flex-col justify-center max-w-[90%] lg:max-w-7xl mx-auto py-12 lg:pt-20 lg:pb-28 lg:px-4 gap-6">
