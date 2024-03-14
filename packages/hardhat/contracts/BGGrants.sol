@@ -3,7 +3,7 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 
 /**
  * @title BGGrants
@@ -13,8 +13,10 @@ import "@openzeppelin/contracts/access/Ownable.sol";
  * @dev Based on https://split.buidlguidl.com/
  */
 
-contract BGGrants is ReentrancyGuard, Ownable {
+contract BGGrants is ReentrancyGuard, AccessControl {
     using SafeERC20 for IERC20;
+
+    bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
     // Events
     event EthSplit(address indexed sender, uint256 totalAmount, address payable[] recipients, uint256[] amounts);
@@ -30,12 +32,19 @@ contract BGGrants is ReentrancyGuard, Ownable {
     error INVALID_RECIPIENT();
     error INSUFFICIENT_SPLIT_AMOUNT();
     error TRANSFER_FAILED();
+    error NOT_ADMIN();
+
+    modifier onlyAdmin() {
+        if (!hasRole(ADMIN_ROLE, msg.sender)) revert NOT_ADMIN();
+        _;
+    }
 
     /**
      * @notice The constructor sets the owner of the contract
-   */
+    */
     constructor(address _owner) {
-        super.transferOwnership(_owner);
+        _setupRole(DEFAULT_ADMIN_ROLE, _owner);
+        _setupRole(ADMIN_ROLE, _owner);
     }
 
     /**
@@ -46,7 +55,7 @@ contract BGGrants is ReentrancyGuard, Ownable {
     function splitETH(
         address payable[] calldata recipients,
         uint256[] calldata amounts
-    ) external payable nonReentrant {
+    ) external payable nonReentrant onlyAdmin {
         uint256 remainingAmount = _splitETH(recipients, amounts, msg.value);
         emit EthSplit(msg.sender, msg.value, recipients, amounts);
 
@@ -63,7 +72,7 @@ contract BGGrants is ReentrancyGuard, Ownable {
     */
     function splitEqualETH(
         address payable[] calldata recipients
-    ) external payable nonReentrant {
+    ) external payable nonReentrant onlyAdmin {
         uint256 totalAmount = msg.value;
         uint256 rLength = recipients.length;
         uint256 equalAmount = totalAmount / rLength;
@@ -97,7 +106,7 @@ contract BGGrants is ReentrancyGuard, Ownable {
         IERC20 token,
         address payable[] calldata recipients,
         uint256[] calldata amounts
-    ) external nonReentrant {
+    ) external nonReentrant onlyAdmin {
         _transferTokensFromSenderToRecipients(token, recipients, amounts);
         emit Erc20Split(msg.sender, recipients, amounts, token);
     }
@@ -112,7 +121,7 @@ contract BGGrants is ReentrancyGuard, Ownable {
         IERC20 token,
         address payable[] calldata recipients,
         uint256 totalAmount
-    ) external nonReentrant {
+    ) external nonReentrant onlyAdmin {
         uint256 rLength = recipients.length;
 
         if (rLength > 25) revert INSUFFICIENT_RECIPIENT_COUNT();
@@ -197,16 +206,24 @@ contract BGGrants is ReentrancyGuard, Ownable {
         }
     }
 
+    function addAdmin(address _admin) external onlyAdmin {
+        grantRole(ADMIN_ROLE, _admin);
+    }
+
+    function removeAdmin(address _admin) external onlyAdmin {
+        revokeRole(ADMIN_ROLE, _admin);
+    }
+
     /**
      * @notice Withdraws the remaining ETH or ERC20 tokens to the owner's address
      * @param token The address of the ERC20 token, or 0 for ETH
     */
-    function withdraw(IERC20 token) external onlyOwner {
+    function withdraw(IERC20 token) external onlyAdmin {
         if (address(token) == address(0)) {
-            (bool success, ) = owner().call{value: address(this).balance, gas: 20000}("");
+            (bool success, ) = msg.sender.call{value: address(this).balance, gas: 20000}("");
             if (!success) revert TRANSFER_FAILED();
         } else {
-            token.transfer(owner(), token.balanceOf(address(this)));
+            token.transfer(msg.sender, token.balanceOf(address(this)));
         }
     }
 
