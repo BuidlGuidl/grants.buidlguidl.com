@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useReviewGrant } from "../hooks/useReviewGrant";
 import { ActionModal } from "./ActionModal";
 import { parseEther } from "viem";
+import { useNetwork } from "wagmi";
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/20/solid";
 import TelegramIcon from "~~/components/assets/TelegramIcon";
 import TwitterIcon from "~~/components/assets/TwitterIcon";
@@ -47,6 +48,7 @@ type GrantReviewProps = {
 };
 export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewProps) => {
   const modalRef = useRef<HTMLDialogElement>(null);
+  const { chain: connectedChain } = useNetwork();
 
   const { data: txResult, writeAsync: splitEqualETH } = useScaffoldContractWrite({
     contractName: "BGGrants",
@@ -59,6 +61,15 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
   if (grant.status !== PROPOSAL_STATUS.PROPOSED && grant.status !== PROPOSAL_STATUS.SUBMITTED) return null;
 
   const acceptLabel = grant.status === PROPOSAL_STATUS.PROPOSED ? "Approve" : "Complete";
+
+  // Disable complete action if chain is mismatch
+  const isCompleteAction = grant.status === PROPOSAL_STATUS.SUBMITTED;
+  const isChainMismatch = !connectedChain || connectedChain.id.toString() !== grant.txChainId;
+  // Boolean(grant.txChainId) => We want to enable btn in this case nd allow admin to send txn on any chain
+  const isCompleteActionDisabled = Boolean(grant.txChainId) && isCompleteAction && isChainMismatch;
+  const completeActionDisableClassName = isCompleteActionDisabled ? "tooltip !pointer-events-auto" : "";
+  const completeActionDisableToolTip = isCompleteActionDisabled && `Please switch to chain: ${grant.txChainId}`;
+
   return (
     <div className="border p-4 my-4">
       <div className="flex justify-between mb-2">
@@ -71,7 +82,14 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
             </a>
           )}
         </div>
-        <input type="checkbox" className="checkbox checkbox-primary" checked={selected} onChange={toggleSelection} />
+        <input
+          type="checkbox"
+          className={`checkbox checkbox-primary ${completeActionDisableClassName}`}
+          data-tip={completeActionDisableToolTip}
+          disabled={isCompleteActionDisabled}
+          checked={selected}
+          onChange={toggleSelection}
+        />
       </div>
       <div className="flex mb-2 items-center">
         <Image src="/assets/eth-completed-grant.png" alt="ETH Icon" width={10} height={10} />
@@ -94,7 +112,8 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
         </button>
         <div className="flex gap-2 lg:gap-4">
           <button
-            className={`btn btn-sm btn-neutral ${isLoading ? "opacity-50" : ""}`}
+            className={`btn btn-sm btn-neutral ${isLoading ? "opacity-50" : ""} ${completeActionDisableClassName}`}
+            data-tip={completeActionDisableToolTip}
             onClick={async () => {
               const resHash = await splitEqualETH({
                 args: [[grant.builder], [parseEther((grant.askAmount / 2).toString())]],
@@ -103,16 +122,17 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
               // Transactor eats the error, so we need to handle by checking resHash
               if (resHash && modalRef.current) modalRef.current.showModal();
             }}
-            disabled={isLoading}
+            disabled={isLoading || isCompleteActionDisabled}
           >
             Send 50%
           </button>
           <button
-            className={`btn btn-sm btn-success ${isLoading ? "opacity-50" : ""}`}
+            className={`btn btn-sm btn-success ${isLoading ? "opacity-50" : ""} ${completeActionDisableClassName}`}
+            data-tip={completeActionDisableToolTip}
             onClick={() => {
               if (modalRef.current) modalRef.current.showModal();
             }}
-            disabled={isLoading}
+            disabled={isLoading || isCompleteActionDisabled}
           >
             {acceptLabel}
           </button>

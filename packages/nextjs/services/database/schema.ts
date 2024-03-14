@@ -50,6 +50,7 @@ export type GrantWithoutTimestamps = {
   status: "proposed" | "approved" | "submitted" | "completed" | "rejected";
   approvedTx?: string;
   completedTx?: string;
+  txChainId?: string;
 };
 
 export type GrantData = Simplify<
