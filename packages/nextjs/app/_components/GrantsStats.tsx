@@ -1,6 +1,5 @@
 import Image from "next/image";
-import ecosystemGrants from "~~/services/database/ecosystemGrants.json";
-import { getGrantsStats } from "~~/services/database/grants";
+import { getAllEcosystemGrants, getGrantsStats } from "~~/services/database/grants";
 
 const Stat = ({ label, imgLink, value }: { label: string; imgLink: string; value: string | number }) => {
   return (
@@ -16,6 +15,7 @@ const Stat = ({ label, imgLink, value }: { label: string; imgLink: string; value
 
 export const GrantsStats = async () => {
   const stats = await getGrantsStats();
+  const ecosystemGrants = await getAllEcosystemGrants();
 
   const sum = ecosystemGrants.grants.reduce(
     (acc, grant) => acc + parseFloat(grant.amountGranted),

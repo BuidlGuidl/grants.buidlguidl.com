@@ -1,5 +1,6 @@
 import { getFirestoreConnector } from "./firestoreDB";
 import { BuilderData, GrantData, GrantDataWithBuilder } from "./schema";
+import ecosystemGrants from "~~/services/database/ecosystemGrants.json";
 import { findUserByAddress } from "~~/services/database/users";
 import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";
 
@@ -107,6 +108,21 @@ export const getAllActiveGrants = async () => {
     console.error("Error getting all active grants:", error);
     throw error;
   }
+};
+
+// Get all the data from ecosystemGrants.json and update the amountGranted for Jessy's grant
+export const getAllEcosystemGrants = async () => {
+  const withdrawEventsSnapshot = await firestoreDB.collection("events").where("type", "==", "cohort.withdraw").get();
+  const totalEthWithdrawnForJessy = withdrawEventsSnapshot.docs.reduce((acc, event) => {
+    const payload = event.data().payload;
+    if (payload.cohortName.includes("Jessy")) {
+      return acc + Number(payload.amount);
+    }
+    return acc;
+  }, 0);
+
+  ecosystemGrants.grants[0].amountGranted = totalEthWithdrawnForJessy.toString();
+  return ecosystemGrants;
 };
 
 type ReviewGrantParams = {
