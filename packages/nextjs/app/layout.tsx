@@ -9,21 +9,21 @@ import "~~/styles/globals.css";
 const baseUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
   : `http://localhost:${process.env.PORT || 3000}`;
-const imageUrl = `${baseUrl}/thumbnail.jpg`;
+const imageUrl = `${baseUrl}/thumbnail.png`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: "Scaffold-ETH 2 App",
-    template: "%s | Scaffold-ETH 2",
+    default: "BuidlGuidl Grants",
+    template: "%s | BuidlGuidl Grants",
   },
-  description: "Built with 🏗 Scaffold-ETH 2",
+  description: "BuidlGuidl Grants offers funding to its members to build meaningful projects across the ecosystem.",
   openGraph: {
     title: {
-      default: "Scaffold-ETH 2 App",
-      template: "%s | Scaffold-ETH 2",
+      default: "BuidlGuidl Grants",
+      template: "%s | BuidlGuidl Grants",
     },
-    description: "Built with 🏗 Scaffold-ETH 2",
+    description: "BuidlGuidl Grants offers funding to its members to build meaningful projects across the ecosystem.",
     images: [
       {
         url: imageUrl,
@@ -34,10 +34,10 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     images: [imageUrl],
     title: {
-      default: "Scaffold-ETH 2",
-      template: "%s | Scaffold-ETH 2",
+      default: "BuidlGuidl Grants",
+      template: "%s | BuidlGuidl Grants",
     },
-    description: "Built with 🏗 Scaffold-ETH 2",
+    description: "BuidlGuidl Grants offers funding to its members to build meaningful projects across the ecosystem.",
   },
   icons: {
     icon: [{ url: "/favicon.png", sizes: "32x32", type: "image/png" }],
