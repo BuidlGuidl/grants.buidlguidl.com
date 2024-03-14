@@ -17,8 +17,6 @@ type ReqBody = {
   signer?: string;
 };
 
-const selectOptions = [0.1, 0.25, 0.5, 1];
-
 const Form = () => {
   const { address: connectedAddress } = useAccount();
   const { signTypedDataAsync } = useSignTypedData();
@@ -34,7 +32,7 @@ const Form = () => {
     try {
       const title = formData.get("title") as string;
       const description = formData.get("description") as string;
-      const askAmount = formData.get("askAmount") as string;
+      const askAmount = "0.25";
       if (!title || !description || !askAmount) {
         notification.error("Please fill all the fields");
         return;
@@ -90,17 +88,6 @@ const Form = () => {
               autoComplete="off"
             />
           </div>
-        </div>
-        <div className="space-y-2">
-          <p className="m-0 text-xl ml-2">Ask amount</p>
-          <select className="select bg-base-200 select-primary select-md select-bordered w-full" name="askAmount">
-            <option disabled>Select amount</option>
-            {selectOptions.map(option => (
-              <option key={option} value={option}>
-                {option} ETH
-              </option>
-            ))}
-          </select>
         </div>
         <SubmitButton />
       </form>
