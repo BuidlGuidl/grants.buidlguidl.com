@@ -5,6 +5,10 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
+interface ENSContract {
+    function setName(string memory newName) external;
+}
+
 /**
  * @title BGGrants
  * @notice A smart contract to split ETH or ERC20 tokens between multiple recipients.
@@ -15,6 +19,8 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 
 contract BGGrants is ReentrancyGuard, AccessControl {
     using SafeERC20 for IERC20;
+    // Mainnet ENS contract
+    ENSContract public immutable ensContract = ENSContract(0xa58E81fe9b61B5c3fE2AFD33CF304c454AbFc7Cb);
 
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
@@ -225,6 +231,15 @@ contract BGGrants is ReentrancyGuard, AccessControl {
         } else {
             token.transfer(msg.sender, token.balanceOf(address(this)));
         }
+    }
+
+    /**
+     * Set the reverse ENS name for the contract
+     * @param _newName The new ENS name for the contract
+     * @dev only meant to be call on mainnet
+    */
+    function setName(string memory _newName) onlyAdmin public {
+        ensContract.setName(_newName);
     }
 
     receive() external payable {}
