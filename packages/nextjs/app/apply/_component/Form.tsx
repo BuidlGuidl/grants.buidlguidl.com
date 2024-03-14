@@ -63,7 +63,7 @@ const Form = () => {
   };
 
   return (
-    <div className="card card-compact rounded-xl w-96 bg-secondary shadow-lg">
+    <div className="card card-compact rounded-xl w-96 bg-secondary shadow-lg mb-12">
       <form action={clientFormAction} className="card-body space-y-3">
         <h2 className="card-title self-center text-3xl !mb-0">Submit Proposal</h2>
         <div className="space-y-2">
