@@ -21,6 +21,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid form details submited" }, { status: 400 });
     }
 
+    // Check to see if the askAmount === 0.25
+    if (Number(askAmount) !== 0.25) {
+      return NextResponse.json({ error: "Invalid askAmount" }, { status: 400 });
+    }
+
     // Verif if the builder is present
     const builder = await findUserByAddress(signer);
     if (!builder.exists) {

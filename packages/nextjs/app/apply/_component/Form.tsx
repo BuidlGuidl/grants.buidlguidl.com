@@ -17,8 +17,6 @@ type ReqBody = {
   signer?: string;
 };
 
-const selectOptions = [0.1, 0.25, 0.5, 1];
-
 const Form = () => {
   const { address: connectedAddress } = useAccount();
   const { signTypedDataAsync } = useSignTypedData();
@@ -34,7 +32,7 @@ const Form = () => {
     try {
       const title = formData.get("title") as string;
       const description = formData.get("description") as string;
-      const askAmount = formData.get("askAmount") as string;
+      const askAmount = "0.25";
       if (!title || !description || !askAmount) {
         notification.error("Please fill all the fields");
         return;
@@ -65,12 +63,12 @@ const Form = () => {
   };
 
   return (
-    <div className="card card-compact w-96 bg-base-100 shadow-xl">
-      <form action={clientFormAction} className="card-body space-y-4">
+    <div className="card card-compact rounded-xl w-96 bg-secondary shadow-lg">
+      <form action={clientFormAction} className="card-body space-y-3">
         <h2 className="card-title self-center text-3xl !mb-0">Submit Proposal</h2>
         <div className="space-y-2">
           <p className="m-0 text-xl ml-2">Title</p>
-          <div className="flex border-2 border-base-300 bg-base-200 rounded-full text-accent">
+          <div className="flex border-2 border-base-300 bg-base-200 rounded-xl text-accent">
             <input
               className="input input-ghost focus-within:border-transparent focus:outline-none focus:bg-transparent focus:text-gray-400 h-[2.2rem] min-h-[2.2rem] px-4 border w-full font-medium placeholder:text-accent/50 text-gray-400"
               placeholder="title"
@@ -82,7 +80,7 @@ const Form = () => {
         </div>
         <div className="space-y-2">
           <p className="m-0 text-xl ml-2">Description</p>
-          <div className="flex border-2 border-base-300 bg-base-200 rounded-3xl text-accent">
+          <div className="flex border-2 border-base-300 bg-base-200 rounded-xl text-accent">
             <textarea
               className="input input-ghost focus-within:border-transparent focus:outline-none focus:bg-transparent focus:text-gray-400 px-4 pt-2 border w-full font-medium placeholder:text-accent/50 text-gray-400 h-28 rounded-none"
               placeholder="description"
@@ -90,17 +88,6 @@ const Form = () => {
               autoComplete="off"
             />
           </div>
-        </div>
-        <div className="space-y-2">
-          <p className="m-0 text-xl ml-2">Ask amount</p>
-          <select className="select bg-base-200 select-primary select-md select-bordered w-full" name="askAmount">
-            <option disabled>Select amount</option>
-            {selectOptions.map(option => (
-              <option key={option} value={option}>
-                {option} ETH
-              </option>
-            ))}
-          </select>
         </div>
         <SubmitButton />
       </form>
