@@ -33,6 +33,7 @@ export type BuilderData = {
   builds?: Build[];
   status?: Status;
   graduated?: Graduated;
+  builderBatch?: string;
 };
 
 export type BuilderDataResponse = {
