@@ -21,10 +21,7 @@ const EcosystemGrantsCard = ({
         <p className="m-0 absolute bottom-4 left-4 text-2xl md:text-3xl lg:text-4xl font-ppEditorial">{title}</p>
       </div>
       <div className="flex-1 flex flex-col items-start justify-between space-y-4 p-5">
-        <p className="text-sm lg:text-base m-0 font-spaceMono font-normal leading-5">
-          {description ||
-            "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.Lorem ipsum dolor sit amet, qui minim labore adipisicing."}
-        </p>
+        <p className="text-sm m-0 font-spaceMono font-normal leading-5 pb-2">{description}</p>
         <div className="flex justify-between items-baseline w-full">
           <div className="bg-primary rounded-lg py-1 px-2 text-xs font-bold">
             Amount:

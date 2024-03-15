@@ -2,22 +2,22 @@
   "grants": [
     {
       "name": "Jessy's Hacker House",
-      "description": "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.Lorem ipsum dolor sit amet, qui minim labore adipisicing.",
+      "description": "Jessy is helping the BuidlGuidl find high-impact up-and-coming devs. Our goal is to fund developers on the edge and help them remain free agents to have the most open source impact.",
       "amountGranted": "0",
       "twitterLink": "https://twitter.com/wehack247",
       "imgLink": "/assets/jessy-hacker-house.png"
     },
     {
       "name": "Solidity By Example",
-      "description": "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.Lorem ipsum dolor sit amet, qui minim labore adipisicing.",
-      "amountGranted": "1",
+      "description": "Solidity-by-example is the best solidity resource out there. It stays up-to-date and Taz is always adding new examples.",
+      "amountGranted": "13",
       "twitterLink": "https://twitter.com/ProgrammerSmart",
       "imgLink": "/assets/solidity-by-example.png"
     },
     {
       "name": "W1nt3r",
-      "description": "Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet.",
-      "amountGranted": "1",
+      "description": "W1nt3r created EVMFromScratch.com and many other engaging onchain apps. He is a model app builder on Ethereum.",
+      "amountGranted": "13",
       "twitterLink": "https://x.com/w1nt3r_eth",
       "imgLink": "/assets/winter.png"
     }
