@@ -71,7 +71,7 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
   const completeActionDisableToolTip = isCompleteActionDisabled && `Please switch to chain: ${grant.txChainId}`;
 
   return (
-    <div className="border border-4 rounded-lg p-4 my-4">
+    <div className="border-4 rounded-lg p-4 my-4">
       <div className="flex justify-between mb-2">
         <div className="font-bold flex flex-col gap-1 lg:gap-2 lg:flex-row items-baseline">
           <h1 className="text-lg m-0">{grant.title}</h1>
