@@ -5,7 +5,7 @@ import { GrantData } from "~~/services/database/schema";
 
 const CompletedGrantCard = ({ title, description, askAmount, builder, link, completedAt }: GrantData) => {
   return (
-    <div className="w-72 md:w-[300px] bg-primary min-h-full rounded-2xl overflow-hidden shadow-lg">
+    <div className="w-72 md:w-[290px] bg-primary min-h-full rounded-2xl overflow-hidden shadow-lg">
       <div className="flex justify-between items-center bg-white py-3 px-4 text-sm">
         <div className="flex items-center">
           <Image src="/assets/eth-completed-grant.png" alt="ETH Icon" width={10} height={10} />
@@ -43,7 +43,7 @@ export const CompletedGrants = async ({ limit }: { limit?: number }) => {
 
   return (
     <div className="bg-customBlue">
-      <div className="container flex flex-col justify-center max-w-[95%] lg:max-w-7xl mx-auto py-12 lg:pt-20 lg:pb-28 gap-6">
+      <div className="container flex flex-col justify-center max-w-[90%] xl:max-w-7xl mx-auto py-12 lg:pt-20 lg:pb-28 gap-6 xl:px-4">
         <div className="self-center lg:self-start w-fit relative">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl text-center lg:text-left font-ppEditorial">
             Completed grants

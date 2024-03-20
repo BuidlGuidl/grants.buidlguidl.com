@@ -40,7 +40,7 @@ export const EcosystemGrants = async () => {
   const ecosystemGrants = await getAllEcosystemGrants();
   return (
     <div>
-      <div className="container flex flex-col justify-center max-w-[90%] lg:max-w-7xl mx-auto py-12 lg:pt-20 lg:pb-28 lg:px-4 gap-6">
+      <div className="container flex flex-col justify-center max-w-[90%] xl:max-w-7xl mx-auto py-12 lg:pt-20 lg:pb-28 xl:px-4 gap-6">
         <div className="self-center lg:self-start w-fit relative">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl text-center lg:text-left font-ppEditorial">
             Ecosystem impact grants
