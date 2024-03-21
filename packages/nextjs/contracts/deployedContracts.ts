@@ -1083,7 +1083,7 @@ const deployedContracts = {
   },
   31337: {
     BGGrants: {
-      address: "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
       abi: [
         {
           inputs: [
@@ -1359,6 +1359,19 @@ const deployedContracts = {
           type: "function",
         },
         {
+          inputs: [],
+          name: "ensContract",
+          outputs: [
+            {
+              internalType: "contract ENSContract",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
           inputs: [
             {
               internalType: "bytes32",
@@ -1464,6 +1477,19 @@ const deployedContracts = {
             },
           ],
           name: "revokeRole",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "_newName",
+              type: "string",
+            },
+          ],
+          name: "setName",
           outputs: [],
           stateMutability: "nonpayable",
           type: "function",

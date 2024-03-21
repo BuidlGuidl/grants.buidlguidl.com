@@ -6,7 +6,7 @@ export const HomepageHero = () => (
     <div className="space-y-2 lg:max-w-[55%] flex flex-col items-center lg:items-start">
       <div className="relative">
         <h2 className="text-3xl md:text-4xl lg:text-6xl lg:leading-[1.2] text-center lg:text-left font-ppEditorial">
-          Funding meaningful projects <br /> across the ecosystem
+          Funding meaningful projects <br /> across the Ethereum ecosystem
         </h2>
         <Image className="absolute -top-3 -right-7" src="/assets/sparkle.png" alt="sparkle" width={32} height={32} />
       </div>
