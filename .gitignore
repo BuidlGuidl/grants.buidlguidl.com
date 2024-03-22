@@ -1,5 +1,4 @@
 node_modules
-packages/nextjs/.env
 
 # dependencies, yarn, etc
 # yarn / eslint
