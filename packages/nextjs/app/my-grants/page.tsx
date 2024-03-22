@@ -40,12 +40,14 @@ const MyGrants: NextPage = () => {
             {grant.title}
             <span className="text-sm text-gray-500 ml-2">({grant.id})</span>
           </h3>
-          <div className="flex mb-2 items-center">
-            <Image src="/assets/eth-completed-grant.png" alt="ETH Icon" width={10} height={10} />
-            <span className="ml-1 tooltip" data-tip="Total amount of the grant">
-              {grant.askAmount} ETH
-            </span>
-          </div>
+          {grant.status !== PROPOSAL_STATUS.PROPOSED && (
+            <div className="flex mb-2 items-center">
+              <Image src="/assets/eth-completed-grant.png" alt="ETH Icon" width={10} height={10} />
+              <span className="ml-1 tooltip" data-tip="Total amount of the grant">
+                {grant.askAmount} ETH
+              </span>
+            </div>
+          )}
           <p className="m-0">{grant.description}</p>
           <p className={`badge ${badgeBgColor[grant.status]}`}>{grant.status}</p>
           {grant.status === PROPOSAL_STATUS.APPROVED && (
