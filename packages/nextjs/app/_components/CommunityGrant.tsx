@@ -29,7 +29,7 @@ export const CommunityGrant = () => {
           <div className="text-center font-spaceMono px-1 max-w-xs sm:max-w-lg lg:max-w-none lg:w-11/12 lg:px-0 lg:text-left space-y-5">
             <p className="m-0 text-xs md:text-sm lg:text-base">
               Are you a BG member eager to make an impact in the ecosystem? At BuidlGuidl, we&apos;re excited to support
-              your builds. We offer sponsorship of up to 1 ETH for projects that drive the community forward.
+              your builds. We offer sponsorships of up to 1 ETH for projects that drive the community forward.
             </p>
             <Link
               href="/apply"
@@ -46,7 +46,7 @@ export const CommunityGrant = () => {
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center lg:space-y-2">
               <h2 className="font-extrabold text-xs lg:text-lg">WHO</h2>
               <p className="my-0 text-[0.4rem] lg:text-sm font-medium">
-                Individuals from BuildGuidl, who want to build a project to contribute to the Ethereum ecosystem.
+                Individuals from BuidlGuidl who want to build a project that contributes to the Ethereum ecosystem.
               </p>
             </div>
           </div>
@@ -64,7 +64,7 @@ export const CommunityGrant = () => {
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center lg:space-y-2">
               <h2 className="font-extrabold text-xs lg:text-lg">Process</h2>
               <p className="my-0 text-[0.4rem] lg:text-sm font-medium">
-                Fill your application, get approved from the BG Grants team and submit the project once completed.
+                Fill out your application, get approved from the BG Grants team, and submit the project once completed.
               </p>
             </div>
           </div>

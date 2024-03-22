@@ -13,8 +13,8 @@ export const HomepageHero = () => (
       <div className="text-center font-spaceMono px-1 max-w-lg lg:max-w-none lg:w-4/5 lg:px-0 lg:text-left space-y-5">
         <div className="bg-base-300 p-4 rounded-2xl">
           <p className="m-0 text-xs md:text-sm lg:text-base">
-            BG grants are one of the ways BuidlGuidl funds development and contribute to the Ethereum ecosystem. Did you
-            just finished SRE or completed one of our batches? This could be the next step in your BuidlGuidl’s journey.
+            BG grants are one of the ways BuidlGuidl funds development and contributes to the Ethereum ecosystem. Did you
+            just finish SRE or complete one of our batches? This could be the next step in your BuidlGuidl journey.
           </p>
         </div>
         <Link
