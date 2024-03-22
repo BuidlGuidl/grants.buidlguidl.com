@@ -15,13 +15,15 @@ export const metadata: Metadata = {
     default: "BuidlGuidl Grants",
     template: "%s | BuidlGuidl Grants",
   },
-  description: "BuidlGuidl Grants offers funding to its members to build meaningful projects across the ecosystem.",
+  description:
+    "BuidlGuidl Grants offers funding to its members to build meaningful projects across the Ethereum ecosystem.",
   openGraph: {
     title: {
       default: "BuidlGuidl Grants",
       template: "%s | BuidlGuidl Grants",
     },
-    description: "BuidlGuidl Grants offers funding to its members to build meaningful projects across the ecosystem.",
+    description:
+      "BuidlGuidl Grants offers funding to its members to build meaningful projects across the Ethereum ecosystem.",
     images: [
       {
         url: imageUrl,
@@ -35,7 +37,8 @@ export const metadata: Metadata = {
       default: "BuidlGuidl Grants",
       template: "%s | BuidlGuidl Grants",
     },
-    description: "BuidlGuidl Grants offers funding to its members to build meaningful projects across the ecosystem.",
+    description:
+      "BuidlGuidl Grants offers funding to its members to build meaningful projects across the Ethereum ecosystem.",
   },
   icons: {
     icon: [{ url: "/favicon.png", sizes: "32x32", type: "image/png" }],

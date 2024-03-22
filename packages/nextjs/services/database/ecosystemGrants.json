@@ -21,5 +21,26 @@
       "twitterLink": "https://x.com/w1nt3r_eth",
       "imgLink": "/assets/winter.png"
     }
+    , {
+      "name": "jtriley.eth",
+      "description": "Ether Deck Mk2: A reasonably optimized, extensible smart account.",
+      "amountGranted": "2.262",
+      "twitterLink": "https://twitter.com/jtriley_eth",
+      "imgLink": "/assets/etherdeck.png"
+    }
+    , {
+      "name": "erhant.eth",
+      "description": "Circomkit is a Circom circuit development & testing toolkit. It provides a simple CLI that abstracts away pathing & setups for SnarkJS commands...",
+      "amountGranted": "2.262",
+      "twitterLink": "https://twitter.com/0xerhant",
+      "imgLink": "/assets/circomkit2.png"
+    }
+    , {
+      "name": "bytes032.eth",
+      "description": "FindAudit is a public good platform that allows protocols to connect with over 100 auditors/audit firms in less than 48 hours.",
+      "amountGranted": "2.262",
+      "twitterLink": "https://twitter.com/bytes032",
+      "imgLink": "/assets/findaudit.png"
+    }
   ]
 }
