@@ -45,7 +45,6 @@ const Form = () => {
         message: {
           title: title,
           description: description,
-          askAmount: askAmount,
         },
       });
 

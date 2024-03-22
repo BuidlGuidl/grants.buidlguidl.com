@@ -36,7 +36,7 @@ export async function POST(req: Request) {
       domain: EIP_712_DOMAIN,
       types: EIP_712_TYPES__APPLY_FOR_GRANT,
       primaryType: "Message",
-      message: { title, description, askAmount },
+      message: { title, description },
       signature: signature,
     });
 

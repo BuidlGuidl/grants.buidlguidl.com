@@ -10,7 +10,6 @@ export const EIP_712_TYPES__APPLY_FOR_GRANT = {
   Message: [
     { name: "title", type: "string" },
     { name: "description", type: "string" },
-    { name: "askAmount", type: "string" },
   ],
 } as const;
 
