@@ -12,7 +12,6 @@ import { postMutationFetcher } from "~~/utils/swr";
 type ReqBody = {
   title?: string;
   description?: string;
-  askAmount?: string;
   signature?: `0x${string}`;
   signer?: string;
 };
@@ -32,8 +31,7 @@ const Form = () => {
     try {
       const title = formData.get("title") as string;
       const description = formData.get("description") as string;
-      const askAmount = "0.25";
-      if (!title || !description || !askAmount) {
+      if (!title || !description) {
         notification.error("Please fill all the fields");
         return;
       }
@@ -48,7 +46,7 @@ const Form = () => {
         },
       });
 
-      await postNewGrant({ title, description, askAmount, signature, signer: connectedAddress });
+      await postNewGrant({ title, description, signature, signer: connectedAddress });
 
       notification.success("Proposal submitted successfully!");
       router.push("/");

@@ -12,18 +12,15 @@ type ReqBody = {
   signer?: string;
 };
 
-// TODO: We could also add extra validtion of nonce
+// Hardcoded default ask amount
+const askAmount = 0.25;
+// TODO: We could also add extra validation of nonce
 export async function POST(req: Request) {
   try {
-    const { title, description, askAmount, signature, signer } = (await req.json()) as ReqBody;
+    const { title, description, signature, signer } = (await req.json()) as ReqBody;
 
-    if (!title || !description || !askAmount || isNaN(Number(askAmount)) || !signature || !signer) {
+    if (!title || !description || !signature || !signer) {
       return NextResponse.json({ error: "Invalid form details submited" }, { status: 400 });
-    }
-
-    // Check to see if the askAmount === 0.25
-    if (Number(askAmount) !== 0.25) {
-      return NextResponse.json({ error: "Invalid askAmount" }, { status: 400 });
     }
 
     // Verif if the builder is present
@@ -47,7 +44,7 @@ export async function POST(req: Request) {
     const grant = await createGrant({
       title: title,
       description: description,
-      askAmount: Number(askAmount),
+      askAmount: askAmount,
       builder: signer,
     });
 
