@@ -76,17 +76,17 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
   return (
     <div className="border-4 rounded-lg p-4 my-4">
       <div className="flex justify-between mb-2">
-        <div className="font-bold flex flex-col gap-1 lg:gap-2 lg:flex-row items-baseline">
+        <div className="font-bold flex flex-col gap-1 lg:gap-2 lg:flex-row lg:flex-wrap items-baseline">
           <h1 className="text-lg m-0">{grant.title}</h1>
           <span className="text-sm text-gray-500">({grant.id})</span>
-          <button className="cursor-pointer self-center" onClick={() => editGrantModalRef?.current?.showModal()}>
-            <PencilSquareIcon className="h-5 w-5" />
-          </button>
           {grant.link && (
             <a href={grant.link} className="underline text-sm" target="_blank" rel="noopener noreferrer">
               View Build <ArrowTopRightOnSquareIcon className="h-4 w-4 inline" />
             </a>
           )}
+          <button className="cursor-pointer self-center" onClick={() => editGrantModalRef?.current?.showModal()}>
+            <PencilSquareIcon className="h-6 w-6" />
+          </button>
         </div>
         <input
           type="checkbox"
