@@ -25,7 +25,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { grantId: s
       domain: EIP_712_DOMAIN,
       types: EIP_712_TYPES_EDIT_GRANT,
       primaryType: "Message",
-      message: { title, description, askAmount: askAmount.toString() },
+      message: { title, description, askAmount: askAmount.toString(), grantId },
       signature: signature,
     });
     if (recoveredAddress !== signer) {
@@ -39,6 +39,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { grantId: s
     }
 
     await updateGrant(grantId, { title, description, askAmount });
+    return NextResponse.json({ success: true });
   } catch (e) {
     console.error(e);
     return NextResponse.json({ error: "Error editing grant" }, { status: 500 });

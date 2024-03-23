@@ -149,7 +149,7 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
           </button>
         </div>
       </div>
-      <EditGrantModal ref={editGrantModalRef} grant={grant} />
+      <EditGrantModal ref={editGrantModalRef} grant={grant} closeModal={() => editGrantModalRef?.current?.close()} />
       <ActionModal ref={actionModalRef} grant={grant} initialTxLink={txResult?.hash} />
     </div>
   );

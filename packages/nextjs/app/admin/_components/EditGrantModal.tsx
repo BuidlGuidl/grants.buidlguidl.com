@@ -1,16 +1,40 @@
 import { ChangeEvent, forwardRef, useState } from "react";
+import { useSWRConfig } from "swr";
+import useSWRMutation from "swr/mutation";
+import { useAccount, useNetwork, useSignTypedData } from "wagmi";
 import { GrantDataWithBuilder } from "~~/services/database/schema";
+import { EIP_712_DOMAIN, EIP_712_TYPES_EDIT_GRANT } from "~~/utils/eip712";
+import { getParsedError, notification } from "~~/utils/scaffold-eth";
+import { patchMutationFetcher } from "~~/utils/swr";
 
 type EditGrantModalProps = {
   grant: GrantDataWithBuilder;
+  closeModal: () => void;
 };
 
-export const EditGrantModal = forwardRef<HTMLDialogElement, EditGrantModalProps>(({ grant }, ref) => {
+type ReqBody = {
+  title?: string;
+  description?: string;
+  askAmount?: number;
+  signature?: `0x${string}`;
+  signer?: string;
+};
+
+export const EditGrantModal = forwardRef<HTMLDialogElement, EditGrantModalProps>(({ grant, closeModal }, ref) => {
   const [formData, setFormData] = useState({
     title: grant.title,
     description: grant.description,
     askAmount: grant.askAmount,
   });
+
+  const { address } = useAccount();
+  const { chain: connectedChain } = useNetwork();
+  const { signTypedDataAsync, isLoading: isSigningMessage } = useSignTypedData();
+
+  const { trigger: editGrant, isMutating } = useSWRMutation(`/api/grants/${grant.id}`, patchMutationFetcher<ReqBody>);
+  const { mutate } = useSWRConfig();
+
+  const isLoading = isSigningMessage || isMutating;
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -18,6 +42,44 @@ export const EditGrantModal = forwardRef<HTMLDialogElement, EditGrantModalProps>
       ...prevFormData,
       [name]: value,
     }));
+  };
+
+  const handleEditGrant = async () => {
+    if (!address || !connectedChain) {
+      notification.error("Please connect your wallet");
+      return;
+    }
+
+    let notificationId: string | undefined;
+    try {
+      const signature = await signTypedDataAsync({
+        domain: EIP_712_DOMAIN,
+        types: EIP_712_TYPES_EDIT_GRANT,
+        primaryType: "Message",
+        message: {
+          grantId: grant.id,
+          title: formData.title,
+          description: formData.description,
+          askAmount: formData.askAmount.toString(),
+        },
+      });
+      notificationId = notification.loading("Updating grant");
+      await editGrant({
+        signer: address,
+        signature,
+        ...formData,
+      });
+      await mutate("/api/grants/review");
+      notification.remove(notificationId);
+      notification.success(`Successfully updated grant ${grant.id}`);
+      closeModal();
+    } catch (error) {
+      console.error("Error editing grant", error);
+      const errorMessage = getParsedError(error);
+      notification.error(errorMessage);
+    } finally {
+      if (notificationId) notification.remove(notificationId);
+    }
   };
 
   return (
@@ -66,6 +128,14 @@ export const EditGrantModal = forwardRef<HTMLDialogElement, EditGrantModalProps>
             onChange={handleInputChange}
           />
         </div>
+        <button
+          className={`btn btn-md btn-success ${isLoading ? "opacity-50" : ""}`}
+          onClick={handleEditGrant}
+          disabled={isLoading}
+        >
+          {isLoading && <span className="loading loading-spinner"></span>}
+          Submit
+        </button>
       </div>
     </dialog>
   );
