@@ -19,7 +19,7 @@
       "description": "W1nt3r created EVMFromScratch.com and many other engaging onchain apps. He is a model app builder on Ethereum.",
       "amountGranted": "13",
       "twitterLink": "https://x.com/w1nt3r_eth",
-      "imgLink": "/assets/winter.png"
+      "imgLink": "/assets/w1nt3r-evm.png"
     }
     , {
       "name": "jtriley.eth",
@@ -33,7 +33,7 @@
       "description": "Circomkit is a Circom circuit development & testing toolkit. It provides a simple CLI that abstracts away pathing & setups for SnarkJS commands...",
       "amountGranted": "2.262",
       "twitterLink": "https://twitter.com/0xerhant",
-      "imgLink": "/assets/circomkit2.png"
+      "imgLink": "/assets/circomkit.png"
     }
     , {
       "name": "bytes032.eth",
