@@ -12,7 +12,7 @@ type ReqBody = {
   signer?: string;
 };
 
-export async function PUT(req: NextRequest, { params }: { params: { grantId: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: { grantId: string } }) {
   try {
     const { grantId } = params;
     const { title, description, signature, signer, askAmount } = (await req.json()) as ReqBody;

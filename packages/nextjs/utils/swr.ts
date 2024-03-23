@@ -26,5 +26,5 @@ export const makeMutationFetcher =
 export const postMutationFetcher = <T = Record<any, any>>(url: string, arg: { arg: T }) =>
   makeMutationFetcher<T>("POST")(url, arg);
 
-export const putMutationFetcher = <T = Record<any, any>>(url: string, arg: { arg: T }) =>
-  makeMutationFetcher<T>("PUT")(url, arg);
+export const patchMutationFetcher = <T = Record<any, any>>(url: string, arg: { arg: T }) =>
+  makeMutationFetcher<T>("PATCH")(url, arg);
