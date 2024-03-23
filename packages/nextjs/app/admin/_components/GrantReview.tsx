@@ -79,7 +79,7 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
         <div className="font-bold flex flex-col gap-1 lg:gap-2 lg:flex-row items-baseline">
           <h1 className="text-lg m-0">{grant.title}</h1>
           <span className="text-sm text-gray-500">({grant.id})</span>
-          <button className="cursor-pointer" onClick={() => editGrantModalRef?.current?.showModal()}>
+          <button className="cursor-pointer self-center" onClick={() => editGrantModalRef?.current?.showModal()}>
             <PencilSquareIcon className="h-5 w-5" />
           </button>
           {grant.link && (
