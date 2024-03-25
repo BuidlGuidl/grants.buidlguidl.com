@@ -9,6 +9,7 @@ import { useAccount } from "wagmi";
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/20/solid";
 import { GrantData } from "~~/services/database/schema";
 import { PROPOSAL_STATUS } from "~~/utils/grants";
+import { getBlockExplorerTxLink } from "~~/utils/scaffold-eth";
 
 const badgeBgColor = {
   [PROPOSAL_STATUS.PROPOSED]: "bg-warning",
@@ -53,7 +54,7 @@ const MyGrants: NextPage = () => {
           <p className={`badge ${badgeBgColor[grant.status]}`}>{grant.status}</p>
           {grant.approvedTx && (
             <a
-              href={grant.approvedTx}
+              href={getBlockExplorerTxLink(Number(grant.txChainId), grant.approvedTx)}
               target="_blank"
               rel="noopener noreferrer"
               className="ml-4 underline underline-offset-4 text-xs"
@@ -63,7 +64,7 @@ const MyGrants: NextPage = () => {
           )}
           {grant.completedTx && (
             <a
-              href={grant.completedTx}
+              href={getBlockExplorerTxLink(Number(grant.txChainId), grant.completedTx)}
               target="_blank"
               rel="noopener noreferrer"
               className="ml-4 underline underline-offset-4 text-xs"
