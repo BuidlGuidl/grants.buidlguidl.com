@@ -2,9 +2,11 @@ import { useRef } from "react";
 import Image from "next/image";
 import { useReviewGrant } from "../hooks/useReviewGrant";
 import { ActionModal } from "./ActionModal";
+import { EditGrantModal } from "./EditGrantModal";
 import { parseEther } from "viem";
 import { useNetwork } from "wagmi";
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/20/solid";
+import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import TelegramIcon from "~~/components/assets/TelegramIcon";
 import TwitterIcon from "~~/components/assets/TwitterIcon";
 import { Address } from "~~/components/scaffold-eth";
@@ -47,7 +49,8 @@ type GrantReviewProps = {
   toggleSelection: () => void;
 };
 export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewProps) => {
-  const modalRef = useRef<HTMLDialogElement>(null);
+  const actionModalRef = useRef<HTMLDialogElement>(null);
+  const editGrantModalRef = useRef<HTMLDialogElement>(null);
   const { chain: connectedChain } = useNetwork();
 
   const { data: txResult, writeAsync: splitEqualETH } = useScaffoldContractWrite({
@@ -73,7 +76,7 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
   return (
     <div className="border-4 rounded-lg p-4 my-4">
       <div className="flex justify-between mb-2">
-        <div className="font-bold flex flex-col gap-1 lg:gap-2 lg:flex-row items-baseline">
+        <div className="font-bold flex flex-col gap-1 lg:gap-2 lg:flex-row lg:flex-wrap items-baseline">
           <h1 className="text-lg m-0">{grant.title}</h1>
           <span className="text-sm text-gray-500">({grant.id})</span>
           {grant.link && (
@@ -81,6 +84,9 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
               View Build <ArrowTopRightOnSquareIcon className="h-4 w-4 inline" />
             </a>
           )}
+          <button className="cursor-pointer self-center" onClick={() => editGrantModalRef?.current?.showModal()}>
+            <PencilSquareIcon className="h-6 w-6" />
+          </button>
         </div>
         <input
           type="checkbox"
@@ -125,7 +131,7 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
                 value: parseEther((grant.askAmount / 2).toString()),
               });
               // Transactor eats the error, so we need to handle by checking resHash
-              if (resHash && modalRef.current) modalRef.current.showModal();
+              if (resHash && actionModalRef.current) actionModalRef.current.showModal();
             }}
             disabled={isLoading || isCompleteActionDisabled}
           >
@@ -135,7 +141,7 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
             className={`btn btn-sm btn-success ${isLoading ? "opacity-50" : ""} ${completeActionDisableClassName}`}
             data-tip={completeActionDisableToolTip}
             onClick={() => {
-              if (modalRef.current) modalRef.current.showModal();
+              if (actionModalRef.current) actionModalRef.current.showModal();
             }}
             disabled={isLoading || isCompleteActionDisabled}
           >
@@ -143,7 +149,8 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
           </button>
         </div>
       </div>
-      <ActionModal ref={modalRef} grant={grant} initialTxLink={txResult?.hash} />
+      <EditGrantModal ref={editGrantModalRef} grant={grant} closeModal={() => editGrantModalRef?.current?.close()} />
+      <ActionModal ref={actionModalRef} grant={grant} initialTxLink={txResult?.hash} />
     </div>
   );
 };
