@@ -125,6 +125,7 @@ export const EditGrantModal = forwardRef<HTMLDialogElement, EditGrantModalProps>
           <input
             type="number"
             name="askAmount"
+            disabled={grant.status === "submitted"}
             placeholder="ask amount"
             value={formData.askAmount}
             className="input input-sm input-bordered w-full"
