@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { recoverTypedDataAddress } from "viem";
 import { updateGrant } from "~~/services/database/grants";
 import { findUserByAddress } from "~~/services/database/users";
-import { EIP_712_DOMAIN, EIP_712_TYPES_EDIT_GRANT } from "~~/utils/eip712";
+import { EIP_712_DOMAIN, EIP_712_TYPES__EDIT_GRANT } from "~~/utils/eip712";
 
 type ReqBody = {
   title?: string;
@@ -23,7 +23,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { grantId: s
 
     const recoveredAddress = await recoverTypedDataAddress({
       domain: EIP_712_DOMAIN,
-      types: EIP_712_TYPES_EDIT_GRANT,
+      types: EIP_712_TYPES__EDIT_GRANT,
       primaryType: "Message",
       message: { title, description, askAmount: askAmount.toString(), grantId },
       signature: signature,

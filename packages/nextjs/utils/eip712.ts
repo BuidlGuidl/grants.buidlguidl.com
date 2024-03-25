@@ -10,7 +10,7 @@ export const EIP_712_TYPES__APPLY_FOR_GRANT = {
   ],
 } as const;
 
-export const EIP_712_TYPES_EDIT_GRANT = {
+export const EIP_712_TYPES__EDIT_GRANT = {
   Message: [
     ...EIP_712_TYPES__APPLY_FOR_GRANT.Message,
 

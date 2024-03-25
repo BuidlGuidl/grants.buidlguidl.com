@@ -3,7 +3,7 @@ import { useSWRConfig } from "swr";
 import useSWRMutation from "swr/mutation";
 import { useAccount, useNetwork, useSignTypedData } from "wagmi";
 import { GrantDataWithBuilder } from "~~/services/database/schema";
-import { EIP_712_DOMAIN, EIP_712_TYPES_EDIT_GRANT } from "~~/utils/eip712";
+import { EIP_712_DOMAIN, EIP_712_TYPES__EDIT_GRANT } from "~~/utils/eip712";
 import { getParsedError, notification } from "~~/utils/scaffold-eth";
 import { patchMutationFetcher } from "~~/utils/swr";
 
@@ -54,7 +54,7 @@ export const EditGrantModal = forwardRef<HTMLDialogElement, EditGrantModalProps>
     try {
       const signature = await signTypedDataAsync({
         domain: EIP_712_DOMAIN,
-        types: EIP_712_TYPES_EDIT_GRANT,
+        types: EIP_712_TYPES__EDIT_GRANT,
         primaryType: "Message",
         message: {
           grantId: grant.id,
