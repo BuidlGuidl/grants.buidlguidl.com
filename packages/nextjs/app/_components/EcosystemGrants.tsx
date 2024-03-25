@@ -18,7 +18,9 @@ const EcosystemGrantsCard = ({
     <div className="bg-base-100 rounded-2xl min-h-[380px] max-w-[370px] flex flex-col">
       <div className="h-56 w-full bg-gray-400/60 rounded-tl-2xl rounded-tr-2xl relative">
         <Image src={imageLink} alt={title} fill={true} className="rounded-tl-2xl rounded-tr-2xl" />
-        <p className="m-0 absolute bottom-4 left-4 text-2xl md:text-3xl lg:text-4xl font-ppEditorial">{title}</p>
+        <p className="m-0 absolute bottom-4 left-4 text-2xl md:text-3xl lg:text-4xl font-ppEditorial text-white">
+          {title}
+        </p>
       </div>
       <div className="flex-1 flex flex-col items-start justify-between space-y-4 p-5">
         <p className="text-sm m-0 font-spaceMono font-normal leading-5 pb-2">{description}</p>
