@@ -17,7 +17,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { grantId: s
     const { grantId } = params;
     const { title, description, signature, signer, askAmount } = (await req.json()) as ReqBody;
 
-    if (!title || !description || !askAmount || !signature || !signer) {
+    if (!title || !description || !askAmount || typeof askAmount !== "number" || !signature || !signer) {
       return NextResponse.json({ error: "Invalid form details submited" }, { status: 400 });
     }
 

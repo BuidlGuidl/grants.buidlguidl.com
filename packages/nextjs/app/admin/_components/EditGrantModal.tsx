@@ -24,7 +24,7 @@ export const EditGrantModal = forwardRef<HTMLDialogElement, EditGrantModalProps>
   const [formData, setFormData] = useState({
     title: grant.title,
     description: grant.description,
-    askAmount: grant.askAmount,
+    askAmount: grant.askAmount.toString(),
   });
 
   const { address } = useAccount();
@@ -60,7 +60,9 @@ export const EditGrantModal = forwardRef<HTMLDialogElement, EditGrantModalProps>
           grantId: grant.id,
           title: formData.title,
           description: formData.description,
-          askAmount: formData.askAmount.toString(),
+          // Converting this to number with parseFloat and again to string (similar to backend),
+          // if not it generates different signature with .23 and 0.23
+          askAmount: parseFloat(formData.askAmount).toString(),
         },
       });
       notificationId = notification.loading("Updating grant");
@@ -68,6 +70,7 @@ export const EditGrantModal = forwardRef<HTMLDialogElement, EditGrantModalProps>
         signer: address,
         signature,
         ...formData,
+        askAmount: parseFloat(formData.askAmount),
       });
       await mutate("/api/grants/review");
       notification.remove(notificationId);
