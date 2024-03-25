@@ -10,6 +10,15 @@ export const EIP_712_TYPES__APPLY_FOR_GRANT = {
   ],
 } as const;
 
+export const EIP_712_TYPES__EDIT_GRANT = {
+  Message: [
+    ...EIP_712_TYPES__APPLY_FOR_GRANT.Message,
+
+    { name: "grantId", type: "string" },
+    { name: "askAmount", type: "string" },
+  ],
+} as const;
+
 export const EIP_712_TYPES__REVIEW_GRANT = {
   Message: [
     { name: "grantId", type: "string" },

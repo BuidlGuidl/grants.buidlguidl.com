@@ -161,6 +161,15 @@ export const reviewGrant = async ({ grantId, action, txHash, txChainId }: Review
   }
 };
 
+export const updateGrant = async (grantId: string, grantData: Partial<GrantData>) => {
+  try {
+    await getGrantsDoc(grantId).update(grantData);
+  } catch (error) {
+    console.error("Error updating the grant:", error);
+    throw error;
+  }
+};
+
 export const getGrantsStats = async () => {
   // total_eth_granted is the summation of askAmount of all completed grants
   // total_active_grants is the count of grants with status "approved"
