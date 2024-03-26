@@ -5,28 +5,41 @@ import { BatchActionModal } from "./_components/BatchActionModal";
 import { GrantReview } from "./_components/GrantReview";
 import useSWR from "swr";
 import { parseEther } from "viem";
+import { useAccount } from "wagmi";
 import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import { GrantDataWithBuilder } from "~~/services/database/schema";
 import { PROPOSAL_STATUS } from "~~/utils/grants";
 import { notification } from "~~/utils/scaffold-eth";
 
+const fetcherWithHeader = (url: string, address: string) =>
+  fetch(url, {
+    headers: {
+      Address: address,
+    },
+  }).then(res => res.json());
+
 const AdminPage = () => {
+  const { address } = useAccount();
   const [selectedApproveGrants, setSelectedApproveGrants] = useState<string[]>([]);
   const [selectedCompleteGrants, setSelectedCompleteGrants] = useState<string[]>([]);
   const [modalBtnLabel, setModalBtnLabel] = useState<"Approve" | "Complete">("Approve");
   const modalRef = useRef<HTMLDialogElement>(null);
 
-  const { data, isLoading } = useSWR<{ data: GrantDataWithBuilder[] }>("/api/grants/review", {
-    onError: error => {
-      console.error("Error fetching grants", error);
-      notification.error("Error getting grants data");
+  const { data, isLoading } = useSWR<{ data: GrantDataWithBuilder[] }>(
+    address ? "/api/grants/review" : null,
+    url => url && fetcherWithHeader(url, address as string),
+    {
+      onError: error => {
+        console.error("Error fetching grants", error);
+        notification.error("Error getting grants data");
+      },
+      onSuccess: () => {
+        // reset states whenver any of action is performed
+        setSelectedApproveGrants([]);
+        setSelectedCompleteGrants([]);
+      },
     },
-    onSuccess: () => {
-      // reset states whenver any of action is performed
-      setSelectedApproveGrants([]);
-      setSelectedCompleteGrants([]);
-    },
-  });
+  );
   const grants = data?.data;
 
   const toggleGrantSelection = (grantId: string, action: "approve" | "complete") => {
