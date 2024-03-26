@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { recoverTypedDataAddress } from "viem";
 import { getAllGrantsForReview, reviewGrant } from "~~/services/database/grants";
@@ -8,6 +9,21 @@ import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
+  // Soft check.
+  const reqHeaders = headers();
+  const address = reqHeaders.get("Address");
+
+  if (!address) {
+    console.error("Unauthorized");
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const signerData = await findUserByAddress(address);
+  if (signerData.data?.role !== "admin") {
+    console.error("Unauthorized", address);
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const grants = await getAllGrantsForReview();
     return NextResponse.json({ data: grants });
