@@ -166,7 +166,7 @@ const AdminPage = () => {
       <div className="container mx-auto mt-12 max-w-[95%]">
         <div className="p-8 bg-error/5">
           <h2 className="font-bold text-xl">Error fetching data</h2>
-          <p className="m-0">Please make you have right address connected</p>
+          <p className="m-0">Please make you are connected to right address.</p>
           <Link href="/" className="underline underline-offset-2">
             Go back to home page
           </Link>
