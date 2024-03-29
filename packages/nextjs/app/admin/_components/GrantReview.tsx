@@ -74,79 +74,98 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
   const completeActionDisableToolTip = isCompleteActionDisabled && `Please switch to chain: ${grant.txChainId}`;
 
   return (
-    <div className="border-4 rounded-lg p-4 my-4">
-      <div className="flex justify-between mb-2">
-        <div className="font-bold flex flex-col gap-1 lg:gap-2 lg:flex-row lg:flex-wrap items-baseline">
-          <h1 className="text-lg m-0">{grant.title}</h1>
-          <span className="text-sm text-gray-500">({grant.id})</span>
-          {grant.link && (
-            <a href={grant.link} className="underline text-sm" target="_blank" rel="noopener noreferrer">
-              View Build <ArrowTopRightOnSquareIcon className="h-4 w-4 inline" />
-            </a>
-          )}
+    <div className="border-4 rounded-lg my-4">
+      <div className="flex justify-between items-center bg-white py-3 px-4 text-sm">
+        <div className="flex items-center">
+          <Image src="/assets/eth-completed-grant.png" alt="ETH Icon" width={10} height={10} />
+          <span className="ml-1 font-bold tooltip" data-tip="Total amount of the grant">
+            {grant.askAmount} ETH
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span>
+            {grant.proposedAt
+              ? new Date(grant.proposedAt).toLocaleString(undefined, {
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+              : ""}
+          </span>
           <button className="cursor-pointer self-center" onClick={() => editGrantModalRef?.current?.showModal()}>
             <PencilSquareIcon className="h-6 w-6" />
           </button>
+          <input
+            type="checkbox"
+            className={`checkbox checkbox-primary ${completeActionDisableClassName}`}
+            data-tip={completeActionDisableToolTip}
+            disabled={isCompleteActionDisabled}
+            checked={selected}
+            onChange={toggleSelection}
+          />
         </div>
-        <input
-          type="checkbox"
-          className={`checkbox checkbox-primary ${completeActionDisableClassName}`}
-          data-tip={completeActionDisableToolTip}
-          disabled={isCompleteActionDisabled}
-          checked={selected}
-          onChange={toggleSelection}
-        />
       </div>
-      <div className="flex mb-2 items-center">
-        <Image src="/assets/eth-completed-grant.png" alt="ETH Icon" width={10} height={10} />
-        <span className="ml-1 tooltip" data-tip="Total amount of the grant">
-          {grant.askAmount} ETH
-        </span>
+      <div className="bg-base-300 p-4">
+        <div className="flex justify-between mb-2">
+          <div className="font-bold flex flex-col gap-1 lg:gap-2 lg:flex-row lg:flex-wrap items-baseline">
+            <h1 className="text-lg m-0">{grant.title}</h1>
+            <span className="text-sm text-gray-500">({grant.id})</span>
+            {grant.link && (
+              <a href={grant.link} className="underline text-sm" target="_blank" rel="noopener noreferrer">
+                View Build <ArrowTopRightOnSquareIcon className="h-4 w-4 inline" />
+              </a>
+            )}
+          </div>
+        </div>
+        <div className="flex gap-4 items-center">
+          <Address address={grant.builder} link={`https://app.buidlguidl.com/builders/${grant.builder}`} />
+          <BuilderSocials socialLinks={grant.builderData?.socialLinks} />
+          {grant.builderData?.builderBatch && (
+            <div className="badge badge-outline">Batch #{grant.builderData.builderBatch}</div>
+          )}
+        </div>
       </div>
-      <div className="flex gap-4 items-center">
-        <Address address={grant.builder} link={`https://app.buidlguidl.com/builders/${grant.builder}`} />
-        <BuilderSocials socialLinks={grant.builderData?.socialLinks} />
-        {grant.builderData?.builderBatch && (
-          <div className="badge badge-outline">Batch #{grant.builderData.builderBatch}</div>
-        )}
-      </div>
-      <p>{grant.description}</p>
-      <div className="flex gap-2 lg:gap-4 mt-4 justify-between">
-        <button
-          className={`btn btn-sm btn-error ${isLoading ? "opacity-50" : ""}`}
-          onClick={() => handleReviewGrant(PROPOSAL_STATUS.REJECTED)}
-          disabled={isLoading}
-        >
-          Reject
-        </button>
-        <div className="flex gap-2 lg:gap-4">
+      <div className="p-4">
+        <p>{grant.description}</p>
+        <div className="flex gap-2 lg:gap-4 mt-4 justify-between">
           <button
-            className={`btn btn-sm btn-success border-2 bg-transparent ${
-              isLoading ? "opacity-50" : ""
-            } ${completeActionDisableClassName}`}
-            data-tip={completeActionDisableToolTip}
-            onClick={async () => {
-              const resHash = await splitEqualETH({
-                args: [[grant.builder], [parseEther((grant.askAmount / 2).toString())]],
-                value: parseEther((grant.askAmount / 2).toString()),
-              });
-              // Transactor eats the error, so we need to handle by checking resHash
-              if (resHash && actionModalRef.current) actionModalRef.current.showModal();
-            }}
-            disabled={isLoading || isCompleteActionDisabled}
+            className={`btn btn-sm btn-error ${isLoading ? "opacity-50" : ""}`}
+            onClick={() => handleReviewGrant(PROPOSAL_STATUS.REJECTED)}
+            disabled={isLoading}
           >
-            Send 50%
+            Reject
           </button>
-          <button
-            className={`btn btn-sm btn-success ${isLoading ? "opacity-50" : ""} ${completeActionDisableClassName}`}
-            data-tip={completeActionDisableToolTip}
-            onClick={() => {
-              if (actionModalRef.current) actionModalRef.current.showModal();
-            }}
-            disabled={isLoading || isCompleteActionDisabled}
-          >
-            {acceptLabel}
-          </button>
+          <div className="flex gap-2 lg:gap-4">
+            <button
+              className={`btn btn-sm btn-success border-2 bg-transparent ${
+                isLoading ? "opacity-50" : ""
+              } ${completeActionDisableClassName}`}
+              data-tip={completeActionDisableToolTip}
+              onClick={async () => {
+                const resHash = await splitEqualETH({
+                  args: [[grant.builder], [parseEther((grant.askAmount / 2).toString())]],
+                  value: parseEther((grant.askAmount / 2).toString()),
+                });
+                // Transactor eats the error, so we need to handle by checking resHash
+                if (resHash && actionModalRef.current) actionModalRef.current.showModal();
+              }}
+              disabled={isLoading || isCompleteActionDisabled}
+            >
+              Send 50%
+            </button>
+            <button
+              className={`btn btn-sm btn-success ${isLoading ? "opacity-50" : ""} ${completeActionDisableClassName}`}
+              data-tip={completeActionDisableToolTip}
+              onClick={() => {
+                if (actionModalRef.current) actionModalRef.current.showModal();
+              }}
+              disabled={isLoading || isCompleteActionDisabled}
+            >
+              {acceptLabel}
+            </button>
+          </div>
         </div>
       </div>
       <EditGrantModal ref={editGrantModalRef} grant={grant} closeModal={() => editGrantModalRef?.current?.close()} />
