@@ -4,12 +4,16 @@ import { useRef, useState } from "react";
 import { BatchActionModal } from "./_components/BatchActionModal";
 import { GrantReview } from "./_components/GrantReview";
 import useSWR from "swr";
+import useSWRMutation from "swr/mutation";
+import { useLocalStorage } from "usehooks-ts";
 import { parseEther } from "viem";
-import { useAccount } from "wagmi";
+import { useAccount, useSignTypedData } from "wagmi";
 import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import { GrantDataWithBuilder } from "~~/services/database/schema";
+import { EIP_712_DOMAIN, EIP_712_TYPES__ADMIN_SIGN_IN } from "~~/utils/eip712";
 import { PROPOSAL_STATUS } from "~~/utils/grants";
-import { notification } from "~~/utils/scaffold-eth";
+import { getParsedError, notification } from "~~/utils/scaffold-eth";
+import { postMutationFetcher } from "~~/utils/swr";
 
 const fetcherWithHeader = (url: string, address: string) =>
   fetch(url, {
@@ -24,6 +28,15 @@ const AdminPage = () => {
   const [selectedCompleteGrants, setSelectedCompleteGrants] = useState<string[]>([]);
   const [modalBtnLabel, setModalBtnLabel] = useState<"Approve" | "Complete">("Approve");
   const modalRef = useRef<HTMLDialogElement>(null);
+  const [apiKey, setApiKey] = useLocalStorage("admin-api-key", "", { initializeWithValue: false });
+  const { signTypedDataAsync, isLoading: isSigningMessage } = useSignTypedData();
+  const { trigger: postAdminSignIn, isMutating: isSigningIn } = useSWRMutation(
+    "/api/admin/signin",
+    postMutationFetcher<{
+      signer?: string;
+      signature?: `0x${string}`;
+    }>,
+  );
 
   const { data, isLoading } = useSWR<{ data: GrantDataWithBuilder[] }>(
     address ? "/api/grants/review" : null,
@@ -82,12 +95,46 @@ const AdminPage = () => {
     if (hash && modalRef.current) modalRef.current.showModal();
   };
 
+  const handleSignIn = async () => {
+    try {
+      if (!address) {
+        notification.error("Please connect your wallet");
+        return;
+      }
+
+      const signature = await signTypedDataAsync({
+        domain: EIP_712_DOMAIN,
+        types: EIP_712_TYPES__ADMIN_SIGN_IN,
+        primaryType: "Message",
+        message: { action: "Sign In", description: "I authorize myself as admin" },
+      });
+
+      const resData = (await postAdminSignIn({ signer: address, signature })) as { data: { apiKey: string } };
+      setApiKey(resData.data.apiKey);
+    } catch (error) {
+      console.error("Error signing in", error);
+      const errMessage = getParsedError(error);
+      notification.error(errMessage);
+    }
+  };
+
   const completedGrants = grants
     ?.filter(grant => grant.status === PROPOSAL_STATUS.SUBMITTED)
     .sort((a, b) => (b?.submittedAt && a?.submittedAt ? b.submittedAt - a.submittedAt : 0));
   const newGrants = grants
     ?.filter(grant => grant.status === PROPOSAL_STATUS.PROPOSED)
     .sort((a, b) => (b?.proposedAt && a?.proposedAt ? b.proposedAt - a.proposedAt : 0));
+
+  if (!apiKey) {
+    return (
+      <div className="flex items-center justify-center mt-28">
+        <button className="btn btn-primary" onClick={handleSignIn} disabled={isSigningMessage || isSigningIn}>
+          {(isSigningIn || isSigningMessage) && <span className="loading loading-spinner"></span>}
+          Sign in to view
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto mt-12 max-w-[95%]">

@@ -35,7 +35,7 @@ export async function POST(req: Request) {
 
     const API_KEY = process.env.ADMIN_API_KEY;
 
-    return NextResponse.json({ apiKey: API_KEY });
+    return NextResponse.json({ data: { apiKey: API_KEY } }, { status: 200 });
   } catch (error) {
     console.error("Error in admin signin", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
