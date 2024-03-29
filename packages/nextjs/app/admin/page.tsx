@@ -72,7 +72,7 @@ const AdminPage = () => {
     const builders = selectedGrantsWithMetaData.map(grant => grant.builder);
     const buildersAmount = selectedGrantsWithMetaData.map(grant => parseEther((grant.askAmount / 2).toString()));
     const totalAmount = selectedGrantsWithMetaData.reduce((acc, grant) => acc + grant.askAmount, 0);
-    console.log("totalAmount amount is :", totalAmount);
+
     const value = parseEther((totalAmount / 2).toString());
     const hash = await splitEqualETH({
       args: [builders, buildersAmount],
