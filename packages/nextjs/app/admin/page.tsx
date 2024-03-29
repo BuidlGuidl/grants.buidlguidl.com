@@ -82,8 +82,12 @@ const AdminPage = () => {
     if (hash && modalRef.current) modalRef.current.showModal();
   };
 
-  const completedGrants = grants?.filter(grant => grant.status === PROPOSAL_STATUS.SUBMITTED);
-  const newGrants = grants?.filter(grant => grant.status === PROPOSAL_STATUS.PROPOSED);
+  const completedGrants = grants
+    ?.filter(grant => grant.status === PROPOSAL_STATUS.SUBMITTED)
+    .sort((a, b) => (b?.submittedAt && a?.submittedAt ? b.submittedAt - a.submittedAt : 0));
+  const newGrants = grants
+    ?.filter(grant => grant.status === PROPOSAL_STATUS.PROPOSED)
+    .sort((a, b) => (b?.proposedAt && a?.proposedAt ? b.proposedAt - a.proposedAt : 0));
 
   return (
     <div className="container mx-auto mt-12 max-w-[95%]">
