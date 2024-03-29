@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Link from "next/link";
 import { BatchActionModal } from "./_components/BatchActionModal";
 import { GrantReview } from "./_components/GrantReview";
 import useSWR from "swr";
@@ -50,7 +51,11 @@ const AdminPage = () => {
     }>,
   );
 
-  const { data, isLoading } = useSWR<{ data: GrantDataWithBuilder[] }>(
+  const {
+    data,
+    isLoading,
+    error: grantsError,
+  } = useSWR<{ data: GrantDataWithBuilder[] }>(
     address && apiKey ? "/api/grants/review" : null,
     url => url && fetcherWithHeader(url, { address, apiKey } as ReqHeaders),
     {
@@ -137,13 +142,35 @@ const AdminPage = () => {
     ?.filter(grant => grant.status === PROPOSAL_STATUS.PROPOSED)
     .sort((a, b) => (b?.proposedAt && a?.proposedAt ? b.proposedAt - a.proposedAt : 0));
 
-  if (!apiKey) {
+  if (!apiKey || !address) {
     return (
-      <div className="flex items-center justify-center mt-28">
-        <button className="btn btn-primary" onClick={handleSignIn} disabled={isSigningMessage || isSigningIn}>
-          {(isSigningIn || isSigningMessage) && <span className="loading loading-spinner"></span>}
-          Sign in to view
-        </button>
+      <div className="container mx-auto mt-12 max-w-[95%]">
+        <div className="p-8 bg-success/5">
+          <h2 className="font-bold text-xl">Sign in to review</h2>
+          <p className="m-0">Please sign a message to reivew the grants</p>
+          <button
+            className="btn btn-primary btn-md mt-4"
+            onClick={handleSignIn}
+            disabled={isSigningMessage || isSigningIn}
+          >
+            {(isSigningIn || isSigningMessage) && <span className="loading loading-spinner"></span>}
+            Sign in
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (grantsError) {
+    return (
+      <div className="container mx-auto mt-12 max-w-[95%]">
+        <div className="p-8 bg-error/5">
+          <h2 className="font-bold text-xl">Error fetching data</h2>
+          <p className="m-0">Please make you have right address connected</p>
+          <Link href="/" className="underline underline-offset-2">
+            Go back to home page
+          </Link>
+        </div>
       </div>
     );
   }
