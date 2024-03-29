@@ -15,12 +15,24 @@ import { PROPOSAL_STATUS } from "~~/utils/grants";
 import { getParsedError, notification } from "~~/utils/scaffold-eth";
 import { postMutationFetcher } from "~~/utils/swr";
 
-const fetcherWithHeader = (url: string, address: string) =>
-  fetch(url, {
+type ReqHeaders = {
+  address: string;
+  apiKey: string;
+};
+
+const fetcherWithHeader = async (url: string, headers: { address: string; apiKey: string }) => {
+  const res = await fetch(url, {
     headers: {
-      Address: address,
+      Address: headers.address,
+      "Admin-Api-Key": headers.apiKey,
     },
-  }).then(res => res.json());
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.error || `Error getting data`);
+  }
+  return data;
+};
 
 const AdminPage = () => {
   const { address } = useAccount();
@@ -39,8 +51,8 @@ const AdminPage = () => {
   );
 
   const { data, isLoading } = useSWR<{ data: GrantDataWithBuilder[] }>(
-    address ? "/api/grants/review" : null,
-    url => url && fetcherWithHeader(url, address as string),
+    address && apiKey ? "/api/grants/review" : null,
+    url => url && fetcherWithHeader(url, { address, apiKey } as ReqHeaders),
     {
       onError: error => {
         console.error("Error fetching grants", error);

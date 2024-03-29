@@ -12,8 +12,14 @@ export async function GET() {
   // Soft check.
   const reqHeaders = headers();
   const address = reqHeaders.get("Address");
+  const adminApiKey = reqHeaders.get("Admin-Api-Key");
+  const serverAdminApiKey = process.env.ADMIN_API_KEY;
 
-  if (!address) {
+  if (!serverAdminApiKey) {
+    return NextResponse.json({ error: "No API key configured on server" }, { status: 500 });
+  }
+
+  if (!address || adminApiKey !== serverAdminApiKey) {
     console.error("Unauthorized");
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
