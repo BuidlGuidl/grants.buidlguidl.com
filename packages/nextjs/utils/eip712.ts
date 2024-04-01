@@ -40,3 +40,10 @@ export const EIP_712_TYPES__REVIEW_GRANT_BATCH = {
   GrantReview: [...EIP_712_TYPES__REVIEW_GRANT.Message],
   Message: [{ name: "reviews", type: "GrantReview[]" }],
 } as const;
+
+export const EIP_712_TYPES__ADMIN_SIGN_IN = {
+  Message: [
+    { name: "action", type: "string" },
+    { name: "description", type: "string" },
+  ],
+};

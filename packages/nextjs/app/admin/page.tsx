@@ -1,22 +1,39 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Link from "next/link";
 import { BatchActionModal } from "./_components/BatchActionModal";
 import { GrantReview } from "./_components/GrantReview";
 import useSWR from "swr";
+import useSWRMutation from "swr/mutation";
+import { useLocalStorage } from "usehooks-ts";
 import { parseEther } from "viem";
-import { useAccount } from "wagmi";
+import { useAccount, useSignTypedData } from "wagmi";
 import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import { GrantDataWithBuilder } from "~~/services/database/schema";
+import { EIP_712_DOMAIN, EIP_712_TYPES__ADMIN_SIGN_IN } from "~~/utils/eip712";
 import { PROPOSAL_STATUS } from "~~/utils/grants";
-import { notification } from "~~/utils/scaffold-eth";
+import { getParsedError, notification } from "~~/utils/scaffold-eth";
+import { postMutationFetcher } from "~~/utils/swr";
 
-const fetcherWithHeader = (url: string, address: string) =>
-  fetch(url, {
+type ReqHeaders = {
+  address: string;
+  apiKey: string;
+};
+
+const fetcherWithHeader = async (url: string, headers: { address: string; apiKey: string }) => {
+  const res = await fetch(url, {
     headers: {
-      Address: address,
+      Address: headers.address,
+      "Admin-Api-Key": headers.apiKey,
     },
-  }).then(res => res.json());
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.error || `Error getting data`);
+  }
+  return data;
+};
 
 const AdminPage = () => {
   const { address } = useAccount();
@@ -24,10 +41,23 @@ const AdminPage = () => {
   const [selectedCompleteGrants, setSelectedCompleteGrants] = useState<string[]>([]);
   const [modalBtnLabel, setModalBtnLabel] = useState<"Approve" | "Complete">("Approve");
   const modalRef = useRef<HTMLDialogElement>(null);
+  const [apiKey, setApiKey] = useLocalStorage("admin-api-key", "", { initializeWithValue: false });
+  const { signTypedDataAsync, isLoading: isSigningMessage } = useSignTypedData();
+  const { trigger: postAdminSignIn, isMutating: isSigningIn } = useSWRMutation(
+    "/api/admin/signin",
+    postMutationFetcher<{
+      signer?: string;
+      signature?: `0x${string}`;
+    }>,
+  );
 
-  const { data, isLoading } = useSWR<{ data: GrantDataWithBuilder[] }>(
-    address ? "/api/grants/review" : null,
-    url => url && fetcherWithHeader(url, address as string),
+  const {
+    data,
+    isLoading,
+    error: grantsError,
+  } = useSWR<{ data: GrantDataWithBuilder[] }>(
+    address && apiKey ? "/api/grants/review" : null,
+    url => url && fetcherWithHeader(url, { address, apiKey } as ReqHeaders),
     {
       onError: error => {
         console.error("Error fetching grants", error);
@@ -82,12 +112,68 @@ const AdminPage = () => {
     if (hash && modalRef.current) modalRef.current.showModal();
   };
 
+  const handleSignIn = async () => {
+    try {
+      if (!address) {
+        notification.error("Please connect your wallet");
+        return;
+      }
+
+      const signature = await signTypedDataAsync({
+        domain: EIP_712_DOMAIN,
+        types: EIP_712_TYPES__ADMIN_SIGN_IN,
+        primaryType: "Message",
+        message: { action: "Sign In", description: "I authorize myself as admin" },
+      });
+
+      const resData = (await postAdminSignIn({ signer: address, signature })) as { data: { apiKey: string } };
+      setApiKey(resData.data.apiKey);
+    } catch (error) {
+      console.error("Error signing in", error);
+      const errMessage = getParsedError(error);
+      notification.error(errMessage);
+    }
+  };
+
   const completedGrants = grants
     ?.filter(grant => grant.status === PROPOSAL_STATUS.SUBMITTED)
     .sort((a, b) => (b?.submittedAt && a?.submittedAt ? b.submittedAt - a.submittedAt : 0));
   const newGrants = grants
     ?.filter(grant => grant.status === PROPOSAL_STATUS.PROPOSED)
     .sort((a, b) => (b?.proposedAt && a?.proposedAt ? b.proposedAt - a.proposedAt : 0));
+
+  if (!apiKey || !address) {
+    return (
+      <div className="container mx-auto mt-12 max-w-[95%]">
+        <div className="p-8 bg-success/5">
+          <h2 className="font-bold text-xl">Sign in to review</h2>
+          <p className="m-0">Please sign a message to reivew the grants</p>
+          <button
+            className="btn btn-primary btn-md mt-4"
+            onClick={handleSignIn}
+            disabled={isSigningMessage || isSigningIn}
+          >
+            {(isSigningIn || isSigningMessage) && <span className="loading loading-spinner"></span>}
+            Sign in
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (grantsError) {
+    return (
+      <div className="container mx-auto mt-12 max-w-[95%]">
+        <div className="p-8 bg-error/5">
+          <h2 className="font-bold text-xl">Error fetching data</h2>
+          <p className="m-0">Please make you are connected to right address.</p>
+          <Link href="/" className="underline underline-offset-2">
+            Go back to home page
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto mt-12 max-w-[95%]">
