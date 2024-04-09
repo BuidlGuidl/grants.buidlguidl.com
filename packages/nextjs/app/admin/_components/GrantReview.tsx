@@ -121,9 +121,24 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
         </div>
         <div className="flex gap-4 items-center">
           <Address address={grant.builder} link={`https://app.buidlguidl.com/builders/${grant.builder}`} />
+        </div>
+        <div className="flex gap-4 items-center mt-3">
           <BuilderSocials socialLinks={grant.builderData?.socialLinks} />
           {grant.builderData?.builderBatch && (
             <div className="badge badge-outline">Batch #{grant.builderData.builderBatch}</div>
+          )}
+          {grant.builderData?.builderCohort?.map(cohort => {
+            return (
+              <a href={cohort.url} target="_blank" rel="noreferrer" key={cohort.id} className="link">
+                <div className="badge badge-secondary">{cohort.name}</div>
+              </a>
+            );
+          })}
+          {grant.builderData?.stream?.cap && (
+            <div className="badge badge-primary">
+              <span className="font-bold">Stream:</span>
+              {grant.builderData.stream.cap} ETH
+            </div>
           )}
         </div>
       </div>

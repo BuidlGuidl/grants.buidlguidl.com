@@ -34,6 +34,15 @@ export type BuilderData = {
   status?: Status;
   graduated?: Graduated;
   builderBatch?: string;
+  builderCohort?: { id: string; name: string; url: string }[];
+  stream?: {
+    balance: string;
+    cap: string;
+    frequency: number;
+    lastContract: number;
+    lastIndexedBlock: number;
+    streamAddress: string;
+  };
 };
 
 export type BuilderDataResponse = {
