@@ -3,15 +3,16 @@ import Image from "next/image";
 import { useReviewGrant } from "../hooks/useReviewGrant";
 import { ActionModal } from "./ActionModal";
 import { EditGrantModal } from "./EditGrantModal";
+import useSWR from "swr";
 import { parseEther } from "viem";
 import { useNetwork } from "wagmi";
-import { ArrowTopRightOnSquareIcon } from "@heroicons/react/20/solid";
+import { ArrowTopRightOnSquareIcon, QuestionMarkCircleIcon } from "@heroicons/react/20/solid";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import TelegramIcon from "~~/components/assets/TelegramIcon";
 import TwitterIcon from "~~/components/assets/TwitterIcon";
 import { Address } from "~~/components/scaffold-eth";
 import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
-import { GrantDataWithBuilder, SocialLinks } from "~~/services/database/schema";
+import { GrantData, GrantDataWithBuilder, SocialLinks } from "~~/services/database/schema";
 import { PROPOSAL_STATUS } from "~~/utils/grants";
 
 const BuilderSocials = ({ socialLinks }: { socialLinks?: SocialLinks }) => {
@@ -61,6 +62,17 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
 
   const { handleReviewGrant, isLoading } = useReviewGrant(grant);
 
+  // Fetch all grants for this builder to show count and detail in tooltip
+  const { data: grants, error } = useSWR<GrantData[]>(
+    grant.status === PROPOSAL_STATUS.PROPOSED || grant.status == PROPOSAL_STATUS.SUBMITTED
+      ? `/api/builders/${grant.builder}/grants`
+      : null,
+  );
+
+  if (error) {
+    console.error("Error fetching grants data for this builder: ", error);
+  }
+
   if (grant.status !== PROPOSAL_STATUS.PROPOSED && grant.status !== PROPOSAL_STATUS.SUBMITTED) return null;
 
   const acceptLabel = grant.status === PROPOSAL_STATUS.PROPOSED ? "Approve" : "Complete";
@@ -72,6 +84,22 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
   const isCompleteActionDisabled = Boolean(grant.txChainId) && isCompleteAction && isChainMismatch;
   const completeActionDisableClassName = isCompleteActionDisabled ? "tooltip !pointer-events-auto" : "";
   const completeActionDisableToolTip = isCompleteActionDisabled && `Please switch to chain: ${grant.txChainId}`;
+
+  // Filter out current grant from grantsCount and grantsDetail (tooltip content)
+  const grantsCount = grants ? grants.filter(g => g.id !== grant.id).length : 0;
+
+  const grantsDetail = grants
+    ? grants
+        .filter(g => g.id !== grant.id)
+        .reduce<{ [key: string]: number }>((acc, curr: GrantData) => {
+          acc[curr.status] = (acc[curr.status] || 0) + 1;
+          return acc;
+        }, {})
+    : {};
+
+  const tooltipContent = Object.entries(grantsDetail)
+    .map(([status, count]) => `${status}: ${count}`)
+    .join(" | ");
 
   return (
     <div className="border-4 rounded-lg my-4">
@@ -119,8 +147,17 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
             )}
           </div>
         </div>
-        <div className="flex gap-4 items-center">
+        <div className="flex gap-4 items-center relative">
           <Address address={grant.builder} link={`https://app.buidlguidl.com/builders/${grant.builder}`} />
+          {grantsCount > 0 && (
+            <span className="group text-sm text-gray-500">
+              {grantsCount} {grantsCount === 1 ? "submission" : "submissions"}{" "}
+              <QuestionMarkCircleIcon className="h-4 w-4 inline" />
+              <span className="hidden group-hover:block absolute bg-gray-200 text-xs rounded p-1 -mt-12 ml-8">
+                {tooltipContent}
+              </span>
+            </span>
+          )}
         </div>
         <div className="flex gap-4 items-center mt-3">
           <BuilderSocials socialLinks={grant.builderData?.socialLinks} />
