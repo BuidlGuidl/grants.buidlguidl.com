@@ -173,7 +173,7 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
           })}
           {grant.builderData?.stream?.cap && (
             <div className="badge badge-primary">
-              <span className="font-bold">Stream:</span>
+              <span className="font-bold">Stream:&nbsp;</span>
               {grant.builderData.stream.cap} ETH
             </div>
           )}
