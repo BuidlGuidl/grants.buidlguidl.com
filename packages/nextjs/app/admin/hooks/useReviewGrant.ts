@@ -13,6 +13,7 @@ type ReqBody = {
   action: ProposalStatusType;
   txHash: string;
   txChainId: string;
+  note: string;
 };
 
 export const useReviewGrant = (grant: GrantData) => {
@@ -27,7 +28,7 @@ export const useReviewGrant = (grant: GrantData) => {
 
   const isLoading = isSigningMessage || isPostingNewGrant;
 
-  const handleReviewGrant = async (action: ProposalStatusType, txnHash = "") => {
+  const handleReviewGrant = async (action: ProposalStatusType, txnHash = "", note = "") => {
     if (!address || !connectedChain) {
       notification.error("Please connect your wallet");
       return;
@@ -44,6 +45,7 @@ export const useReviewGrant = (grant: GrantData) => {
           action: action,
           txHash: txnHash,
           txChainId: connectedChain.id.toString(),
+          note,
         },
       });
     } catch (e) {
@@ -61,6 +63,7 @@ export const useReviewGrant = (grant: GrantData) => {
         action,
         txHash: txnHash,
         txChainId: connectedChain.id.toString(),
+        note,
       });
       await mutate("/api/grants/review");
       notification.remove(notificationId);

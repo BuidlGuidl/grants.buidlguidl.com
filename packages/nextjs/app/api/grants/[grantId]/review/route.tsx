@@ -11,11 +11,12 @@ type ReqBody = {
   action: ProposalStatusType;
   txHash: string;
   txChainId: string;
+  note: string;
 };
 
 export async function POST(req: NextRequest, { params }: { params: { grantId: string } }) {
   const { grantId } = params;
-  const { signature, signer, action, txHash, txChainId } = (await req.json()) as ReqBody;
+  const { signature, signer, action, txHash, txChainId, note } = (await req.json()) as ReqBody;
 
   // Validate action is valid
   const validActions = Object.values(PROPOSAL_STATUS);
@@ -34,6 +35,7 @@ export async function POST(req: NextRequest, { params }: { params: { grantId: st
       action: action,
       txHash,
       txChainId,
+      note,
     },
     signature,
   });
@@ -56,6 +58,7 @@ export async function POST(req: NextRequest, { params }: { params: { grantId: st
       grantId,
       action,
       txHash,
+      note,
       txChainId,
     });
   } catch (error) {

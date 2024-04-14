@@ -57,7 +57,9 @@ export const ActionModal = forwardRef<HTMLDialogElement, ActionModalProps>(({ gr
         </div>
         <button
           className={`btn btn-sm btn-success ${isLoading ? "opacity-50" : ""}`}
-          onClick={() => handleReviewGrant(acceptStatus, transactionInputRef.current?.value)}
+          onClick={() =>
+            handleReviewGrant(acceptStatus, transactionInputRef?.current?.value, noteInputRef?.current?.value)
+          }
           disabled={isLoading}
         >
           {isLoading && <span className="loading loading-spinner"></span>}
