@@ -142,18 +142,16 @@ export const reviewGrant = async ({ grantId, action, txHash, txChainId, note }: 
     // Prepare the data to update based on the action
     const updateData: Partial<GrantData> = { status: action };
 
+    if (note !== undefined) {
+      updateData.note = note;
+    }
+
     // Add/update the transaction hash based on the action
     if (action === PROPOSAL_STATUS.APPROVED) {
       updateData["approvedTx"] = txHash;
       updateData["txChainId"] = txChainId; // Add txChainId when the grant is approved
-      if (note && note.trim().length > 0) {
-        updateData["approvedNote"] = note;
-      }
     } else if (action === PROPOSAL_STATUS.COMPLETED) {
       updateData["completedTx"] = txHash;
-      if (note && note.trim().length > 0) {
-        updateData["completedNote"] = note;
-      }
     }
 
     // Update timestamp based on the action

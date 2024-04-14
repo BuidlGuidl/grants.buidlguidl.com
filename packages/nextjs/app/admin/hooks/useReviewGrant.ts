@@ -2,8 +2,8 @@ import { useSWRConfig } from "swr";
 import useSWRMutation from "swr/mutation";
 import { useAccount, useNetwork, useSignTypedData } from "wagmi";
 import { GrantData } from "~~/services/database/schema";
-import { EIP_712_DOMAIN, EIP_712_TYPES__REVIEW_GRANT } from "~~/utils/eip712";
-import { ProposalStatusType } from "~~/utils/grants";
+import { EIP_712_DOMAIN, EIP_712_TYPES__REVIEW_GRANT, EIP_712_TYPES__REVIEW_GRANT_WITH_NOTE } from "~~/utils/eip712";
+import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";
 import { notification } from "~~/utils/scaffold-eth";
 import { postMutationFetcher } from "~~/utils/swr";
 
@@ -13,7 +13,7 @@ type ReqBody = {
   action: ProposalStatusType;
   txHash: string;
   txChainId: string;
-  note: string;
+  note?: string;
 };
 
 export const useReviewGrant = (grant: GrantData) => {
@@ -28,7 +28,7 @@ export const useReviewGrant = (grant: GrantData) => {
 
   const isLoading = isSigningMessage || isPostingNewGrant;
 
-  const handleReviewGrant = async (action: ProposalStatusType, txnHash = "", note = "") => {
+  const handleReviewGrant = async (action: ProposalStatusType, txnHash = "", note: string | undefined = undefined) => {
     if (!address || !connectedChain) {
       notification.error("Please connect your wallet");
       return;
@@ -36,18 +36,32 @@ export const useReviewGrant = (grant: GrantData) => {
 
     let signature;
     try {
-      signature = await signTypedDataAsync({
-        domain: { ...EIP_712_DOMAIN, chainId: connectedChain.id },
-        types: EIP_712_TYPES__REVIEW_GRANT,
-        primaryType: "Message",
-        message: {
-          grantId: grant.id,
-          action: action,
-          txHash: txnHash,
-          txChainId: connectedChain.id.toString(),
-          note,
-        },
-      });
+      if (action === PROPOSAL_STATUS.APPROVED || action === PROPOSAL_STATUS.REJECTED) {
+        signature = await signTypedDataAsync({
+          domain: { ...EIP_712_DOMAIN, chainId: connectedChain.id },
+          types: EIP_712_TYPES__REVIEW_GRANT_WITH_NOTE,
+          primaryType: "Message",
+          message: {
+            grantId: grant.id,
+            action: action,
+            txHash: txnHash,
+            txChainId: connectedChain.id.toString(),
+            note: note ?? "",
+          },
+        });
+      } else {
+        signature = await signTypedDataAsync({
+          domain: { ...EIP_712_DOMAIN, chainId: connectedChain.id },
+          types: EIP_712_TYPES__REVIEW_GRANT,
+          primaryType: "Message",
+          message: {
+            grantId: grant.id,
+            action: action,
+            txHash: txnHash,
+            txChainId: connectedChain.id.toString(),
+          },
+        });
+      }
     } catch (e) {
       console.error("Error signing message", e);
       notification.error("Error signing message");

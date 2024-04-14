@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { recoverTypedDataAddress } from "viem";
 import { reviewGrant } from "~~/services/database/grants";
 import { findUserByAddress } from "~~/services/database/users";
-import { EIP_712_DOMAIN, EIP_712_TYPES__REVIEW_GRANT } from "~~/utils/eip712";
+import { EIP_712_DOMAIN, EIP_712_TYPES__REVIEW_GRANT, EIP_712_TYPES__REVIEW_GRANT_WITH_NOTE } from "~~/utils/eip712";
 import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";
 
 type ReqBody = {
@@ -11,7 +11,7 @@ type ReqBody = {
   action: ProposalStatusType;
   txHash: string;
   txChainId: string;
-  note: string;
+  note?: string;
 };
 
 export async function POST(req: NextRequest, { params }: { params: { grantId: string } }) {
@@ -25,20 +25,38 @@ export async function POST(req: NextRequest, { params }: { params: { grantId: st
     return NextResponse.json({ error: "Invalid action" }, { status: 400 });
   }
 
-  // Validate Signature
-  const recoveredAddress = await recoverTypedDataAddress({
-    domain: { ...EIP_712_DOMAIN, chainId: Number(txChainId) },
-    types: EIP_712_TYPES__REVIEW_GRANT,
-    primaryType: "Message",
-    message: {
-      grantId: grantId,
-      action: action,
-      txHash,
-      txChainId,
-      note,
-    },
-    signature,
-  });
+  let recoveredAddress: string;
+
+  // If action is approved or rejected, include note in signature
+  if (action === PROPOSAL_STATUS.APPROVED || action === PROPOSAL_STATUS.REJECTED) {
+    recoveredAddress = await recoverTypedDataAddress({
+      domain: { ...EIP_712_DOMAIN, chainId: Number(txChainId) },
+      types: EIP_712_TYPES__REVIEW_GRANT_WITH_NOTE,
+      primaryType: "Message",
+      message: {
+        grantId: grantId,
+        action: action,
+        txHash,
+        txChainId,
+        note: note ?? "",
+      },
+      signature,
+    });
+  } else {
+    // Validate Signature
+    recoveredAddress = await recoverTypedDataAddress({
+      domain: { ...EIP_712_DOMAIN, chainId: Number(txChainId) },
+      types: EIP_712_TYPES__REVIEW_GRANT,
+      primaryType: "Message",
+      message: {
+        grantId: grantId,
+        action: action,
+        txHash,
+        txChainId,
+      },
+      signature,
+    });
+  }
 
   if (recoveredAddress !== signer) {
     console.error("Signature error", recoveredAddress, signer);

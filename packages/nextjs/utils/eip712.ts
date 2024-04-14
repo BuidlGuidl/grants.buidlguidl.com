@@ -19,15 +19,17 @@ export const EIP_712_TYPES__EDIT_GRANT = {
   ],
 } as const;
 
-const ReviewGrantMessage = [
-  { name: "grantId", type: "string" },
-  { name: "action", type: "string" },
-  { name: "txHash", type: "string" },
-  { name: "txChainId", type: "string" },
-] as const;
-
 export const EIP_712_TYPES__REVIEW_GRANT = {
-  Message: [...ReviewGrantMessage, { name: "note", type: "string" }],
+  Message: [
+    { name: "grantId", type: "string" },
+    { name: "action", type: "string" },
+    { name: "txHash", type: "string" },
+    { name: "txChainId", type: "string" },
+  ],
+} as const;
+
+export const EIP_712_TYPES__REVIEW_GRANT_WITH_NOTE = {
+  Message: [...EIP_712_TYPES__REVIEW_GRANT.Message, { name: "note", type: "string" }],
 } as const;
 
 export const EIP_712_TYPES__SUBMIT_GRANT = {
@@ -39,7 +41,7 @@ export const EIP_712_TYPES__SUBMIT_GRANT = {
 } as const;
 
 export const EIP_712_TYPES__REVIEW_GRANT_BATCH = {
-  GrantReview: ReviewGrantMessage,
+  GrantReview: EIP_712_TYPES__REVIEW_GRANT.Message,
   Message: [{ name: "reviews", type: "GrantReview[]" }],
 } as const;
 
