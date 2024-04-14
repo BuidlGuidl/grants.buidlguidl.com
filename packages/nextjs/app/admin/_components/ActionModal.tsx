@@ -12,7 +12,8 @@ type ActionModalProps = {
 };
 
 export const ActionModal = forwardRef<HTMLDialogElement, ActionModalProps>(({ grant, initialTxLink }, ref) => {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const transactionInputRef = useRef<HTMLInputElement>(null);
+  const noteInputRef = useRef<HTMLTextAreaElement>(null);
 
   const { chain } = useNetwork();
   const chainWithExtraAttributes = chain ? { ...chain, ...NETWORKS_EXTRA_DATA[chain.id] } : undefined;
@@ -36,16 +37,27 @@ export const ActionModal = forwardRef<HTMLDialogElement, ActionModalProps>(({ gr
             </p>
           )}
         </div>
-        <input
-          type="text"
-          ref={inputRef}
-          defaultValue={initialTxLink ?? ""}
-          placeholder="Transaction hash"
-          className="input input-bordered"
-        />
+        <div className="w-full flex-col space-y-1">
+          <p className="m-0 font-semibold text-base">Transction Hash</p>
+          <input
+            type="text"
+            ref={transactionInputRef}
+            defaultValue={initialTxLink ?? ""}
+            placeholder="Transaction hash"
+            className="input input-bordered w-full"
+          />
+        </div>
+        <div className="w-full flex-col space-y-1">
+          <p className="m-0 font-semibold text-base">Note (optional)</p>
+          <textarea
+            ref={noteInputRef}
+            placeholder={`Note for ${acceptLabel.toLowerCase()}ing this grant`}
+            className="input input-bordered w-full py-2 h-24"
+          />
+        </div>
         <button
           className={`btn btn-sm btn-success ${isLoading ? "opacity-50" : ""}`}
-          onClick={() => handleReviewGrant(acceptStatus, inputRef.current?.value)}
+          onClick={() => handleReviewGrant(acceptStatus, transactionInputRef.current?.value)}
           disabled={isLoading}
         >
           {isLoading && <span className="loading loading-spinner"></span>}
