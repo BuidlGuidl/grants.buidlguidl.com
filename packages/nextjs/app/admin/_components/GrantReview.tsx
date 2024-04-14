@@ -1,6 +1,5 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
-import { useReviewGrant } from "../hooks/useReviewGrant";
 import { ActionModal } from "./ActionModal";
 import { EditGrantModal } from "./EditGrantModal";
 import { parseEther } from "viem";
@@ -12,7 +11,7 @@ import TwitterIcon from "~~/components/assets/TwitterIcon";
 import { Address } from "~~/components/scaffold-eth";
 import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import { GrantDataWithBuilder, SocialLinks } from "~~/services/database/schema";
-import { PROPOSAL_STATUS } from "~~/utils/grants";
+import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";
 
 const BuilderSocials = ({ socialLinks }: { socialLinks?: SocialLinks }) => {
   if (!socialLinks) return null;
@@ -51,6 +50,9 @@ type GrantReviewProps = {
 export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewProps) => {
   const actionModalRef = useRef<HTMLDialogElement>(null);
   const editGrantModalRef = useRef<HTMLDialogElement>(null);
+  const [reviewAction, setReviewAction] = useState<ProposalStatusType>(
+    grant.status === PROPOSAL_STATUS.PROPOSED ? PROPOSAL_STATUS.APPROVED : PROPOSAL_STATUS.COMPLETED,
+  );
   const { chain: connectedChain } = useNetwork();
 
   const { data: txResult, writeAsync: splitEqualETH } = useScaffoldContractWrite({
@@ -58,8 +60,6 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
     functionName: "splitETH",
     args: [undefined, undefined],
   });
-
-  const { handleReviewGrant, isLoading } = useReviewGrant(grant);
 
   if (grant.status !== PROPOSAL_STATUS.PROPOSED && grant.status !== PROPOSAL_STATUS.SUBMITTED) return null;
 
@@ -146,37 +146,45 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
         <p>{grant.description}</p>
         <div className="flex gap-2 lg:gap-4 mt-4 justify-between">
           <button
-            className={`btn btn-sm btn-error ${isLoading ? "opacity-50" : ""}`}
-            onClick={() => handleReviewGrant(PROPOSAL_STATUS.REJECTED)}
-            disabled={isLoading}
+            className="btn btn-sm btn-error "
+            onClick={() => {
+              setReviewAction(PROPOSAL_STATUS.REJECTED);
+              actionModalRef.current?.showModal();
+            }}
+            disabled={isCompleteActionDisabled}
           >
             Reject
           </button>
           <div className="flex gap-2 lg:gap-4">
             <button
-              className={`btn btn-sm btn-success border-2 bg-transparent ${
-                isLoading ? "opacity-50" : ""
-              } ${completeActionDisableClassName}`}
+              className={`btn btn-sm btn-success border-2 bg-transparent ${completeActionDisableClassName}`}
               data-tip={completeActionDisableToolTip}
               onClick={async () => {
                 const resHash = await splitEqualETH({
                   args: [[grant.builder], [parseEther((grant.askAmount / 2).toString())]],
                   value: parseEther((grant.askAmount / 2).toString()),
                 });
+
+                setReviewAction(
+                  grant.status === PROPOSAL_STATUS.PROPOSED ? PROPOSAL_STATUS.APPROVED : PROPOSAL_STATUS.COMPLETED,
+                );
                 // Transactor eats the error, so we need to handle by checking resHash
                 if (resHash && actionModalRef.current) actionModalRef.current.showModal();
               }}
-              disabled={isLoading || isCompleteActionDisabled}
+              disabled={isCompleteActionDisabled}
             >
               Send 50%
             </button>
             <button
-              className={`btn btn-sm btn-success ${isLoading ? "opacity-50" : ""} ${completeActionDisableClassName}`}
+              className={`btn btn-sm btn-success ${completeActionDisableClassName}`}
               data-tip={completeActionDisableToolTip}
               onClick={() => {
+                setReviewAction(
+                  grant.status === PROPOSAL_STATUS.PROPOSED ? PROPOSAL_STATUS.APPROVED : PROPOSAL_STATUS.COMPLETED,
+                );
                 if (actionModalRef.current) actionModalRef.current.showModal();
               }}
-              disabled={isLoading || isCompleteActionDisabled}
+              disabled={isCompleteActionDisabled}
             >
               {acceptLabel}
             </button>
@@ -184,7 +192,7 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
         </div>
       </div>
       <EditGrantModal ref={editGrantModalRef} grant={grant} closeModal={() => editGrantModalRef?.current?.close()} />
-      <ActionModal ref={actionModalRef} grant={grant} initialTxLink={txResult?.hash} />
+      <ActionModal ref={actionModalRef} grant={grant} initialTxLink={txResult?.hash} action={reviewAction} />
     </div>
   );
 };
