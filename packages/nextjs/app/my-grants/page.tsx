@@ -56,7 +56,7 @@ const MyGrants: NextPage = () => {
             <div className="flex items-center">
               <p className={`badge ${badgeBgColor[grant.status]}`}>{grant.status}</p>
               {grant.note && grant.note.trim().length > 0 && (
-                <div className="inline-block ml-1 tooltip pointer" data-tip={grant.note}>
+                <div className="inline-block ml-1 tooltip tooltip-bottom cursor-pointer" data-tip={grant.note}>
                   <QuestionMarkCircleIcon className="h-5 w-5 inline" />
                 </div>
               )}
