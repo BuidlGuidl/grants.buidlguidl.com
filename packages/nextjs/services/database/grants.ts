@@ -146,10 +146,14 @@ export const reviewGrant = async ({ grantId, action, txHash, txChainId, note }: 
     if (action === PROPOSAL_STATUS.APPROVED) {
       updateData["approvedTx"] = txHash;
       updateData["txChainId"] = txChainId; // Add txChainId when the grant is approved
-      updateData["approvedNote"] = note && note.trim().length > 0 ? note : undefined;
+      if (note && note.trim().length > 0) {
+        updateData["approvedNote"] = note;
+      }
     } else if (action === PROPOSAL_STATUS.COMPLETED) {
       updateData["completedTx"] = txHash;
-      updateData["completedNote"] = note && note.trim().length > 0 ? note : undefined;
+      if (note && note.trim().length > 0) {
+        updateData["completedNote"] = note;
+      }
     }
 
     // Update timestamp based on the action
