@@ -60,6 +60,7 @@ export type GrantWithoutTimestamps = {
   status: "proposed" | "approved" | "submitted" | "completed" | "rejected";
   approvedTx?: string;
   completedTx?: string;
+  note?: string;
   txChainId?: string;
 };
 

@@ -130,8 +130,9 @@ type ReviewGrantParams = {
   action: ProposalStatusType;
   txHash: string;
   txChainId: string;
+  note?: string;
 };
-export const reviewGrant = async ({ grantId, action, txHash, txChainId }: ReviewGrantParams) => {
+export const reviewGrant = async ({ grantId, action, txHash, txChainId, note }: ReviewGrantParams) => {
   try {
     const validActions = Object.values(PROPOSAL_STATUS);
     if (!validActions.includes(action)) {
@@ -139,7 +140,11 @@ export const reviewGrant = async ({ grantId, action, txHash, txChainId }: Review
     }
 
     // Prepare the data to update based on the action
-    const updateData: Record<string, any> = { status: action };
+    const updateData: Partial<GrantData> = { status: action };
+
+    if (note !== undefined) {
+      updateData.note = note;
+    }
 
     // Add/update the transaction hash based on the action
     if (action === PROPOSAL_STATUS.APPROVED) {
@@ -151,7 +156,7 @@ export const reviewGrant = async ({ grantId, action, txHash, txChainId }: Review
 
     // Update timestamp based on the action
     const grantActionTimeStamp = new Date().getTime();
-    const grantActionTimeStampKey = `${action}At`;
+    const grantActionTimeStampKey = `${action}At` as const;
     updateData[grantActionTimeStampKey] = grantActionTimeStamp;
 
     await grantsCollection.doc(grantId).update(updateData);

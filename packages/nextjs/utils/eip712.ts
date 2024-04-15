@@ -28,6 +28,10 @@ export const EIP_712_TYPES__REVIEW_GRANT = {
   ],
 } as const;
 
+export const EIP_712_TYPES__REVIEW_GRANT_WITH_NOTE = {
+  Message: [...EIP_712_TYPES__REVIEW_GRANT.Message, { name: "note", type: "string" }],
+} as const;
+
 export const EIP_712_TYPES__SUBMIT_GRANT = {
   Message: [
     { name: "grantId", type: "string" },
@@ -37,7 +41,7 @@ export const EIP_712_TYPES__SUBMIT_GRANT = {
 } as const;
 
 export const EIP_712_TYPES__REVIEW_GRANT_BATCH = {
-  GrantReview: [...EIP_712_TYPES__REVIEW_GRANT.Message],
+  GrantReview: EIP_712_TYPES__REVIEW_GRANT.Message,
   Message: [{ name: "reviews", type: "GrantReview[]" }],
 } as const;
 

@@ -7,6 +7,7 @@ import { NextPage } from "next";
 import useSWR from "swr";
 import { useAccount } from "wagmi";
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/20/solid";
+import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import { GrantData } from "~~/services/database/schema";
 import { PROPOSAL_STATUS } from "~~/utils/grants";
 import { getBlockExplorerTxLink } from "~~/utils/scaffold-eth";
@@ -51,32 +52,43 @@ const MyGrants: NextPage = () => {
             </div>
           )}
           <p className="m-0">{grant.description}</p>
-          <p className={`badge ${badgeBgColor[grant.status]}`}>{grant.status}</p>
-          {grant.approvedTx && (
-            <a
-              href={getBlockExplorerTxLink(Number(grant.txChainId), grant.approvedTx)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="ml-4 underline underline-offset-4 text-xs"
-            >
-              50% approve tx <ArrowTopRightOnSquareIcon className="h-4 w-4 inline" />
-            </a>
-          )}
-          {grant.completedTx && (
-            <a
-              href={getBlockExplorerTxLink(Number(grant.txChainId), grant.completedTx)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="ml-4 underline underline-offset-4 text-xs"
-            >
-              50% complete tx <ArrowTopRightOnSquareIcon className="h-4 w-4 inline" />
-            </a>
-          )}
-          {grant.status === PROPOSAL_STATUS.APPROVED && (
-            <button onClick={() => openModal(grant)} className="btn btn-primary float-right">
-              Submit build
-            </button>
-          )}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <p className={`badge ${badgeBgColor[grant.status]}`}>{grant.status}</p>
+              {grant.note &&
+                grant.note.trim().length > 0 &&
+                (grant.status === PROPOSAL_STATUS.REJECTED || grant.status === PROPOSAL_STATUS.APPROVED) && (
+                  <div className="flex ml-1 tooltip tooltip-bottom cursor-pointer" data-tip={grant.note}>
+                    <QuestionMarkCircleIcon className="h-5 w-5 inline" />
+                  </div>
+                )}
+              {grant.approvedTx && (
+                <a
+                  href={getBlockExplorerTxLink(Number(grant.txChainId), grant.approvedTx)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ml-4 underline underline-offset-4 text-xs"
+                >
+                  50% approve tx <ArrowTopRightOnSquareIcon className="h-4 w-4 inline" />
+                </a>
+              )}
+              {grant.completedTx && (
+                <a
+                  href={getBlockExplorerTxLink(Number(grant.txChainId), grant.completedTx)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ml-4 underline underline-offset-4 text-xs"
+                >
+                  50% complete tx <ArrowTopRightOnSquareIcon className="h-4 w-4 inline" />
+                </a>
+              )}
+            </div>
+            {grant.status === PROPOSAL_STATUS.APPROVED && (
+              <button onClick={() => openModal(grant)} className="btn btn-primary justify-self-end">
+                Submit build
+              </button>
+            )}
+          </div>
         </div>
       ))}
 
