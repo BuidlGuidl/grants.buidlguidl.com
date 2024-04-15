@@ -55,7 +55,7 @@ export const ActionModal = forwardRef<HTMLDialogElement, ActionModalProps>(({ gr
             <p className="m-0 font-semibold text-base">Note (optional)</p>
             <textarea
               ref={noteInputRef}
-              placeholder={`Note for ${actionLabel.toLowerCase()}ing this grant`}
+              placeholder={`Note for the builder (${actionLabel})`}
               className="input input-bordered w-full py-2 h-24"
             />
           </div>
