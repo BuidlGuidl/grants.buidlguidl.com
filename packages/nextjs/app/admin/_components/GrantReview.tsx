@@ -63,11 +63,7 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
   const { handleReviewGrant, isLoading } = useReviewGrant(grant);
 
   // Fetch all grants for this builder to show count and detail in tooltip
-  const { data: grants, error } = useSWR<GrantData[]>(
-    grant.status === PROPOSAL_STATUS.PROPOSED || grant.status == PROPOSAL_STATUS.SUBMITTED
-      ? `/api/builders/${grant.builder}/grants`
-      : null,
-  );
+  const { data: grants, error } = useSWR<GrantData[]>(`/api/builders/${grant.builder}/grants`);
 
   if (error) {
     console.error("Error fetching grants data for this builder: ", error);
