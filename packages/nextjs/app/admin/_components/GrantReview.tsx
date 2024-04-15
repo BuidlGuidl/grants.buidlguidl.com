@@ -93,7 +93,7 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
         }, {})
     : {};
 
-  const tooltipContent = Object.entries(grantsDetail)
+  const otherGrantsTooltip = Object.entries(grantsDetail)
     .map(([status, count]) => `${status}: ${count}`)
     .join(" | ");
 
@@ -146,12 +146,9 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
         <div className="flex gap-4 items-center relative">
           <Address address={grant.builder} link={`https://app.buidlguidl.com/builders/${grant.builder}`} />
           {grantsCount > 0 && (
-            <span className="group text-sm text-gray-500">
+            <span className="group text-sm text-gray-500 tooltip" data-tip={otherGrantsTooltip}>
               {grantsCount} {grantsCount === 1 ? "submission" : "submissions"}{" "}
               <QuestionMarkCircleIcon className="h-4 w-4 inline" />
-              <span className="hidden group-hover:block absolute bg-gray-200 text-xs rounded p-1 -mt-12 ml-8">
-                {tooltipContent}
-              </span>
             </span>
           )}
         </div>
