@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import SubmitButton from "./SubmitButton";
 import useSWRMutation from "swr/mutation";
@@ -16,8 +17,11 @@ type ReqBody = {
   signer?: string;
 };
 
+const MAX_DESCRIPTION_LENGTH = 750;
+
 const Form = () => {
   const { address: connectedAddress } = useAccount();
+  const [descriptionLength, setDescriptionLength] = useState(0);
   const { signTypedDataAsync } = useSignTypedData();
   const router = useRouter();
   const { trigger: postNewGrant } = useSWRMutation("/api/grants/new", postMutationFetcher<ReqBody>);
@@ -60,7 +64,7 @@ const Form = () => {
   };
 
   return (
-    <div className="card card-compact rounded-xl w-96 bg-secondary shadow-lg mb-12">
+    <div className="card card-compact rounded-xl max-w-[95%] w-[500px] bg-secondary shadow-lg mb-12">
       <form action={clientFormAction} className="card-body space-y-3">
         <h2 className="card-title self-center text-3xl !mb-0">Submit Proposal</h2>
         <div className="space-y-2">
@@ -68,22 +72,28 @@ const Form = () => {
           <div className="flex border-2 border-base-300 bg-base-200 rounded-xl text-accent">
             <input
               className="input input-ghost focus-within:border-transparent focus:outline-none focus:bg-transparent focus:text-gray-400 h-[2.2rem] min-h-[2.2rem] px-4 border w-full font-medium placeholder:text-accent/50 text-gray-400"
-              placeholder="title"
+              placeholder="Proposal title"
               name="title"
               autoComplete="off"
               type="text"
+              maxLength={50}
             />
           </div>
         </div>
         <div className="space-y-2">
           <p className="m-0 text-xl ml-2">Description</p>
-          <div className="flex border-2 border-base-300 bg-base-200 rounded-xl text-accent">
+          <div className="flex flex-col border-2 border-base-300 bg-base-200 rounded-xl text-accent">
             <textarea
-              className="input input-ghost focus-within:border-transparent focus:outline-none focus:bg-transparent focus:text-gray-400 px-4 pt-2 border w-full font-medium placeholder:text-accent/50 text-gray-400 h-28 rounded-none"
-              placeholder="description"
+              className="input input-ghost focus-within:border-transparent focus:outline-none focus:bg-transparent focus:text-gray-400 px-4 pt-2 border w-full font-medium placeholder:text-accent/50 text-gray-400 h-28 md:h-52 rounded-none"
+              placeholder="Proposal description"
               name="description"
               autoComplete="off"
+              maxLength={MAX_DESCRIPTION_LENGTH}
+              onChange={e => setDescriptionLength(e.target.value.length)}
             />
+            <p className="my-1">
+              {descriptionLength} / {MAX_DESCRIPTION_LENGTH}
+            </p>
           </div>
         </div>
         <SubmitButton />
