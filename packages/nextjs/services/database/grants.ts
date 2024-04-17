@@ -1,5 +1,5 @@
 import { getFirestoreConnector } from "./firestoreDB";
-import { BuilderData, GrantData, GrantDataWithBuilder } from "./schema";
+import { BuilderData, GrantData, GrantDataWithPrivateNote } from "./schema";
 import ecosystemGrants from "~~/services/database/ecosystemGrants.json";
 import { findUserByAddress } from "~~/services/database/users";
 import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";
@@ -60,13 +60,17 @@ export const getAllGrantsForReview = async () => {
 
     const grantsPromises = grantsSnapshot.docs.map(async doc => {
       const grantData = doc.data() as Omit<GrantData, "id">;
+      const privateNotes = doc.ref.collection("private_note");
+      const privateNotesSnapshot = await privateNotes.get();
+      const private_note = privateNotesSnapshot.empty ? undefined : privateNotesSnapshot.docs[0].data().note;
       const builderDataResponse = await findUserByAddress(grantData.builder);
 
       return {
         id: doc.id,
         ...grantData,
+        private_note,
         builderData: builderDataResponse.exists ? (builderDataResponse.data as BuilderData) : undefined,
-      } as GrantDataWithBuilder;
+      } as GrantDataWithPrivateNote;
     });
 
     return await Promise.all(grantsPromises);
@@ -166,9 +170,21 @@ export const reviewGrant = async ({ grantId, action, txHash, txChainId, note }: 
   }
 };
 
-export const updateGrant = async (grantId: string, grantData: Partial<GrantData>) => {
+export const updateGrant = async (grantId: string, grantData: Partial<GrantData>, private_note?: string) => {
   try {
     await getGrantsDoc(grantId).update(grantData);
+
+    if (private_note === undefined) return;
+
+    const privateNoteCollection = grantsCollection.doc(grantId).collection("private_note");
+    const privateNoteSnapshot = await privateNoteCollection.get();
+    if (privateNoteSnapshot.empty) {
+      await privateNoteCollection.add({ note: private_note });
+    } else {
+      privateNoteSnapshot.forEach(doc => {
+        privateNoteCollection.doc(doc.id).update({ note: private_note });
+      });
+    }
   } catch (error) {
     console.error("Error updating the grant:", error);
     throw error;

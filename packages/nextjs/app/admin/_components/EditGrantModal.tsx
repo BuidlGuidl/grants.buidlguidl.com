@@ -2,13 +2,13 @@ import { ChangeEvent, forwardRef, useState } from "react";
 import { useSWRConfig } from "swr";
 import useSWRMutation from "swr/mutation";
 import { useAccount, useNetwork, useSignTypedData } from "wagmi";
-import { GrantDataWithBuilder } from "~~/services/database/schema";
+import { GrantDataWithPrivateNote } from "~~/services/database/schema";
 import { EIP_712_DOMAIN, EIP_712_TYPES__EDIT_GRANT } from "~~/utils/eip712";
 import { getParsedError, notification } from "~~/utils/scaffold-eth";
 import { patchMutationFetcher } from "~~/utils/swr";
 
 type EditGrantModalProps = {
-  grant: GrantDataWithBuilder;
+  grant: GrantDataWithPrivateNote;
   closeModal: () => void;
 };
 
@@ -18,6 +18,7 @@ type ReqBody = {
   askAmount?: number;
   signature?: `0x${string}`;
   signer?: string;
+  private_note?: string;
 };
 
 export const EditGrantModal = forwardRef<HTMLDialogElement, EditGrantModalProps>(({ grant, closeModal }, ref) => {
@@ -25,6 +26,7 @@ export const EditGrantModal = forwardRef<HTMLDialogElement, EditGrantModalProps>
     title: grant.title,
     description: grant.description,
     askAmount: grant.askAmount.toString(),
+    private_note: grant.private_note ?? "",
   });
 
   const { address } = useAccount();
@@ -63,6 +65,7 @@ export const EditGrantModal = forwardRef<HTMLDialogElement, EditGrantModalProps>
           // Converting this to number with parseFloat and again to string (similar to backend),
           // if not it generates different signature with .23 and 0.23
           askAmount: parseFloat(formData.askAmount).toString(),
+          private_note: formData.private_note,
         },
       });
       notificationId = notification.loading("Updating grant");
@@ -129,6 +132,17 @@ export const EditGrantModal = forwardRef<HTMLDialogElement, EditGrantModalProps>
             placeholder="ask amount"
             value={formData.askAmount}
             className="input input-sm input-bordered w-full"
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="w-full flex-col gap-1">
+          <p className="m-0 font-semibold text-base">Private Note(optional)</p>
+          <textarea
+            name="privateNote"
+            placeholder="private note..."
+            value={formData.private_note}
+            className="textarea textarea-md textarea-bordered  w-full"
+            rows={3}
             onChange={handleInputChange}
           />
         </div>
