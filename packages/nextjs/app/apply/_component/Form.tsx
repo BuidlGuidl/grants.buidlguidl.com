@@ -76,7 +76,7 @@ const Form = () => {
               name="title"
               autoComplete="off"
               type="text"
-              maxLength={50}
+              maxLength={75}
             />
           </div>
         </div>
