@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { ApplyEligibilityLink } from "./ApplyEligibilityLink";
 
 export const CommunityGrant = () => {
   return (
@@ -31,12 +31,7 @@ export const CommunityGrant = () => {
               Are you a BG member eager to make an impact in the ecosystem? At BuidlGuidl, we&apos;re excited to support
               your builds. We offer sponsorships of up to 1 ETH for projects that drive the community forward.
             </p>
-            <Link
-              href="/apply"
-              className="btn bg-white hover:opacity-90 hover:bg-white btn-md border-1 border-black hover:border-1 hover:border-black rounded-2xl px-6 shadow-none font-medium"
-            >
-              Apply for a grant
-            </Link>
+            <ApplyEligibilityLink />
           </div>
         </div>
         {/* Right section (Who, process, payment, etc) */}
