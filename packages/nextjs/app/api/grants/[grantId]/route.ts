@@ -10,12 +10,13 @@ type ReqBody = {
   askAmount?: number;
   signature?: `0x${string}`;
   signer?: string;
+  private_note?: string;
 };
 
 export async function PATCH(req: NextRequest, { params }: { params: { grantId: string } }) {
   try {
     const { grantId } = params;
-    const { title, description, signature, signer, askAmount } = (await req.json()) as ReqBody;
+    const { title, description, signature, signer, askAmount, private_note } = (await req.json()) as ReqBody;
 
     if (!title || !description || !askAmount || typeof askAmount !== "number" || !signature || !signer) {
       return NextResponse.json({ error: "Invalid form details submited" }, { status: 400 });
@@ -25,7 +26,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { grantId: s
       domain: EIP_712_DOMAIN,
       types: EIP_712_TYPES__EDIT_GRANT,
       primaryType: "Message",
-      message: { title, description, askAmount: askAmount.toString(), grantId },
+      message: { title, description, askAmount: askAmount.toString(), grantId, private_note: private_note ?? "" },
       signature: signature,
     });
     if (recoveredAddress !== signer) {
@@ -37,8 +38,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { grantId: s
     if (signerData.data?.role !== "admin") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-
-    await updateGrant(grantId, { title, description, askAmount });
+    await updateGrant(grantId, { title, description, askAmount }, private_note);
     return NextResponse.json({ success: true });
   } catch (e) {
     console.error(e);

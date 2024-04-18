@@ -11,7 +11,7 @@ import TelegramIcon from "~~/components/assets/TelegramIcon";
 import TwitterIcon from "~~/components/assets/TwitterIcon";
 import { Address } from "~~/components/scaffold-eth";
 import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
-import { GrantData, GrantDataWithBuilder, SocialLinks } from "~~/services/database/schema";
+import { GrantData, GrantDataWithPrivateNote, SocialLinks } from "~~/services/database/schema";
 import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";
 
 const BuilderSocials = ({ socialLinks }: { socialLinks?: SocialLinks }) => {
@@ -44,7 +44,7 @@ const BuilderSocials = ({ socialLinks }: { socialLinks?: SocialLinks }) => {
 };
 
 type GrantReviewProps = {
-  grant: GrantDataWithBuilder;
+  grant: GrantDataWithPrivateNote;
   selected: boolean;
   toggleSelection: () => void;
 };
@@ -220,6 +220,9 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
             </button>
           </div>
         </div>
+        {grant.private_note && grant.private_note.trim().length > 0 && (
+          <p className="mb-0 text-orange-500">{grant.private_note}</p>
+        )}
       </div>
       <EditGrantModal ref={editGrantModalRef} grant={grant} closeModal={() => editGrantModalRef?.current?.close()} />
       <ActionModal ref={actionModalRef} grant={grant} initialTxLink={txResult?.hash} action={reviewAction} />

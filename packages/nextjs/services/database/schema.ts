@@ -71,3 +71,4 @@ export type GrantData = Simplify<
 >;
 
 export type GrantDataWithBuilder = Simplify<GrantData & { builderData?: BuilderData }>;
+export type GrantDataWithPrivateNote = Simplify<GrantDataWithBuilder & { private_note?: string }>;

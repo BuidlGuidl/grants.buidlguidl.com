@@ -16,6 +16,7 @@ export const EIP_712_TYPES__EDIT_GRANT = {
 
     { name: "grantId", type: "string" },
     { name: "askAmount", type: "string" },
+    { name: "private_note", type: "string" },
   ],
 } as const;
 
