@@ -11,10 +11,10 @@ export const ApplyEligibilityLink = () => {
 
   const applyButtonColor =
     !isConnected || isFetchingBuilderData
-      ? "btn-primary disabled"
+      ? "btn-primary"
       : !isBuilderPresent
-      ? "btn-warning disabled"
-      : "btn-success";
+      ? "btn-warning"
+      : "bg-customGreen hover:bg-customGreen hover:opacity-80";
 
   const notConnectedMessage = (
     <div className="leading-snug">
@@ -59,7 +59,7 @@ export const ApplyEligibilityLink = () => {
   const ApplyButton = isBuilderPresent ? (
     <Link
       href="/apply"
-      className={`btn ${applyButtonColor} hover:opacity-90 px-4 md:px-8 btn-md border-1 border-black hover:border-1 hover:border-black rounded-2xl shadow-none font-medium`}
+      className={`btn ${applyButtonColor} px-4 md:px-8 btn-md border-1 border-black hover:border-1 hover:border-black rounded-2xl shadow-none font-medium`}
     >
       <Icon className="h-5 w-5 mr-1 inline-block" />
       APPLY FOR A GRANT

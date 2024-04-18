@@ -21,9 +21,10 @@ module.exports = {
           "base-300": "#EEF0FF",
           "base-content": "#212638",
           info: "#93BBFB",
-          success: "#DDFFB3",
+          success: "#34EEB6",
           warning: "#FEC297",
           error: "#FF8863",
+          test: "#DDFFB3",
 
           ".tooltip": {
             "--tooltip-tail": "6px",
@@ -54,6 +55,7 @@ module.exports = {
           success: "#34EEB6",
           warning: "#FFCF72",
           error: "#FF8863",
+          test: "#DDFFB3",
 
           ".tooltip": {
             "--tooltip-tail": "6px",
@@ -73,6 +75,7 @@ module.exports = {
     extend: {
       colors: {
         customBlue: '#D5DAFF',
+        customGreen: '#DDFFB3',
       },
       boxShadow: {
         center: "0 0 12px -2px rgb(0 0 0 / 0.05)",
