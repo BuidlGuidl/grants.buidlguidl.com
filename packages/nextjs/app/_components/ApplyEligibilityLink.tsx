@@ -51,7 +51,7 @@ export const ApplyEligibilityLink = () => {
     !isConnected || isFetchingBuilderData ? "notConnected" : !isBuilderPresent ? "notMember" : "eligible";
 
   return (
-    <div className="flex flex-col items-start bg-white px-6 py-2 pb-6 font-spaceGrotesk space-y-1 w-4/5 rounded-2xl text-left">
+    <div className="mx-auto lg:m-0 flex flex-col items-start bg-white px-6 py-2 pb-6 font-spaceGrotesk space-y-1 w-4/5 rounded-2xl text-left">
       <p className="text-2xl font-semibold mb-0">Do you qualify?</p>
       <FeedbackMessage builderStatus={builderStatus} />
       {builderStatus === "eligible" ? (
