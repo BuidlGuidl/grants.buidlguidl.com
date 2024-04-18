@@ -9,15 +9,16 @@ export const ApplyEligibilityLink = () => {
   const { isConnected, address: connectedAddress } = useAccount();
   const { isBuilderPresent, isLoading: isFetchingBuilderData } = useBGBuilderData(connectedAddress);
 
-  const applyButtonColor = !isConnected
-    ? "btn-primary disabled"
-    : !isBuilderPresent
-    ? "btn-warning disabled"
-    : "btn-success";
+  const applyButtonColor =
+    !isConnected || isFetchingBuilderData
+      ? "btn-primary disabled"
+      : !isBuilderPresent
+      ? "btn-warning disabled"
+      : "btn-success";
 
   const notConnectedMessage = (
     <div className="leading-snug">
-      <p className="">
+      <p>
         🔎 <strong>Connect your wallet</strong> to verify whether you qualify to apply or not.
       </p>
     </div>
