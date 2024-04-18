@@ -1,12 +1,12 @@
 import Image from "next/image";
-import Link from "next/link";
+import { ApplyEligibilityLink } from "./ApplyEligibilityLink";
 
 export const CommunityGrant = () => {
   return (
     <div id="communityGrants" className="bg-secondary">
       <div className="container max-w-[90%] sm:max-w-md lg:max-w-[90%] xl:max-w-7xl m-auto xl:pl-4 lg:pt-10 flex flex-col-reverse lg:flex-row gap-5 lg:gap-0 my-6 lg:my-0">
         {/* Left section(Title, desc and btn) */}
-        <div className="my-4 lg:py-16 space-y-2 lg:max-w-[40%] flex flex-col items-center lg:items-start">
+        <div className="my-4 lg:py-16 space-y-2 lg:max-w-[45%] flex flex-col items-center lg:items-start">
           {/* Title  */}
           <div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl text-center lg:text-left font-ppEditorial mb-0 lg:mb-2">
@@ -31,12 +31,7 @@ export const CommunityGrant = () => {
               Are you a BG member eager to make an impact in the ecosystem? At BuidlGuidl, we&apos;re excited to support
               your builds. We offer sponsorships of up to 1 ETH for projects that drive the community forward.
             </p>
-            <Link
-              href="/apply"
-              className="btn bg-white hover:opacity-90 hover:bg-white btn-md border-1 border-black hover:border-1 hover:border-black rounded-2xl px-6 shadow-none font-medium"
-            >
-              Apply for a grant
-            </Link>
+            <ApplyEligibilityLink />
           </div>
         </div>
         {/* Right section (Who, process, payment, etc) */}
