@@ -22,7 +22,7 @@ module.exports = {
           "base-content": "#212638",
           info: "#93BBFB",
           success: "#34EEB6",
-          warning: "#FFCF72",
+          warning: "#FEC297",
           error: "#FF8863",
 
           ".tooltip": {
@@ -72,7 +72,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        customBlue: '#D5DAFF',
+        customBlue: "#D5DAFF",
+        customGreen: "#DDFFB3",
       },
       boxShadow: {
         center: "0 0 12px -2px rgb(0 0 0 / 0.05)",

@@ -19,14 +19,14 @@ export async function POST(req: Request) {
   try {
     const { title, description, signature, signer } = (await req.json()) as ReqBody;
 
-    if (!title || !description || !signature || !signer) {
-      return NextResponse.json({ error: "Invalid form details submited" }, { status: 400 });
+    if (!title || !description || !signature || !signer || description.length > 750 || title.length > 75) {
+      return NextResponse.json({ error: "Invalid form details submitted" }, { status: 400 });
     }
 
     // Verif if the builder is present
     const builder = await findUserByAddress(signer);
     if (!builder.exists) {
-      return NextResponse.json({ error: "Only buidlguild builders can submit for grants" }, { status: 401 });
+      return NextResponse.json({ error: "Only Buidlguidl builders can submit for grants" }, { status: 401 });
     }
 
     const recoveredAddress = await recoverTypedDataAddress({
