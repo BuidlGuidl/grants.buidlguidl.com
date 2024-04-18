@@ -18,15 +18,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { grantId: s
     const { grantId } = params;
     const { title, description, signature, signer, askAmount, private_note } = (await req.json()) as ReqBody;
 
-    if (
-      !title ||
-      !description ||
-      !askAmount ||
-      typeof askAmount !== "number" ||
-      !signature ||
-      !signer ||
-      !private_note
-    ) {
+    if (!title || !description || !askAmount || typeof askAmount !== "number" || !signature || !signer) {
       return NextResponse.json({ error: "Invalid form details submited" }, { status: 400 });
     }
 
@@ -34,7 +26,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { grantId: s
       domain: EIP_712_DOMAIN,
       types: EIP_712_TYPES__EDIT_GRANT,
       primaryType: "Message",
-      message: { title, description, askAmount: askAmount.toString(), grantId, private_note },
+      message: { title, description, askAmount: askAmount.toString(), grantId, private_note: private_note ?? "" },
       signature: signature,
     });
     if (recoveredAddress !== signer) {
