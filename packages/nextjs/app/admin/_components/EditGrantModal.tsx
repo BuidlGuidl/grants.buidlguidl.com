@@ -138,7 +138,7 @@ export const EditGrantModal = forwardRef<HTMLDialogElement, EditGrantModalProps>
         <div className="w-full flex-col gap-1">
           <p className="m-0 font-semibold text-base">Private Note(optional)</p>
           <textarea
-            name="privateNote"
+            name="private_note"
             placeholder="private note..."
             value={formData.private_note}
             className="textarea textarea-md textarea-bordered  w-full"
