@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
 import { LockClosedIcon, LockOpenIcon } from "@heroicons/react/24/outline";
 import { useBGBuilderData } from "~~/hooks/useBGBuilderData";
@@ -46,6 +47,7 @@ const FeedbackMessage = ({ builderStatus }: { builderStatus: BuilderStatus }) =>
 export const ApplyEligibilityLink = () => {
   const { isConnected, address: connectedAddress } = useAccount();
   const { isBuilderPresent, isLoading: isFetchingBuilderData } = useBGBuilderData(connectedAddress);
+  const { openConnectModal } = useConnectModal();
 
   const builderStatus: BuilderStatus =
     !isConnected || isFetchingBuilderData ? "notConnected" : !isBuilderPresent ? "notMember" : "eligible";
@@ -64,12 +66,19 @@ export const ApplyEligibilityLink = () => {
         </Link>
       ) : (
         <button
-          className={`btn px-4 md:px-8 btn-md border-1 border-black hover:border-1 hover:border-black rounded-2xl shadow-none font-medium cursor-not-allowed ${
-            builderStatus === "notConnected" ? "btn-primary" : "btn-warning"
+          className={`btn px-4 md:px-8 btn-md border-1 border-black hover:border-1 hover:border-black rounded-2xl shadow-none font-medium ${
+            builderStatus === "notConnected" ? "btn-primary" : "btn-warning cursor-not-allowed"
           }`}
+          onClick={() => {
+            if (!isConnected && openConnectModal) openConnectModal();
+          }}
         >
-          <LockClosedIcon className="h-5 w-5 mr-1 inline-block" />
-          APPLY FOR A GRANT
+          {isFetchingBuilderData ? (
+            <span className="loading loading-spinner h-5 w-5"></span>
+          ) : (
+            <LockClosedIcon className="h-5 w-5 mr-1 inline-block" />
+          )}
+          {!isConnected ? "CONNECT WALLET" : "APPLY FOR A GRANT"}
         </button>
       )}
     </div>
