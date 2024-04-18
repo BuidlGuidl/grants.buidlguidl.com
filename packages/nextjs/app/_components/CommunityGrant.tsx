@@ -6,7 +6,7 @@ export const CommunityGrant = () => {
     <div id="communityGrants" className="bg-secondary">
       <div className="container max-w-[90%] sm:max-w-md lg:max-w-[90%] xl:max-w-7xl m-auto xl:pl-4 lg:pt-10 flex flex-col-reverse lg:flex-row gap-5 lg:gap-0 my-6 lg:my-0">
         {/* Left section(Title, desc and btn) */}
-        <div className="my-4 lg:py-16 space-y-2 lg:max-w-[40%] flex flex-col items-center lg:items-start">
+        <div className="my-4 lg:py-16 space-y-2 lg:max-w-[45%] flex flex-col items-center lg:items-start">
           {/* Title  */}
           <div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl text-center lg:text-left font-ppEditorial mb-0 lg:mb-2">
