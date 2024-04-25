@@ -182,14 +182,17 @@ const AdminPage = () => {
         <div className="flex flex-col lg:flex-row gap-12 mt-4">
           <div className="p-8 bg-warning/5 lg:w-1/2">
             <div className="flex justify-between items-center">
-              <h2 className="font-bold text-xl">New Grant Proposals</h2>
+              <h2 className="font-bold text-xl">
+                New Grant Proposals {newGrants && newGrants.length > 0 && <>({newGrants.length})</>}
+              </h2>
               {newGrants && newGrants.length !== 0 && (
                 <button
                   className="btn btn-sm btn-primary"
                   onClick={() => handleBatchAction(newGrants, "approve")}
                   disabled={selectedApproveGrants.length === 0}
                 >
-                  Batch Send + Approve
+                  Batch Send + Approve{" "}
+                  {selectedApproveGrants && selectedApproveGrants.length > 0 && <>({selectedApproveGrants.length})</>}
                 </button>
               )}
             </div>
@@ -205,14 +208,19 @@ const AdminPage = () => {
           </div>
           <div className="p-8 bg-success/5 lg:w-1/2">
             <div className="flex justify-between items-center">
-              <h2 className="font-bold text-xl">Completed Grants</h2>
+              <h2 className="font-bold text-xl">
+                Completed Grants {completedGrants && completedGrants.length > 0 && <>({completedGrants.length})</>}
+              </h2>
               {completedGrants && completedGrants.length !== 0 && (
                 <button
                   className="btn btn-sm btn-primary"
                   onClick={() => handleBatchAction(completedGrants, "complete")}
                   disabled={selectedCompleteGrants.length === 0}
                 >
-                  Batch Send + Complete
+                  Batch Send + Complete{" "}
+                  {selectedCompleteGrants && selectedCompleteGrants.length > 0 && (
+                    <>({selectedCompleteGrants.length})</>
+                  )}
                 </button>
               )}
             </div>
