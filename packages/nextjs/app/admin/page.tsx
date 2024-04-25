@@ -183,7 +183,7 @@ const AdminPage = () => {
           <div className="p-8 bg-warning/5 lg:w-1/2">
             <div className="flex justify-between items-center">
               <h2 className="font-bold text-xl">
-                New Grant Proposals {newGrants && newGrants.length > 0 && `(${newGrants.length})`}
+                New Grant Proposals {newGrants && newGrants.length > 0 && <>({newGrants.length})</>}
               </h2>
               {newGrants && newGrants.length !== 0 && (
                 <button
@@ -191,7 +191,8 @@ const AdminPage = () => {
                   onClick={() => handleBatchAction(newGrants, "approve")}
                   disabled={selectedApproveGrants.length === 0}
                 >
-                  Batch Send + Approve
+                  Batch Send + Approve{" "}
+                  {selectedApproveGrants && selectedApproveGrants.length > 0 && <>({selectedApproveGrants.length})</>}
                 </button>
               )}
             </div>
@@ -208,7 +209,7 @@ const AdminPage = () => {
           <div className="p-8 bg-success/5 lg:w-1/2">
             <div className="flex justify-between items-center">
               <h2 className="font-bold text-xl">
-                Completed Grants {completedGrants && completedGrants.length > 0 && `(${completedGrants.length})`}
+                Completed Grants {completedGrants && completedGrants.length > 0 && <>({completedGrants.length})</>}
               </h2>
               {completedGrants && completedGrants.length !== 0 && (
                 <button
@@ -216,7 +217,10 @@ const AdminPage = () => {
                   onClick={() => handleBatchAction(completedGrants, "complete")}
                   disabled={selectedCompleteGrants.length === 0}
                 >
-                  Batch Send + Complete
+                  Batch Send + Complete{" "}
+                  {selectedCompleteGrants && selectedCompleteGrants.length > 0 && (
+                    <>({selectedCompleteGrants.length})</>
+                  )}
                 </button>
               )}
             </div>
