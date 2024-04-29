@@ -43,6 +43,10 @@ const BuilderSocials = ({ socialLinks }: { socialLinks?: SocialLinks }) => {
   );
 };
 
+const getImpersonatorLink = (address: string) => {
+  return `https://impersonator.vision/?address=${address}&url=https://grants.buidlguidl.com/my-grants`;
+};
+
 type GrantReviewProps = {
   grant: GrantDataWithPrivateNote;
   selected: boolean;
@@ -146,10 +150,12 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
         <div className="flex gap-4 items-center relative">
           <Address address={grant.builder} link={`https://app.buidlguidl.com/builders/${grant.builder}`} />
           {grantsCount > 0 && (
-            <span className="group text-sm text-gray-500 tooltip" data-tip={otherGrantsTooltip}>
-              {grantsCount} {grantsCount === 1 ? "submission" : "submissions"}{" "}
-              <QuestionMarkCircleIcon className="h-4 w-4 inline" />
-            </span>
+            <a href={getImpersonatorLink(grant.builder)} target="_blank" rel="noreferrer">
+              <span className="group text-sm text-gray-500 tooltip" data-tip={otherGrantsTooltip}>
+                {grantsCount} {grantsCount === 1 ? "submission" : "submissions"}{" "}
+                <QuestionMarkCircleIcon className="h-4 w-4 inline" />
+              </span>
+            </a>
           )}
         </div>
         <div className="flex gap-4 items-center mt-3">
