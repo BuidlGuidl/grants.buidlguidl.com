@@ -227,7 +227,7 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
           </div>
         </div>
         {grant.private_note && grant.private_note.trim().length > 0 && (
-          <p className="mb-0 text-orange-500">{grant.private_note}</p>
+          <p className="mb-0 text-orange-500 whitespace-pre-wrap">{grant.private_note}</p>
         )}
       </div>
       <EditGrantModal ref={editGrantModalRef} grant={grant} closeModal={() => editGrantModalRef?.current?.close()} />
