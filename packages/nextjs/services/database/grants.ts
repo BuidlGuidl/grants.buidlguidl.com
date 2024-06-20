@@ -146,6 +146,13 @@ export const reviewGrant = async ({ grantId, action, txHash, txChainId, note }: 
     // Prepare the data to update based on the action
     const updateData: Partial<GrantData> = { status: action };
 
+    // Reject build submission moving back to APPROVED status
+    const grantSnapshot = await getGrantSnapshotById(grantId);
+    const currentStatus = grantSnapshot.data()?.status;
+    if (currentStatus === PROPOSAL_STATUS.SUBMITTED && action === PROPOSAL_STATUS.REJECTED) {
+      updateData.status = PROPOSAL_STATUS.APPROVED;
+    }
+
     if (note !== undefined) {
       updateData.note = note;
     }

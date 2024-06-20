@@ -40,7 +40,7 @@ export const ActionModal = forwardRef<HTMLDialogElement, ActionModalProps>(({ gr
         </div>
         {action !== PROPOSAL_STATUS.REJECTED && (
           <div className="w-full flex-col space-y-1">
-            <p className="m-0 font-semibold text-base">Transction Hash</p>
+            <p className="m-0 font-semibold text-base">Transaction Hash</p>
             <input
               type="text"
               ref={transactionInputRef}
