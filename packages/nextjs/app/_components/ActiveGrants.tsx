@@ -19,6 +19,11 @@ const ActiveGrantRow = ({ title, askAmount, builder, approvedAt }: GrantData) =>
 
 export const ActiveGrants = async () => {
   const activeGrants = await getAllActiveGrants();
+
+  if (!activeGrants.length) {
+    return null;
+  }
+
   // Sort by approved date DESC
   const sortedActiveGrants = activeGrants.sort((a, b) => {
     if (a.approvedAt && b.approvedAt) {
@@ -26,10 +31,6 @@ export const ActiveGrants = async () => {
     }
     return 0;
   });
-
-  if (!activeGrants.length) {
-    return null;
-  }
 
   return (
     <div className="container flex flex-col justify-center max-w-[90%] xl:max-w-7xl mx-auto py-16 lg:pt-20 lg:pb-28 gap-6">
