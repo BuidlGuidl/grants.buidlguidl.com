@@ -19,6 +19,13 @@ const ActiveGrantRow = ({ title, askAmount, builder, approvedAt }: GrantData) =>
 
 export const ActiveGrants = async () => {
   const activeGrants = await getAllActiveGrants();
+  // Sort by approved date DESC
+  const sortedActiveGrants = activeGrants.sort((a, b) => {
+    if (a.approvedAt && b.approvedAt) {
+      return b.approvedAt - a.approvedAt;
+    }
+    return 0;
+  });
 
   if (!activeGrants.length) {
     return null;
@@ -42,7 +49,7 @@ export const ActiveGrants = async () => {
               </tr>
             </thead>
             <tbody className="">
-              {activeGrants.map(grant => (
+              {sortedActiveGrants.map(grant => (
                 <ActiveGrantRow key={grant.id} {...grant} />
               ))}
             </tbody>
