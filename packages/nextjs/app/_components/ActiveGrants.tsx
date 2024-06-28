@@ -24,6 +24,14 @@ export const ActiveGrants = async () => {
     return null;
   }
 
+  // Sort by approved date DESC
+  const sortedActiveGrants = activeGrants.sort((a, b) => {
+    if (a.approvedAt && b.approvedAt) {
+      return b.approvedAt - a.approvedAt;
+    }
+    return 0;
+  });
+
   return (
     <div className="container flex flex-col justify-center max-w-[90%] xl:max-w-7xl mx-auto py-16 lg:pt-20 lg:pb-28 gap-6">
       <div className="self-center lg:self-start w-fit relative">
@@ -42,7 +50,7 @@ export const ActiveGrants = async () => {
               </tr>
             </thead>
             <tbody className="">
-              {activeGrants.map(grant => (
+              {sortedActiveGrants.map(grant => (
                 <ActiveGrantRow key={grant.id} {...grant} />
               ))}
             </tbody>
