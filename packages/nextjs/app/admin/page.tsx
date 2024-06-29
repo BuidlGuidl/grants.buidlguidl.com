@@ -101,9 +101,10 @@ const AdminPage = () => {
     });
     const builders = selectedGrantsWithMetaData.map(grant => grant.builder);
     const buildersAmount = selectedGrantsWithMetaData.map(grant => parseEther((grant.askAmount / 2).toString()));
-    const totalAmount = selectedGrantsWithMetaData.reduce((acc, grant) => {
-      return acc + parseEther(grant.askAmount.toString());
-    }, BigInt(0));
+    const totalAmount = selectedGrantsWithMetaData.reduce(
+      (acc, grant) => acc + parseEther(grant.askAmount.toString()),
+      BigInt(0),
+    );
 
     const value = totalAmount / BigInt(2);
 
