@@ -18,7 +18,7 @@ const ActiveGrantRow = ({ title, askAmount, builder, approvedAt }: GrantData) =>
 };
 
 export const ActiveGrants = async () => {
-  const activeGrants = await getAllActiveGrants();
+  const activeGrants = await getAllActiveGrants(8);
 
   if (!activeGrants.length) {
     return null;
