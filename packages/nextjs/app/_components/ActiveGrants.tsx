@@ -18,8 +18,7 @@ const ActiveGrantRow = ({ title, askAmount, builder, approvedAt }: GrantData) =>
 };
 
 export const ActiveGrants = async () => {
-  const LIMIT = 8;
-  const activeGrants = await getAllActiveGrants(LIMIT);
+  const activeGrants = await getAllActiveGrants();
 
   if (!activeGrants.length) {
     return null;
@@ -57,13 +56,11 @@ export const ActiveGrants = async () => {
             </tbody>
           </table>
         </div>
-        {activeGrants.length > LIMIT && (
-          <div className="link w-full text-center mt-6 lg:text-lg">
-            <a href="/active-grants" className="">
-              See all active grants
-            </a>
-          </div>
-        )}
+        <div className="link w-full text-center mt-6 lg:text-lg">
+          <a href="/active-grants" className="">
+            See all active grants
+          </a>
+        </div>
       </div>
     </div>
   );
