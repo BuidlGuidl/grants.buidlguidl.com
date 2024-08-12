@@ -182,6 +182,9 @@ const AdminPage = () => {
   return (
     <div className="container mx-auto mt-12 max-w-[95%]">
       {isLoading && <span className="loading loading-spinner"></span>}
+      <Link href="/active-grants" className="block mb-2 link text-right">
+        Active Grants &gt;
+      </Link>
       {grants && (
         <div className="flex flex-col lg:flex-row gap-12 mt-4">
           <div className="p-8 bg-warning/5 lg:w-1/2">
@@ -211,9 +214,6 @@ const AdminPage = () => {
             ))}
           </div>
           <div className="pt-2 p-8 bg-success/5 lg:w-1/2">
-            <Link href="/active-grants" className="block mb-2 underline underline-offset-2">
-              Active Grants
-            </Link>
             <div className="flex justify-between items-center">
               <h2 className="font-bold text-xl">
                 Completed Grants {completedGrants && completedGrants.length > 0 && <>({completedGrants.length})</>}
