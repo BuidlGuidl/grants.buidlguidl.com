@@ -5,6 +5,8 @@ import { getAllActiveGrants } from "~~/services/database/grants";
 import { GrantData } from "~~/services/database/schema";
 import { formatDateFromNow } from "~~/utils/grants";
 
+export const dynamic = "force-dynamic";
+
 const ActiveGrantCard = ({ title, description, askAmount, builder, link, approvedAt }: GrantData) => {
   return (
     <div className="w-72 md:w-[290px] bg-primary min-h-full rounded-2xl overflow-hidden shadow-lg">
