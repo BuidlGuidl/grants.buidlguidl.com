@@ -100,9 +100,15 @@ export const getAllCompletedGrants = async (limit?: number) => {
   }
 };
 
-export const getAllActiveGrants = async () => {
+export const getAllActiveGrants = async (limit?: number) => {
   try {
-    const grantsSnapshot = await grantsCollection.where("status", "==", PROPOSAL_STATUS.APPROVED).get();
+    let query = grantsCollection.where("status", "==", PROPOSAL_STATUS.APPROVED).orderBy("approvedAt", "desc");
+
+    if (limit) {
+      query = query.limit(limit);
+    }
+
+    const grantsSnapshot = await query.get();
     const grants: GrantData[] = [];
     grantsSnapshot.forEach(doc => {
       grants.push({ id: doc.id, ...doc.data() } as GrantData);

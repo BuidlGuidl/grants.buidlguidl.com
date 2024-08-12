@@ -18,7 +18,7 @@ const ActiveGrantRow = ({ title, askAmount, builder, approvedAt }: GrantData) =>
 };
 
 export const ActiveGrants = async () => {
-  const activeGrants = await getAllActiveGrants();
+  const activeGrants = await getAllActiveGrants(8);
 
   if (!activeGrants.length) {
     return null;
@@ -55,6 +55,11 @@ export const ActiveGrants = async () => {
               ))}
             </tbody>
           </table>
+        </div>
+        <div className="link w-full text-center mt-6 lg:text-lg">
+          <a href="/active-grants" className="">
+            See all active grants
+          </a>
         </div>
       </div>
     </div>
