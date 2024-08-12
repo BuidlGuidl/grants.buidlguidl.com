@@ -210,7 +210,10 @@ const AdminPage = () => {
               />
             ))}
           </div>
-          <div className="p-8 bg-success/5 lg:w-1/2">
+          <div className="pt-2 p-8 bg-success/5 lg:w-1/2">
+            <Link href="/active-grants" className="block mb-2 underline underline-offset-2">
+              Active Grants
+            </Link>
             <div className="flex justify-between items-center">
               <h2 className="font-bold text-xl">
                 Completed Grants {completedGrants && completedGrants.length > 0 && <>({completedGrants.length})</>}
