@@ -213,7 +213,7 @@ const AdminPage = () => {
               />
             ))}
           </div>
-          <div className="pt-2 p-8 bg-success/5 lg:w-1/2">
+          <div className="p-8 bg-success/5 lg:w-1/2">
             <div className="flex justify-between items-center">
               <h2 className="font-bold text-xl">
                 Completed Grants {completedGrants && completedGrants.length > 0 && <>({completedGrants.length})</>}
