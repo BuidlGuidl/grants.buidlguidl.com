@@ -1,9 +1,10 @@
 import { useSWRConfig } from "swr";
 import useSWRMutation from "swr/mutation";
-import { useAccount, useNetwork, useSignTypedData } from "wagmi";
+import { useAccount, useNetwork, usePublicClient, useSignTypedData } from "wagmi";
 import { GrantData } from "~~/services/database/schema";
 import { EIP_712_DOMAIN, EIP_712_TYPES__REVIEW_GRANT, EIP_712_TYPES__REVIEW_GRANT_WITH_NOTE } from "~~/utils/eip712";
 import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";
+import { isSafeContext } from "~~/utils/safe-signature";
 import { notification } from "~~/utils/scaffold-eth";
 import { postMutationFetcher } from "~~/utils/swr";
 
@@ -14,11 +15,13 @@ type ReqBody = {
   txHash: string;
   txChainId: string;
   note?: string;
+  isSafeSignature?: boolean;
 };
 
 export const useReviewGrant = (grant: GrantData) => {
   const { address } = useAccount();
   const { chain: connectedChain } = useNetwork();
+  const publicClient = usePublicClient({ chainId: connectedChain?.id });
   const { signTypedDataAsync, isLoading: isSigningMessage } = useSignTypedData();
   const { trigger: postReviewGrant, isMutating: isPostingNewGrant } = useSWRMutation(
     `/api/grants/${grant.id}/review`,
@@ -71,6 +74,7 @@ export const useReviewGrant = (grant: GrantData) => {
     let notificationId;
     try {
       notificationId = notification.loading("Submitting review");
+      const isSafeSignature = await isSafeContext(publicClient, address);
       await postReviewGrant({
         signer: address,
         signature,
@@ -78,6 +82,7 @@ export const useReviewGrant = (grant: GrantData) => {
         txHash: txnHash,
         txChainId: connectedChain.id.toString(),
         note,
+        isSafeSignature,
       });
       await mutate("/api/grants/review");
       notification.remove(notificationId);
