@@ -56,8 +56,6 @@ export const validateSafeSignature = async ({
     safeAddress: safeAddress,
   });
   const safeMessage = hashSafeMessage(typedData);
-  console.log("safeMessage", safeMessage);
-  console.log("signature", signature);
 
   const isValidSignature = await protocolKit.isValidSignature(safeMessage, signature);
   return isValidSignature;

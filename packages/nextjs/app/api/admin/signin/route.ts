@@ -13,7 +13,6 @@ type AdminSignInBody = {
 export async function POST(req: Request) {
   try {
     const { signer, signature, isSafeSignature, chainId } = (await req.json()) as AdminSignInBody;
-    console.log("AdminSignInBody", { signer, signature, isSafeSignature, chainId });
 
     if (!signer || !signature) {
       return new Response("Missing signer or signature", { status: 400 });
