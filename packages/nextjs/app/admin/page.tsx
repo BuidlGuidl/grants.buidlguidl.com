@@ -8,11 +8,12 @@ import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 import { useLocalStorage } from "usehooks-ts";
 import { parseEther } from "viem";
-import { useAccount, useSignTypedData } from "wagmi";
+import { useAccount, useNetwork, usePublicClient, useSignTypedData } from "wagmi";
 import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import { GrantDataWithBuilder } from "~~/services/database/schema";
 import { EIP_712_DOMAIN, EIP_712_TYPES__ADMIN_SIGN_IN } from "~~/utils/eip712";
 import { PROPOSAL_STATUS } from "~~/utils/grants";
+import { isSafeContext } from "~~/utils/safe-signature";
 import { getParsedError, notification } from "~~/utils/scaffold-eth";
 import { postMutationFetcher } from "~~/utils/swr";
 
@@ -38,6 +39,8 @@ const fetcherWithHeader = async (url: string, headers: { address: string; apiKey
 const AdminPage = () => {
   const { address } = useAccount();
   const [selectedApproveGrants, setSelectedApproveGrants] = useState<string[]>([]);
+  const { chain: connectedChain } = useNetwork();
+  const publicClient = usePublicClient({ chainId: connectedChain?.id });
   const [selectedCompleteGrants, setSelectedCompleteGrants] = useState<string[]>([]);
   const [modalBtnLabel, setModalBtnLabel] = useState<"Approve" | "Complete">("Approve");
   const modalRef = useRef<HTMLDialogElement>(null);
@@ -48,6 +51,8 @@ const AdminPage = () => {
     postMutationFetcher<{
       signer?: string;
       signature?: `0x${string}`;
+      isSafeSignature?: boolean;
+      chainId?: number;
     }>,
   );
 
@@ -130,7 +135,16 @@ const AdminPage = () => {
         message: { action: "Sign In", description: "I authorize myself as admin" },
       });
 
-      const resData = (await postAdminSignIn({ signer: address, signature })) as { data: { apiKey: string } };
+      const isSafeSignature = await isSafeContext(publicClient, address);
+
+      const resData = (await postAdminSignIn({
+        signer: address,
+        signature,
+        isSafeSignature,
+        chainId: connectedChain?.id,
+      })) as {
+        data: { apiKey: string };
+      };
       setApiKey(resData.data.apiKey);
     } catch (error) {
       console.error("Error signing in", error);

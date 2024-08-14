@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+import { EIP712TypedData } from "@safe-global/safe-core-sdk-types";
 import { recoverTypedDataAddress } from "viem";
 import { reviewGrant } from "~~/services/database/grants";
 import { findUserByAddress } from "~~/services/database/users";
 import { EIP_712_DOMAIN, EIP_712_TYPES__REVIEW_GRANT, EIP_712_TYPES__REVIEW_GRANT_WITH_NOTE } from "~~/utils/eip712";
 import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";
+import { validateSafeSignature } from "~~/utils/safe-signature";
 
 type ReqBody = {
   signer: string;
@@ -12,11 +14,12 @@ type ReqBody = {
   txHash: string;
   txChainId: string;
   note?: string;
+  isSafeSignature?: boolean;
 };
 
 export async function POST(req: NextRequest, { params }: { params: { grantId: string } }) {
   const { grantId } = params;
-  const { signature, signer, action, txHash, txChainId, note } = (await req.json()) as ReqBody;
+  const { signature, signer, action, txHash, txChainId, note, isSafeSignature } = (await req.json()) as ReqBody;
 
   // Validate action is valid
   const validActions = Object.values(PROPOSAL_STATUS);
@@ -25,11 +28,11 @@ export async function POST(req: NextRequest, { params }: { params: { grantId: st
     return NextResponse.json({ error: "Invalid action" }, { status: 400 });
   }
 
-  let recoveredAddress: string;
+  let isValidSignature: boolean;
 
   // If action is approved or rejected, include note in signature
   if (action === PROPOSAL_STATUS.APPROVED || action === PROPOSAL_STATUS.REJECTED) {
-    recoveredAddress = await recoverTypedDataAddress({
+    const typedData = {
       domain: { ...EIP_712_DOMAIN, chainId: Number(txChainId) },
       types: EIP_712_TYPES__REVIEW_GRANT_WITH_NOTE,
       primaryType: "Message",
@@ -41,10 +44,21 @@ export async function POST(req: NextRequest, { params }: { params: { grantId: st
         note: note ?? "",
       },
       signature,
-    });
+    } as const;
+    if (isSafeSignature) {
+      isValidSignature = await validateSafeSignature({
+        chainId: Number(txChainId),
+        typedData: typedData as unknown as EIP712TypedData,
+        signature,
+        safeAddress: signer,
+      });
+    } else {
+      const recoveredAddress = await recoverTypedDataAddress(typedData);
+      isValidSignature = recoveredAddress === signer;
+    }
   } else {
     // Validate Signature
-    recoveredAddress = await recoverTypedDataAddress({
+    const typedData = {
       domain: { ...EIP_712_DOMAIN, chainId: Number(txChainId) },
       types: EIP_712_TYPES__REVIEW_GRANT,
       primaryType: "Message",
@@ -55,11 +69,22 @@ export async function POST(req: NextRequest, { params }: { params: { grantId: st
         txChainId,
       },
       signature,
-    });
+    } as const;
+    if (isSafeSignature) {
+      isValidSignature = await validateSafeSignature({
+        chainId: Number(txChainId),
+        typedData: typedData as unknown as EIP712TypedData,
+        signature,
+        safeAddress: signer,
+      });
+    } else {
+      const recoveredAddress = await recoverTypedDataAddress(typedData);
+      isValidSignature = recoveredAddress === signer;
+    }
   }
 
-  if (recoveredAddress !== signer) {
-    console.error("Signature error", recoveredAddress, signer);
+  if (!isValidSignature) {
+    console.error("Invalid signature", signer);
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

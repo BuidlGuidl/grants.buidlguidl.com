@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import { EIP712TypedData } from "@safe-global/safe-core-sdk-types";
 import { recoverTypedDataAddress } from "viem";
 import { updateGrant } from "~~/services/database/grants";
 import { findUserByAddress } from "~~/services/database/users";
 import { EIP_712_DOMAIN, EIP_712_TYPES__EDIT_GRANT } from "~~/utils/eip712";
+import { validateSafeSignature } from "~~/utils/safe-signature";
 
 type ReqBody = {
   title?: string;
@@ -11,25 +13,44 @@ type ReqBody = {
   signature?: `0x${string}`;
   signer?: string;
   private_note?: string;
+  isSafeSignature?: boolean;
+  chainId?: number;
 };
 
 export async function PATCH(req: NextRequest, { params }: { params: { grantId: string } }) {
   try {
     const { grantId } = params;
-    const { title, description, signature, signer, askAmount, private_note } = (await req.json()) as ReqBody;
+    const { title, description, signature, signer, askAmount, private_note, isSafeSignature, chainId } =
+      (await req.json()) as ReqBody;
 
     if (!title || !description || !askAmount || typeof askAmount !== "number" || !signature || !signer) {
       return NextResponse.json({ error: "Invalid form details submited" }, { status: 400 });
     }
 
-    const recoveredAddress = await recoverTypedDataAddress({
+    let isValidSignature: boolean;
+
+    const typedData = {
       domain: EIP_712_DOMAIN,
       types: EIP_712_TYPES__EDIT_GRANT,
       primaryType: "Message",
       message: { title, description, askAmount: askAmount.toString(), grantId, private_note: private_note ?? "" },
       signature: signature,
-    });
-    if (recoveredAddress !== signer) {
+    } as const;
+
+    if (isSafeSignature) {
+      if (!chainId) return new Response("Missing chainId", { status: 400 });
+      isValidSignature = await validateSafeSignature({
+        chainId: Number(chainId),
+        typedData: typedData as unknown as EIP712TypedData,
+        safeAddress: signer,
+        signature,
+      });
+    } else {
+      const recoveredAddress = await recoverTypedDataAddress(typedData);
+      isValidSignature = recoveredAddress === signer;
+    }
+
+    if (!isValidSignature) {
       return NextResponse.json({ error: "Recovered address did not match signer" }, { status: 401 });
     }
 

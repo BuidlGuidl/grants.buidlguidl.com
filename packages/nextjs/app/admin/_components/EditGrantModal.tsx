@@ -1,9 +1,10 @@
 import { ChangeEvent, forwardRef, useState } from "react";
 import { useSWRConfig } from "swr";
 import useSWRMutation from "swr/mutation";
-import { useAccount, useNetwork, useSignTypedData } from "wagmi";
+import { useAccount, useNetwork, usePublicClient, useSignTypedData } from "wagmi";
 import { GrantDataWithPrivateNote } from "~~/services/database/schema";
 import { EIP_712_DOMAIN, EIP_712_TYPES__EDIT_GRANT } from "~~/utils/eip712";
+import { isSafeContext } from "~~/utils/safe-signature";
 import { getParsedError, notification } from "~~/utils/scaffold-eth";
 import { patchMutationFetcher } from "~~/utils/swr";
 
@@ -19,6 +20,8 @@ type ReqBody = {
   signature?: `0x${string}`;
   signer?: string;
   private_note?: string;
+  isSafeSignature?: boolean;
+  chainId?: number;
 };
 
 export const EditGrantModal = forwardRef<HTMLDialogElement, EditGrantModalProps>(({ grant, closeModal }, ref) => {
@@ -31,6 +34,7 @@ export const EditGrantModal = forwardRef<HTMLDialogElement, EditGrantModalProps>
 
   const { address } = useAccount();
   const { chain: connectedChain } = useNetwork();
+  const publiClient = usePublicClient({ chainId: connectedChain?.id });
   const { signTypedDataAsync, isLoading: isSigningMessage } = useSignTypedData();
 
   const { trigger: editGrant, isMutating } = useSWRMutation(`/api/grants/${grant.id}`, patchMutationFetcher<ReqBody>);
@@ -69,11 +73,15 @@ export const EditGrantModal = forwardRef<HTMLDialogElement, EditGrantModalProps>
         },
       });
       notificationId = notification.loading("Updating grant");
+
+      const isSafeSignature = await isSafeContext(publiClient, address);
       await editGrant({
         signer: address,
         signature,
         ...formData,
         askAmount: parseFloat(formData.askAmount),
+        isSafeSignature,
+        chainId: connectedChain.id,
       });
       await mutate("/api/grants/review");
       notification.remove(notificationId);
