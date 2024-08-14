@@ -35,8 +35,10 @@ export const isSafeContext = async (publicClient: PublicClient, address: Address
   const code = await publicClient.getBytecode({
     address,
   });
+
   // If contract code is `0x` => no contract deployed on that address
-  if (code === "0x") return false;
+  if (!code || code === "0x") return false;
+
   return true;
 };
 
