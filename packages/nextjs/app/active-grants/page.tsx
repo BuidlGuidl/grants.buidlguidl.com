@@ -7,7 +7,7 @@ import { formatDateFromNow } from "~~/utils/grants";
 
 export const dynamic = "force-dynamic";
 
-const ActiveGrantCard = ({ title, description, askAmount, builder, link, approvedAt }: GrantData) => {
+const ActiveGrantCard = ({ title, description, askAmount, builder, approvedAt }: GrantData) => {
   return (
     <div className="w-72 md:w-[290px] bg-primary min-h-full rounded-2xl overflow-hidden shadow-lg">
       <div className="flex justify-between items-center bg-white py-3 px-4 text-sm">
@@ -26,16 +26,6 @@ const ActiveGrantCard = ({ title, description, askAmount, builder, link, approve
         </div>
         <div className="text-left flex-1">
           <p className="m-0 line-clamp-3 text-sm">{description}</p>
-        </div>
-        <div className="text-left mt-auto">
-          <a
-            href={link}
-            className="badge bg-primary rounded-2xl py-4 px-5 hover:opacity-80 mt-2"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Learn more
-          </a>
         </div>
       </div>
     </div>
