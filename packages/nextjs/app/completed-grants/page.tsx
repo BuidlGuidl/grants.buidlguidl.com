@@ -1,8 +1,10 @@
 import { CompletedGrants } from "../_components/CompletedGrants";
 import { NextPage } from "next";
 
-const SubmitGrant: NextPage = () => {
+export const dynamic = "force-dynamic";
+
+const CompletedGrantsPage: NextPage = () => {
   return <CompletedGrants />;
 };
 
-export default SubmitGrant;
+export default CompletedGrantsPage;
