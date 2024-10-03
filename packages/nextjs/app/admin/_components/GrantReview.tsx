@@ -160,8 +160,8 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
         </div>
         <div className="flex gap-4 items-center mt-3">
           <BuilderSocials socialLinks={grant.builderData?.socialLinks} />
-          {grant.builderData?.builderBatch && (
-            <div className="badge badge-outline">Batch #{grant.builderData.builderBatch}</div>
+          {grant.builderData?.batch?.number && (
+            <div className="badge badge-outline">Batch #{grant.builderData.batch?.number}</div>
           )}
           {grant.builderData?.builderCohort?.map(cohort => {
             return (

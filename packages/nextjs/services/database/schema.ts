@@ -33,7 +33,10 @@ export type BuilderData = {
   builds?: Build[];
   status?: Status;
   graduated?: Graduated;
-  builderBatch?: string;
+  batch?: {
+    number: string;
+    status: string;
+  };
   builderCohort?: { id: string; name: string; url: string }[];
   stream?: {
     balance: string;
