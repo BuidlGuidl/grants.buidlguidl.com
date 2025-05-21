@@ -27,10 +27,10 @@ export const SubmitModal = ({ grant, closeModal }: { grant: GrantData; closeModa
   const { signTypedDataAsync, isLoading: isSigningMessage } = useSignTypedData();
 
   const handleSubmit = async () => {
-    const urlPattern = new RegExp("^(https://app\\.buidlguidl\\.com/build/)[a-z0-9-]+$");
+    const urlPattern = new RegExp("^(https://speedrunethereum\\.com/builds/)[a-z0-9-]+$");
 
     if (!urlPattern.test(buildUrl.toLowerCase()))
-      return notification.error("You must submit a valid build URL (https://app.buidlguidl.com/build/...)");
+      return notification.error("You must submit a valid build URL (https://speedrunethereum.com/builds/...)");
 
     let signature;
     try {
@@ -85,15 +85,15 @@ export const SubmitModal = ({ grant, closeModal }: { grant: GrantData; closeModa
             />
             First you&apos;ll need to register the build in your&nbsp;
             <a
-              href={`https://app.buidlguidl.com/builders/${connectedAddress}`}
+              href={`https://speedrunethereum.com/builders/${connectedAddress}`}
               target="_blank"
               rel="noopener noreferrer"
               className="text-black-500 underline"
             >
-              BuidlGuidl profile
+              SpeedRun Ethereum profile
             </a>
-            &nbsp;and then submit the URL of your BG build in this form. BG Grants team will review it to complete the
-            grant.
+            &nbsp;and then submit the URL of your SpeedRun Ethereum build in this form. BG Grants team will review it to
+            complete the grant.
           </span>
         </div>
         <label className="block mt-4">
@@ -103,7 +103,7 @@ export const SubmitModal = ({ grant, closeModal }: { grant: GrantData; closeModa
           type="text"
           value={buildUrl}
           onChange={e => setBuildUrl(e.target.value)}
-          placeholder="https://app.buidlguidl.com/build/..."
+          placeholder="https://speedrunethereum.com/builds/..."
           className="placeholder: pl-[14px] mt-4 w-full p-1 rounded-lg"
         />
         <button
