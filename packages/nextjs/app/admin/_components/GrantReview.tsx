@@ -148,7 +148,7 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
           </div>
         </div>
         <div className="flex gap-4 items-center relative">
-          <Address address={grant.builder} link={`https://app.buidlguidl.com/builders/${grant.builder}`} />
+          <Address address={grant.builder} link={`https://speedrunethereum.com/builders/${grant.builder}`} />
           {grantsCount > 0 && (
             <a href={getImpersonatorLink(grant.builder)} target="_blank" rel="noreferrer">
               <span className="group text-sm text-gray-500 tooltip" data-tip={otherGrantsTooltip}>
