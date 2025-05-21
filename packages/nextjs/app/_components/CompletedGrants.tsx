@@ -18,7 +18,7 @@ const CompletedGrantCard = ({ title, description, askAmount, builder, link, comp
       </div>
       <div className="flex flex-col p-5 gap-4 bg-white">
         <div className="text-left">
-          <Address address={builder} link={`https://app.buidlguidl.com/builders/${builder}`} />
+          <Address address={builder} link={`https://speedrunethereum.com/builders/${builder}`} />
         </div>
         <div className="text-left flex-1">
           <p className="m-0 line-clamp-3 text-sm">{description}</p>
