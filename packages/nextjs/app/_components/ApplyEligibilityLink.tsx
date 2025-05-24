@@ -8,7 +8,7 @@ import { useBGBuilderData } from "~~/hooks/useBGBuilderData";
 import { useSpeedRunChallengeEligibility } from "~~/hooks/useSpeedRunChallengeEligibility";
 import { REQUIRED_CHALLENGE_COUNT } from "~~/utils/eligibility-criteria";
 
-type BuilderStatus = "notConnected" | "notMember" | "eligible";
+type BuilderStatus = "notConnected" | "notElegible" | "eligible";
 
 const FeedbackMessage = ({
   builderStatus,
@@ -26,7 +26,7 @@ const FeedbackMessage = ({
       </div>
     );
   }
-  if (builderStatus === "notMember") {
+  if (builderStatus === "notElegible") {
     return (
       <div className="leading-snug">
         <p className="-mb-2">
@@ -56,7 +56,7 @@ const FeedbackMessage = ({
       <p className="-mb-2">
         ✅ <strong>You are eligible to apply!</strong>
       </p>
-      <p>Participate in the grants program as a member.</p>
+      <p>Participate in the grants program.</p>
     </div>
   );
 };
@@ -77,7 +77,7 @@ export const ApplyEligibilityLink = () => {
   } else if (isEligibleSRE || isBuilderPresent) {
     builderStatus = "eligible";
   } else {
-    builderStatus = "notMember";
+    builderStatus = "notElegible";
   }
 
   const isFetching = isLoadingSRE || (isEligibleSRE === false && isFetchingBuilderData);
