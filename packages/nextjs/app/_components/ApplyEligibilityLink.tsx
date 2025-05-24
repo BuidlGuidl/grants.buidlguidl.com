@@ -36,12 +36,10 @@ const FeedbackMessage = ({
           You need to complete at least <strong>{REQUIRED_CHALLENGE_COUNT} SpeedRun Ethereum challenges</strong> to
           apply for a grant.
           <br />
-          {completedChallengesCount >= 0 && (
-            <span>
-              You have completed <strong>{completedChallengesCount}</strong> challenge
-              {completedChallengesCount === 1 ? "" : "s"}.
-            </span>
-          )}
+          <span>
+            You have completed <strong>{completedChallengesCount}</strong> challenge
+            {completedChallengesCount === 1 ? "" : "s"}.
+          </span>
           <br />
           <a href="https://speedrunethereum.com" target="_blank" rel="noopener noreferrer" className="underline">
             speedrunethereum.com
