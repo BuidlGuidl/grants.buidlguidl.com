@@ -15,7 +15,7 @@ const FeedbackMessage = ({
   completedChallengesCount,
 }: {
   builderStatus: BuilderStatus;
-  completedChallengesCount?: number;
+  completedChallengesCount: number;
 }) => {
   if (builderStatus === "notConnected") {
     return (
@@ -36,7 +36,7 @@ const FeedbackMessage = ({
           You need to complete at least <strong>{REQUIRED_CHALLENGE_COUNT} SpeedRun Ethereum challenges</strong> to
           apply for a grant.
           <br />
-          {typeof completedChallengesCount === "number" && (
+          {completedChallengesCount >= 0 && (
             <span>
               You have completed <strong>{completedChallengesCount}</strong> challenge
               {completedChallengesCount === 1 ? "" : "s"}.
