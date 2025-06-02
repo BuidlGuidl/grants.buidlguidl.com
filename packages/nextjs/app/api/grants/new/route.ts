@@ -3,6 +3,7 @@ import { recoverTypedDataAddress } from "viem";
 import { createGrant } from "~~/services/database/grants";
 import { findUserByAddress } from "~~/services/database/users";
 import { EIP_712_DOMAIN, EIP_712_TYPES__APPLY_FOR_GRANT } from "~~/utils/eip712";
+import { REQUIRED_CHALLENGE_COUNT, fetchAcceptedChallengeCount } from "~~/utils/eligibility-criteria";
 
 type ReqBody = {
   title?: string;
@@ -23,10 +24,25 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid form details submitted" }, { status: 400 });
     }
 
-    // Verif if the builder is present
+    // Verify if the builder is present (legacy BG check)
     const builder = await findUserByAddress(signer);
-    if (!builder.exists) {
-      return NextResponse.json({ error: "Only Buidlguidl builders can submit for grants" }, { status: 401 });
+    let eligible = false;
+    if (builder.exists) {
+      eligible = true;
+    } else {
+      // New SRE challenge check
+      const completed = await fetchAcceptedChallengeCount(signer);
+      if (completed >= REQUIRED_CHALLENGE_COUNT) {
+        eligible = true;
+      }
+    }
+    if (!eligible) {
+      return NextResponse.json(
+        {
+          error: `Only builders with at least ${REQUIRED_CHALLENGE_COUNT} accepted SpeedRun Ethereum challenges can submit for grants`,
+        },
+        { status: 401 },
+      );
     }
 
     const recoveredAddress = await recoverTypedDataAddress({
