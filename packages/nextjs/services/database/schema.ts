@@ -26,26 +26,17 @@ type Graduated = {
 
 export type BuilderData = {
   id: string;
-  socialLinks?: SocialLinks;
-  role?: "anonymous" | "builder" | "admin";
-  function?: string;
-  creationTimestamp?: number;
+  role?: "anonymous" | "user" | "admin";
   builds?: Build[];
-  status?: Status;
-  graduated?: Graduated;
-  batch?: {
-    number: string;
-    status: string;
+  socialLinks?: {
+    telegram?: string;
+    twitter?: string;
+    github?: string;
+    instagram?: string;
+    discord?: string;
+    email?: string;
   };
-  builderCohort?: { id: string; name: string; url: string }[];
-  stream?: {
-    balance: string;
-    cap: string;
-    frequency: number;
-    lastContract: number;
-    lastIndexedBlock: number;
-    streamAddress: string;
-  };
+  batch?: { number: string; status: string };
 };
 
 export type BuilderDataResponse = {

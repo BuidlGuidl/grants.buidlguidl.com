@@ -2,8 +2,8 @@ import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { EIP712TypedData } from "@safe-global/safe-core-sdk-types";
 import { recoverTypedDataAddress } from "viem";
+import { fetchBuilderData } from "~~/services/database/builders";
 import { getAllGrantsForReview, reviewGrant } from "~~/services/database/grants";
-import { findUserByAddress } from "~~/services/database/users";
 import { EIP_712_DOMAIN, EIP_712_TYPES__REVIEW_GRANT_BATCH } from "~~/utils/eip712";
 import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";
 import { validateSafeSignature } from "~~/utils/safe-signature";
@@ -26,8 +26,8 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const signerData = await findUserByAddress(address);
-  if (signerData.data?.role !== "admin") {
+  const signerData = await fetchBuilderData(address);
+  if (signerData?.role !== "admin") {
     console.error("Unauthorized", address);
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
@@ -76,8 +76,8 @@ export async function POST(req: NextRequest) {
   }
 
   // Only admins can review grants
-  const signerData = await findUserByAddress(signer);
-  if (signerData.data?.role !== "admin") {
+  const signerData = await fetchBuilderData(signer);
+  if (signerData?.role !== "admin") {
     console.error("Unauthorized", signer);
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }

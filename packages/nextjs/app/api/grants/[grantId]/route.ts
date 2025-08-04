@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { EIP712TypedData } from "@safe-global/safe-core-sdk-types";
 import { recoverTypedDataAddress } from "viem";
 import { updateGrant } from "~~/services/database/grants";
-import { findUserByAddress } from "~~/services/database/users";
+import { fetchBuilderData } from "~~/services/database/builders";
 import { EIP_712_DOMAIN, EIP_712_TYPES__EDIT_GRANT } from "~~/utils/eip712";
 import { validateSafeSignature } from "~~/utils/safe-signature";
 
@@ -55,8 +55,8 @@ export async function PATCH(req: NextRequest, { params }: { params: { grantId: s
     }
 
     // Only admins can edit grant
-    const signerData = await findUserByAddress(signer);
-    if (signerData.data?.role !== "admin") {
+    const signerData = await fetchBuilderData(signer);
+    if (signerData?.role !== "admin") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     await updateGrant(grantId, { title, description, askAmount }, private_note);
