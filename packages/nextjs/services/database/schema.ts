@@ -28,14 +28,7 @@ export type BuilderData = {
   id: string;
   role?: "anonymous" | "user" | "admin";
   builds?: Build[];
-  socialLinks?: {
-    telegram?: string;
-    twitter?: string;
-    github?: string;
-    instagram?: string;
-    discord?: string;
-    email?: string;
-  };
+  socialLinks?: SocialLinks;
   batch?: { number: string; status: string };
 };
 
