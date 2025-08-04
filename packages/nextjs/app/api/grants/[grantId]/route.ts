@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { EIP712TypedData } from "@safe-global/safe-core-sdk-types";
 import { recoverTypedDataAddress } from "viem";
-import { updateGrant } from "~~/services/database/grants";
 import { fetchBuilderData } from "~~/services/database/builders";
+import { updateGrant } from "~~/services/database/grants";
 import { EIP_712_DOMAIN, EIP_712_TYPES__EDIT_GRANT } from "~~/utils/eip712";
 import { validateSafeSignature } from "~~/utils/safe-signature";
 

@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { recoverTypedDataAddress } from "viem";
+import { fetchBuilderData } from "~~/services/database/builders";
 import { EIP_712_DOMAIN, EIP_712_TYPES__ADMIN_SIGN_IN } from "~~/utils/eip712";
 import { validateSafeSignature } from "~~/utils/safe-signature";
-import { fetchBuilderData } from "~~/services/database/builders";
 
 type AdminSignInBody = {
   signer?: string;
