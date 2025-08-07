@@ -55,6 +55,16 @@ const MyGrants: NextPage = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <p className={`badge ${badgeBgColor[grant.status]}`}>{grant.status}</p>
+              {grant.link && (
+                <a
+                  href={grant.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ml-2 text-blue-600 underline underline-offset-4 text-xs align-middle font-bold"
+                >
+                  view build <ArrowTopRightOnSquareIcon className="h-4 w-4 inline" />
+                </a>
+              )}
               {grant.note &&
                 grant.note.trim().length > 0 &&
                 (grant.status === PROPOSAL_STATUS.REJECTED || grant.status === PROPOSAL_STATUS.APPROVED) && (
