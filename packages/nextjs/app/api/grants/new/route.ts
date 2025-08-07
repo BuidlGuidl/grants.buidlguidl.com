@@ -14,7 +14,7 @@ type ReqBody = {
 };
 
 // Hardcoded default ask amount
-const askAmount = 0.15;
+const askAmount = 0.08;
 // TODO: We could also add extra validation of nonce
 export async function POST(req: Request) {
   try {
