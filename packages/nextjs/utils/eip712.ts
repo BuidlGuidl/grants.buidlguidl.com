@@ -26,6 +26,7 @@ export const EIP_712_TYPES__REVIEW_GRANT = {
     { name: "action", type: "string" },
     { name: "txHash", type: "string" },
     { name: "txChainId", type: "string" },
+    { name: "link", type: "string" },
   ],
 } as const;
 

@@ -49,6 +49,7 @@ export const useReviewGrant = (grant: GrantData) => {
             action: action,
             txHash: txnHash,
             txChainId: connectedChain.id.toString(),
+            link: grant.link ?? "",
             note: note ?? "",
           },
         });
@@ -62,6 +63,7 @@ export const useReviewGrant = (grant: GrantData) => {
             action: action,
             txHash: txnHash,
             txChainId: connectedChain.id.toString(),
+            link: grant.link ?? "",
           },
         });
       }
