@@ -11,7 +11,8 @@ import TelegramIcon from "~~/components/assets/TelegramIcon";
 import TwitterIcon from "~~/components/assets/TwitterIcon";
 import { Address } from "~~/components/scaffold-eth";
 import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
-import { GrantData, GrantDataWithPrivateNote, SocialLinks } from "~~/services/database/schema";
+import { SocialLinks } from "~~/services/api/sre/schema";
+import { GrantData, GrantDataWithPrivateNote } from "~~/services/database/schema";
 import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";
 
 const BuilderSocials = ({ socialLinks }: { socialLinks?: SocialLinks }) => {
