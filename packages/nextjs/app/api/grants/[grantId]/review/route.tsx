@@ -25,7 +25,7 @@ export async function POST(req: NextRequest, { params }: { params: { grantId: st
   // Log the incoming payload for debugging
   console.log(
     "[REVIEW API] Incoming payload:",
-    JSON.stringify({ grantId, action, txHash, txChainId, link, signature, signer, note }, null, 2),
+    JSON.stringify({ grantId, action, txHash, txChainId, link, signature, signer, note, isSafeSignature }, null, 2),
   );
 
   // Validate action is valid
@@ -133,10 +133,11 @@ export async function POST(req: NextRequest, { params }: { params: { grantId: st
           signature,
           signer,
           note,
+          isSafeSignature,
         };
         console.log("[SRE API] Sending payload:", JSON.stringify(srePayload, null, 2)); // Debug log
         try {
-          await fetch(process.env.SRE_API_URL || "https://speedrunethereum/api/grant-completed", {
+          await fetch(process.env.SRE_API_URL || "https://speedrunethereum.com/api/builds/grant-completed", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(srePayload),
