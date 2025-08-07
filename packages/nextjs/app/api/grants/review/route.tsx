@@ -53,6 +53,7 @@ type BatchReqBody = {
     action: ProposalStatusType;
     txHash: string;
     txChainId: string;
+    link: string;
   }[];
   isSafeSignature?: boolean;
 };
