@@ -22,16 +22,9 @@ export async function POST(req: NextRequest, { params }: { params: { grantId: st
   const { grantId } = params;
   const { signature, signer, action, txHash, txChainId, note, isSafeSignature, link } = (await req.json()) as ReqBody;
 
-  // Log the incoming payload for debugging
-  console.log(
-    "[REVIEW API] Incoming payload:",
-    JSON.stringify({ grantId, action, txHash, txChainId, link, signature, signer, note, isSafeSignature }, null, 2),
-  );
-
   // Validate action is valid
   const validActions = Object.values(PROPOSAL_STATUS);
   if (!validActions.includes(action)) {
-    console.error("Invalid action", action);
     return NextResponse.json({ error: "Invalid action" }, { status: 400 });
   }
 
@@ -98,7 +91,6 @@ export async function POST(req: NextRequest, { params }: { params: { grantId: st
   }
 
   if (!isValidSignature) {
-    console.error("Invalid signature", signer);
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -106,7 +98,6 @@ export async function POST(req: NextRequest, { params }: { params: { grantId: st
   const signerData = await findUserByAddress(signer);
 
   if (signerData.data?.role !== "admin") {
-    console.error("Unauthorized", signer);
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -121,7 +112,6 @@ export async function POST(req: NextRequest, { params }: { params: { grantId: st
 
     // If the action is COMPLETED, forward the signed payload to SRE
     if (action === PROPOSAL_STATUS.COMPLETED) {
-      // Fetch the grant to get the build link
       const grant = await import("~~/services/database/grants").then(m => m.getGrantById(grantId));
       if (grant && grant.link) {
         const srePayload = {
@@ -135,7 +125,6 @@ export async function POST(req: NextRequest, { params }: { params: { grantId: st
           note,
           isSafeSignature,
         };
-        console.log("[SRE API] Sending payload:", JSON.stringify(srePayload, null, 2)); // Debug log
         try {
           await fetch(process.env.SRE_API_URL || "https://speedrunethereum.com/api/builds/grant-completed", {
             method: "POST",
@@ -150,7 +139,6 @@ export async function POST(req: NextRequest, { params }: { params: { grantId: st
       }
     }
   } catch (error) {
-    console.error("Error approving grant", error);
     return NextResponse.json({ error: "Error approving grant" }, { status: 500 });
   }
 
