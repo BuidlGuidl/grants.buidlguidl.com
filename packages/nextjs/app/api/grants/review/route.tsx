@@ -2,7 +2,7 @@ import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { EIP712TypedData } from "@safe-global/safe-core-sdk-types";
 import { recoverTypedDataAddress } from "viem";
-import { fetchBuilderData } from "~~/services/database/builders";
+import { fetchBuilderData } from "~~/services/api/sre/builders";
 import { getAllGrantsForReview, reviewGrant } from "~~/services/database/grants";
 import { EIP_712_DOMAIN, EIP_712_TYPES__REVIEW_GRANT_BATCH } from "~~/utils/eip712";
 import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";

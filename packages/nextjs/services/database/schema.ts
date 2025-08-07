@@ -1,13 +1,5 @@
 import type { Simplify } from "type-fest";
-
-export type SocialLinks = {
-  twitter?: string;
-  github?: string;
-  discord?: string;
-  telegram?: string;
-  instagram?: string;
-  email?: string;
-};
+import type { BuilderData } from "../api/sre/schema";
 
 type Build = {
   submittedTimestamp: number;
@@ -22,19 +14,6 @@ type Status = {
 type Graduated = {
   reason: string;
   status: boolean;
-};
-
-export type BuilderData = {
-  id: string;
-  role?: "anonymous" | "user" | "admin";
-  builds?: Build[];
-  socialLinks?: SocialLinks;
-  batch?: { number: string; status: string };
-};
-
-export type BuilderDataResponse = {
-  exists: boolean;
-  data?: BuilderData;
 };
 
 export type GrantWithoutTimestamps = {

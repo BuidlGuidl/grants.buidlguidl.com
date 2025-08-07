@@ -1,6 +1,6 @@
 import { getFirestoreConnector } from "./firestoreDB";
-import { BuilderData, GrantData, GrantDataWithPrivateNote } from "./schema";
-import { fetchBuilderData } from "./builders";
+import { GrantData, GrantDataWithPrivateNote } from "./schema";
+import { fetchBuilderData } from "../api/sre/builders";
 import ecosystemGrants from "~~/services/database/ecosystemGrants.json";
 import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";
 

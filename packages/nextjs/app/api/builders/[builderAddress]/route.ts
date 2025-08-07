@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { fetchBuilderData } from "~~/services/database/builders";
+import { fetchBuilderData } from "~~/services/api/sre/builders";
 
 export async function GET(_request: Request, { params }: { params: { builderAddress: string } }) {
   try {
