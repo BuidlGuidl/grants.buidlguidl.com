@@ -11,7 +11,8 @@ import TelegramIcon from "~~/components/assets/TelegramIcon";
 import TwitterIcon from "~~/components/assets/TwitterIcon";
 import { Address } from "~~/components/scaffold-eth";
 import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
-import { GrantData, GrantDataWithPrivateNote, SocialLinks } from "~~/services/database/schema";
+import { SocialLinks } from "~~/services/api/sre/schema";
+import { GrantData, GrantDataWithPrivateNote } from "~~/services/database/schema";
 import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";
 
 const BuilderSocials = ({ socialLinks }: { socialLinks?: SocialLinks }) => {
@@ -163,13 +164,14 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
           {grant.builderData?.batch?.number && (
             <div className="badge badge-outline">Batch #{grant.builderData.batch?.number}</div>
           )}
+          {/* TODO: Should we add to SRE data?
           {grant.builderData?.builderCohort?.map(cohort => {
             return (
               <a href={cohort.url} target="_blank" rel="noreferrer" key={cohort.id} className="link">
                 <div className="badge badge-secondary">{cohort.name}</div>
               </a>
             );
-          })}
+          })} */}
         </div>
       </div>
       <div className="p-4">

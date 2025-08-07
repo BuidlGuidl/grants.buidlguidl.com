@@ -1,5 +1,5 @@
 import useSWRImmutable from "swr/immutable";
-import { BuilderDataResponse } from "~~/services/database/schema";
+import { BuilderDataResponse } from "~~/services/api/sre/schema";
 
 export const useBGBuilderData = (address?: string) => {
   const {
