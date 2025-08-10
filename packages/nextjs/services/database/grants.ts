@@ -3,6 +3,7 @@ import { BuilderData, GrantData, GrantDataWithPrivateNote } from "./schema";
 import ecosystemGrants from "~~/services/database/ecosystemGrants.json";
 import { findUserByAddress } from "~~/services/database/users";
 import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";
+import { sendBuildToSRE, extractBuildId } from "../sre";
 
 const firestoreDB = getFirestoreConnector();
 const grantsCollection = firestoreDB.collection("grants");
@@ -177,6 +178,18 @@ export const reviewGrant = async ({ grantId, action, txHash, txChainId, note }: 
     updateData[grantActionTimeStampKey] = grantActionTimeStamp;
 
     await grantsCollection.doc(grantId).update(updateData);
+
+    // Notify SpeedRunEthereum once the grant is marked as COMPLETED.
+    if (action === PROPOSAL_STATUS.COMPLETED) {
+      const buildLink = grantSnapshot.data()?.link as string | undefined;
+      const buildId = extractBuildId(buildLink);
+      if (buildId) {
+        // we don't want to block the main flow on this third-party request.
+        void sendBuildToSRE(buildId);
+      } else {
+        console.warn("[SRE] Could not derive buildId from link – skipping SRE sync", grantId);
+      }
+    }
   } catch (error) {
     console.error("Error processing the grant:", error);
     throw error;

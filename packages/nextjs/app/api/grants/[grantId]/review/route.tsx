@@ -13,24 +13,18 @@ type ReqBody = {
   action: ProposalStatusType;
   txHash: string;
   txChainId: string;
-  link: string;
   note?: string;
   isSafeSignature?: boolean;
 };
 
 export async function POST(req: NextRequest, { params }: { params: { grantId: string } }) {
   const { grantId } = params;
-  const { signature, signer, action, txHash, txChainId, note, isSafeSignature, link } = (await req.json()) as ReqBody;
+  const { signature, signer, action, txHash, txChainId, note, isSafeSignature } = (await req.json()) as ReqBody;
 
   // Validate action is valid
   const validActions = Object.values(PROPOSAL_STATUS);
   if (!validActions.includes(action)) {
     return NextResponse.json({ error: "Invalid action" }, { status: 400 });
-  }
-
-  // For COMPLETED, require link to be a non-empty string
-  if (action === PROPOSAL_STATUS.COMPLETED && (typeof link !== "string" || !link.length)) {
-    return NextResponse.json({ error: "Missing or invalid link for completed grant" }, { status: 400 });
   }
 
   let isValidSignature: boolean;
@@ -46,7 +40,6 @@ export async function POST(req: NextRequest, { params }: { params: { grantId: st
         action: action,
         txHash,
         txChainId,
-        link: link ?? "",
         note: note ?? "",
       },
       signature,
@@ -73,7 +66,6 @@ export async function POST(req: NextRequest, { params }: { params: { grantId: st
         action: action,
         txHash,
         txChainId,
-        link: link ?? "",
       },
       signature,
     } as const;
@@ -109,35 +101,6 @@ export async function POST(req: NextRequest, { params }: { params: { grantId: st
       note,
       txChainId,
     });
-
-    // If the action is COMPLETED, forward the signed payload to SRE
-    if (action === PROPOSAL_STATUS.COMPLETED) {
-      const grant = await import("~~/services/database/grants").then(m => m.getGrantById(grantId));
-      if (grant && grant.link) {
-        const srePayload = {
-          grantId,
-          action,
-          txHash,
-          txChainId,
-          link: grant.link,
-          signature,
-          signer,
-          note,
-          isSafeSignature,
-        };
-        try {
-          await fetch(process.env.SRE_API_URL || "https://speedrunethereum.com/api/builds/grant-completed", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(srePayload),
-          });
-        } catch (sreError) {
-          console.error("Error forwarding grant completion to SRE", sreError);
-        }
-      } else {
-        console.warn("No build link found for grant, not forwarding to SRE", grantId);
-      }
-    }
   } catch (error) {
     return NextResponse.json({ error: "Error approving grant" }, { status: 500 });
   }

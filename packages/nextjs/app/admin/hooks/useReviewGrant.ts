@@ -16,7 +16,6 @@ type ReqBody = {
   txChainId: string;
   note?: string;
   isSafeSignature?: boolean;
-  link: string;
 };
 
 export const useReviewGrant = (grant: GrantData) => {
@@ -50,7 +49,6 @@ export const useReviewGrant = (grant: GrantData) => {
             action: action,
             txHash: txnHash,
             txChainId: connectedChain.id.toString(),
-            link: grant.link ?? "",
             note: note ?? "",
           },
         });
@@ -64,7 +62,6 @@ export const useReviewGrant = (grant: GrantData) => {
             action: action,
             txHash: txnHash,
             txChainId: connectedChain.id.toString(),
-            link: grant.link ?? "",
           },
         });
       }
@@ -86,7 +83,6 @@ export const useReviewGrant = (grant: GrantData) => {
         txChainId: connectedChain.id.toString(),
         note,
         isSafeSignature,
-        link: grant.link ?? "",
       });
       await mutate("/api/grants/review");
       notification.remove(notificationId);

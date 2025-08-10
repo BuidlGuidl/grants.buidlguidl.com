@@ -15,7 +15,6 @@ type BatchReqBody = {
     action: ProposalStatusType;
     txHash: string;
     txChainId: string;
-    link: string;
   }[];
   isSafeSignature?: boolean;
 };
@@ -43,7 +42,6 @@ export const useBatchReviewGrants = () => {
         action,
         txHash,
         txChainId: connectedChain.id.toString(),
-        link: "",
       };
     });
 
