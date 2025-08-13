@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { EIP712TypedData } from "@safe-global/safe-core-sdk-types";
+import { waitUntil } from "@vercel/functions";
 import { recoverTypedDataAddress } from "viem";
-import { reviewGrant } from "~~/services/database/grants";
+import { getGrantById, reviewGrant } from "~~/services/database/grants";
 import { findUserByAddress } from "~~/services/database/users";
+import { extractBuildId, sendBuildToSRE } from "~~/services/sre";
 import { EIP_712_DOMAIN, EIP_712_TYPES__REVIEW_GRANT, EIP_712_TYPES__REVIEW_GRANT_WITH_NOTE } from "~~/utils/eip712";
 import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";
 import { validateSafeSignature } from "~~/utils/safe-signature";
@@ -103,6 +105,27 @@ export async function POST(req: NextRequest, { params }: { params: { grantId: st
     });
   } catch (error) {
     return NextResponse.json({ error: "Error approving grant" }, { status: 500 });
+  }
+
+  // Send build to SRE to mark it as bgGrant
+  if (action === PROPOSAL_STATUS.COMPLETED) {
+    // Use waitUntil for background processing
+    waitUntil(
+      (async () => {
+        try {
+          const grant = await getGrantById(grantId);
+          const buildId = extractBuildId(grant?.link);
+          if (buildId) {
+            await sendBuildToSRE(buildId);
+          } else {
+            console.warn("[SRE] Could not derive buildId from link – skipping SRE sync", grantId);
+          }
+        } catch (sreError) {
+          // Log SRE errors but don't fail the main operation
+          console.error("[SRE] Error notifying SpeedRunEthereum:", sreError);
+        }
+      })(),
+    );
   }
 
   return NextResponse.json({ success: true });
