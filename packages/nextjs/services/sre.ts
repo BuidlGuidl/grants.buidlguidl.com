@@ -23,12 +23,8 @@ export const sendBuildToSRE = async (buildId: string): Promise<void> => {
   const apiUrl = process.env.SRE_API_URL;
   const apiKey = process.env.SRE_API_KEY;
 
-  if (!apiUrl) {
-    console.warn("[SRE] SRE_API_URL env var is not set, skipping call to SRE");
-    return;
-  }
-  if (!apiKey) {
-    console.warn("[SRE] SRE_API_KEY env var is not set, skipping call to SRE");
+  if (!apiUrl || !apiKey) {
+    console.warn("[SRE] Missing SRE config (SRE_API_URL or SRE_API_KEY); skipping call");
     return;
   }
   if (!buildId) {
@@ -37,11 +33,16 @@ export const sendBuildToSRE = async (buildId: string): Promise<void> => {
   }
 
   try {
-    await fetch(apiUrl, {
+    const payload = { buildId, apiKey };
+    const response = await fetch(apiUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ buildId, apiKey }),
+      body: JSON.stringify(payload),
     });
+
+    if (!response.ok) {
+      console.error("[SRE] SRE endpoint returned error status:", response.status);
+    }
   } catch (error) {
     console.error("[SRE] Failed to send build information to SRE", error);
   }
