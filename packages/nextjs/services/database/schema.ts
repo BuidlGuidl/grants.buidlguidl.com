@@ -1,21 +1,6 @@
 import type { Simplify } from "type-fest";
 import type { BuilderData } from "../api/sre/schema";
 
-type Build = {
-  submittedTimestamp: number;
-  id: string;
-};
-
-type Status = {
-  text: string;
-  timestamp: number;
-};
-
-type Graduated = {
-  reason: string;
-  status: boolean;
-};
-
 export type GrantWithoutTimestamps = {
   id: string;
   title: string;
