@@ -1,20 +1,15 @@
 export type SocialLinks = {
-  twitter?: string;
-  github?: string;
-  discord?: string;
-  telegram?: string;
-  instagram?: string;
-  email?: string;
+  socialX?: string;
+  socialGithub?: string;
+  socialDiscord?: string;
+  socialTelegram?: string;
+  socialInstagram?: string;
+  socialEmail?: string;
 };
 
 export type BuilderData = {
-  id: string;
+  userAddress: string;
   role?: "anonymous" | "user" | "admin";
   socialLinks?: SocialLinks;
-  batch?: { number: string; status: string };
-};
-
-export type BuilderDataResponse = {
-  exists: boolean;
-  data?: BuilderData;
+  batchId?: { number: string; status: string };
 };
