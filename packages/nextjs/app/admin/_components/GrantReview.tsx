@@ -20,20 +20,20 @@ const BuilderSocials = ({ socialLinks }: { socialLinks?: SocialLinks }) => {
 
   return (
     <>
-      {socialLinks?.twitter && (
+      {socialLinks?.socialX && (
         <a
           className="inline-block w-[20px] hover:opacity-80"
-          href={`https://twitter.com/${socialLinks?.twitter}`}
+          href={`https://twitter.com/${socialLinks?.socialX}`}
           target="_blank"
           rel="noreferrer"
         >
           <TwitterIcon />
         </a>
       )}
-      {socialLinks?.telegram && (
+      {socialLinks?.socialTelegram && (
         <a
           className="inline-block w-[20px] hover:opacity-80"
-          href={`https://telegram.me/${socialLinks?.telegram}`}
+          href={`https://telegram.me/${socialLinks?.socialTelegram}`}
           target="_blank"
           rel="noreferrer"
         >
@@ -161,8 +161,8 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
         </div>
         <div className="flex gap-4 items-center mt-3">
           <BuilderSocials socialLinks={grant.builderData?.socialLinks} />
-          {grant.builderData?.batch?.number && (
-            <div className="badge badge-outline">Batch #{grant.builderData.batch?.number}</div>
+          {grant.builderData?.batchId?.number && (
+            <div className="badge badge-outline">Batch #{grant.builderData.batchId?.number}</div>
           )}
           {/* TODO: Should we add to SRE data?
           {grant.builderData?.builderCohort?.map(cohort => {
