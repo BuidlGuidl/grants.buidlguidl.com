@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
 import { LockClosedIcon, LockOpenIcon } from "@heroicons/react/24/outline";
-import { useBGBuilderData } from "~~/hooks/useBGBuilderData";
 import { useSpeedRunChallengeEligibility } from "~~/hooks/useSpeedRunChallengeEligibility";
 import { REQUIRED_CHALLENGE_COUNT } from "~~/utils/eligibility-criteria";
 
