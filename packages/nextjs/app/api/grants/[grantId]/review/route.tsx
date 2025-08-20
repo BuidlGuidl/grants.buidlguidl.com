@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { EIP712TypedData } from "@safe-global/safe-core-sdk-types";
 import { waitUntil } from "@vercel/functions";
 import { recoverTypedDataAddress } from "viem";
+import { fetchBuilderData } from "~~/services/api/sre/builders";
 import { getGrantById, reviewGrant } from "~~/services/database/grants";
-import { findUserByAddress } from "~~/services/database/users";
 import { extractBuildId, sendBuildToSRE } from "~~/services/sre";
 import { EIP_712_DOMAIN, EIP_712_TYPES__REVIEW_GRANT, EIP_712_TYPES__REVIEW_GRANT_WITH_NOTE } from "~~/utils/eip712";
 import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";
@@ -89,9 +89,9 @@ export async function POST(req: NextRequest, { params }: { params: { grantId: st
   }
 
   // Only admins can review grants
-  const signerData = await findUserByAddress(signer);
-
-  if (signerData.data?.role !== "admin") {
+  const signerData = await fetchBuilderData(signer);
+  if (signerData?.role !== "admin") {
+    console.error("Unauthorized", signer);
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

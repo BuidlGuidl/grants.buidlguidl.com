@@ -2,7 +2,6 @@
 
 import { useFormStatus } from "react-dom";
 import { useAccount } from "wagmi";
-import { useBGBuilderData } from "~~/hooks/useBGBuilderData";
 import { useSpeedRunChallengeEligibility } from "~~/hooks/useSpeedRunChallengeEligibility";
 import { REQUIRED_CHALLENGE_COUNT } from "~~/utils/eligibility-criteria";
 
@@ -10,16 +9,9 @@ import { REQUIRED_CHALLENGE_COUNT } from "~~/utils/eligibility-criteria";
 const SubmitButton = () => {
   const { pending } = useFormStatus();
   const { isConnected, address: connectedAddress } = useAccount();
-  const { isBuilderPresent, isLoading: isFetchingBuilderData } = useBGBuilderData(connectedAddress);
-  const {
-    isLoading: isLoadingSRE,
-    isEligible: isEligibleSRE,
-    completedChallengesCount,
-  } = useSpeedRunChallengeEligibility(connectedAddress);
+  const { isLoading, isEligible, completedChallengesCount } = useSpeedRunChallengeEligibility(connectedAddress);
 
-  const isEligible = isEligibleSRE || isBuilderPresent;
-  const isFetching = isLoadingSRE || (isEligibleSRE === false && isFetchingBuilderData);
-  const isSubmitDisabled = !isConnected || isFetching || !isEligible || pending;
+  const isSubmitDisabled = !isConnected || isLoading || !isEligible || pending;
 
   let tooltip = "";
   if (!isConnected) {
@@ -33,7 +25,7 @@ const SubmitButton = () => {
   return (
     <div className={`flex ${(!isConnected || !isEligible) && "tooltip tooltip-bottom"}`} data-tip={tooltip}>
       <button className="btn btn-primary w-full" disabled={isSubmitDisabled} aria-disabled={isSubmitDisabled}>
-        {(isFetching || pending) && <span className="loading loading-spinner loading-md"></span>}
+        {(isLoading || pending) && <span className="loading loading-spinner loading-md"></span>}
         Submit
       </button>
     </div>

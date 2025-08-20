@@ -1,57 +1,5 @@
 import type { Simplify } from "type-fest";
-
-export type SocialLinks = {
-  twitter?: string;
-  github?: string;
-  discord?: string;
-  telegram?: string;
-  instagram?: string;
-  email?: string;
-};
-
-type Build = {
-  submittedTimestamp: number;
-  id: string;
-};
-
-type Status = {
-  text: string;
-  timestamp: number;
-};
-
-type Graduated = {
-  reason: string;
-  status: boolean;
-};
-
-export type BuilderData = {
-  id: string;
-  socialLinks?: SocialLinks;
-  role?: "anonymous" | "builder" | "admin";
-  function?: string;
-  creationTimestamp?: number;
-  builds?: Build[];
-  status?: Status;
-  graduated?: Graduated;
-  batch?: {
-    number: string;
-    status: string;
-  };
-  builderCohort?: { id: string; name: string; url: string }[];
-  stream?: {
-    balance: string;
-    cap: string;
-    frequency: number;
-    lastContract: number;
-    lastIndexedBlock: number;
-    streamAddress: string;
-  };
-};
-
-export type BuilderDataResponse = {
-  exists: boolean;
-  data?: BuilderData;
-};
+import type { BuilderData } from "../api/sre/schema";
 
 export type GrantWithoutTimestamps = {
   id: string;

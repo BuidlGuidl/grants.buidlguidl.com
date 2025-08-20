@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
 import { LockClosedIcon, LockOpenIcon } from "@heroicons/react/24/outline";
-import { useBGBuilderData } from "~~/hooks/useBGBuilderData";
 import { useSpeedRunChallengeEligibility } from "~~/hooks/useSpeedRunChallengeEligibility";
 import { REQUIRED_CHALLENGE_COUNT } from "~~/utils/eligibility-criteria";
 
@@ -61,24 +60,17 @@ const FeedbackMessage = ({
 
 export const ApplyEligibilityLink = () => {
   const { isConnected, address: connectedAddress } = useAccount();
-  const { isBuilderPresent, isLoading: isFetchingBuilderData } = useBGBuilderData(connectedAddress);
   const { openConnectModal } = useConnectModal();
-  const {
-    isLoading: isLoadingSRE,
-    isEligible: isEligibleSRE,
-    completedChallengesCount,
-  } = useSpeedRunChallengeEligibility(connectedAddress);
+  const { isLoading, isEligible, completedChallengesCount } = useSpeedRunChallengeEligibility(connectedAddress);
 
   let builderStatus: BuilderStatus = "notConnected";
-  if (!isConnected || isLoadingSRE) {
+  if (!isConnected || isLoading) {
     builderStatus = "notConnected";
-  } else if (isEligibleSRE || isBuilderPresent) {
+  } else if (isEligible) {
     builderStatus = "eligible";
   } else {
     builderStatus = "notElegible";
   }
-
-  const isFetching = isLoadingSRE || (isEligibleSRE === false && isFetchingBuilderData);
 
   return (
     <div className="mx-auto lg:m-0 flex flex-col items-start bg-white px-6 py-2 pb-6 font-spaceGrotesk space-y-1 w-4/5 rounded-2xl text-left">
@@ -101,7 +93,7 @@ export const ApplyEligibilityLink = () => {
             if (!isConnected && openConnectModal) openConnectModal();
           }}
         >
-          {isFetching ? (
+          {isLoading ? (
             <span className="loading loading-spinner h-5 w-5"></span>
           ) : (
             <LockClosedIcon className="h-5 w-5 mr-1 inline-block" />

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { recoverTypedDataAddress } from "viem";
-import { findUserByAddress } from "~~/services/database/users";
+import { fetchBuilderData } from "~~/services/api/sre/builders";
 import { EIP_712_DOMAIN, EIP_712_TYPES__ADMIN_SIGN_IN } from "~~/utils/eip712";
 import { validateSafeSignature } from "~~/utils/safe-signature";
 
@@ -10,6 +10,7 @@ type AdminSignInBody = {
   isSafeSignature?: boolean;
   chainId?: number;
 };
+
 export async function POST(req: Request) {
   try {
     const { signer, signature, isSafeSignature, chainId } = (await req.json()) as AdminSignInBody;
@@ -18,8 +19,8 @@ export async function POST(req: Request) {
       return new Response("Missing signer or signature", { status: 400 });
     }
 
-    const signerData = await findUserByAddress(signer);
-    if (signerData.data?.role !== "admin") {
+    const userData = await fetchBuilderData(signer);
+    if (userData?.role !== "admin") {
       console.error("Unauthorized", signer);
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

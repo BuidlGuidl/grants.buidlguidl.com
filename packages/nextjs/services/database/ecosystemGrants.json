@@ -4,42 +4,42 @@
       "name": "Jessy's Hacker House",
       "description": "Jessy is helping the BuidlGuidl find high-impact up-and-coming devs. Our goal is to fund developers on the edge and help them remain free agents to have the most open source impact.",
       "amountGranted": "0",
-      "twitterLink": "https://twitter.com/wehack247",
+      "xLink": "https://x.com/wehack247",
       "imgLink": "/assets/jessy-hacker-house.png"
     },
     {
       "name": "Solidity By Example",
       "description": "Solidity-by-example is the best solidity resource out there. It stays up-to-date and Taz is always adding new examples.",
       "amountGranted": "13",
-      "twitterLink": "https://twitter.com/ProgrammerSmart",
+      "xLink": "https://x.com/ProgrammerSmart",
       "imgLink": "/assets/solidity-by-example.png"
     },
     {
       "name": "W1nt3r",
       "description": "W1nt3r created EVMFromScratch.com and many other engaging onchain apps. He is a model app builder on Ethereum.",
       "amountGranted": "13",
-      "twitterLink": "https://x.com/w1nt3r_eth",
+      "xLink": "https://x.com/w1nt3r_eth",
       "imgLink": "/assets/w1nt3r-evm.png"
     }
     , {
       "name": "jtriley.eth",
       "description": "Ether Deck Mk2: A reasonably optimized, extensible smart account.",
       "amountGranted": "2.262",
-      "twitterLink": "https://twitter.com/jtriley_eth",
+      "xLink": "https://x.com/jtriley_eth",
       "imgLink": "/assets/etherdeck.png"
     }
     , {
       "name": "erhant.eth",
       "description": "Circomkit is a Circom circuit development & testing toolkit. It provides a simple CLI that abstracts away pathing & setups for SnarkJS commands...",
       "amountGranted": "2.262",
-      "twitterLink": "https://twitter.com/0xerhant",
+      "xLink": "https://x.com/0xerhant",
       "imgLink": "/assets/circomkit.png"
     }
     , {
       "name": "bytes032.eth",
       "description": "FindAudit is a public good platform that allows protocols to connect with over 100 auditors/audit firms in less than 48 hours.",
       "amountGranted": "2.262",
-      "twitterLink": "https://twitter.com/bytes032",
+      "xLink": "https://x.com/bytes032",
       "imgLink": "/assets/findaudit.png"
     }
   ]

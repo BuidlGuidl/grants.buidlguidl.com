@@ -1,4 +1,5 @@
 import Image from "next/image";
+import XIcon from "~~/components/assets/XIcon";
 import { getAllEcosystemGrants } from "~~/services/database/grants";
 
 const EcosystemGrantsCard = ({
@@ -6,13 +7,13 @@ const EcosystemGrantsCard = ({
   description,
   imageLink,
   amountGranted,
-  twitterLink,
+  xLink,
 }: {
   title: string;
   description: string;
   imageLink: string;
   amountGranted: string;
-  twitterLink: string;
+  xLink: string;
 }) => {
   return (
     <div className="bg-base-100 rounded-2xl min-h-[380px] max-w-[370px] flex flex-col">
@@ -24,13 +25,13 @@ const EcosystemGrantsCard = ({
       </div>
       <div className="flex-1 flex flex-col items-start justify-between space-y-4 p-5">
         <p className="text-sm m-0 font-spaceMono font-normal leading-5 pb-2">{description}</p>
-        <div className="flex justify-between items-baseline w-full">
+        <div className="flex justify-between align-center items-center w-full">
           <div className="bg-primary rounded-lg py-1 px-2 text-xs font-bold">
             Amount:
             <span className="text-sm"> {Number(amountGranted).toFixed(2)} ETH</span>
           </div>
-          <a href={twitterLink} target="_blank" className="text-sm underline underline-offset-1">
-            Twitter
+          <a href={xLink} target="_blank" className="inline-block w-[20px] hover:opacity-80">
+            <XIcon />
           </a>
         </div>
       </div>
@@ -58,7 +59,7 @@ export const EcosystemGrants = async () => {
               description={grant.description}
               imageLink={grant.imgLink}
               amountGranted={grant.amountGranted}
-              twitterLink={grant.twitterLink}
+              xLink={grant.xLink}
             />
           ))}
         </div>
