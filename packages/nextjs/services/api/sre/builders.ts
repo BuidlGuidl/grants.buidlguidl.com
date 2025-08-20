@@ -1,8 +1,10 @@
 import { BuilderData, SocialLinks } from "./schema";
 
+export const SRE_ENDPOINT = "https://speedrunethereum.com";
+
 export async function fetchBuilderData(address: string): Promise<BuilderData | undefined> {
   try {
-    const res = await fetch(`https://speedrunethereum.com/api/users/${address}`);
+    const res = await fetch(`${SRE_ENDPOINT}/api/users/${address}`);
 
     if (!res.ok) return undefined;
 
@@ -22,12 +24,10 @@ export async function fetchBuilderData(address: string): Promise<BuilderData | u
       userAddress: user.userAddress,
       role: user.role ? user.role.toLowerCase() : undefined,
       socialLinks,
-      batchId: user.batchId
-        ? { number: String(Number(user.batchId) - 1), status: user.batchStatus }
-        : undefined,
+      batchId: user.batchId ? { number: String(Number(user.batchId) - 1), status: user.batchStatus } : undefined,
     };
   } catch (error) {
-    console.error('Failed to fetch builder data:', error);
+    console.error("Failed to fetch builder data:", error);
     return undefined;
   }
 }
