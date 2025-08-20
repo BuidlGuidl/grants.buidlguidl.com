@@ -8,7 +8,7 @@ import { useNetwork } from "wagmi";
 import { ArrowTopRightOnSquareIcon, QuestionMarkCircleIcon } from "@heroicons/react/20/solid";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import TelegramIcon from "~~/components/assets/TelegramIcon";
-import TwitterIcon from "~~/components/assets/TwitterIcon";
+import XIcon from "~~/components/assets/XIcon";
 import { Address } from "~~/components/scaffold-eth";
 import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import { SocialLinks } from "~~/services/api/sre/schema";
@@ -23,11 +23,11 @@ const BuilderSocials = ({ socialLinks }: { socialLinks?: SocialLinks }) => {
       {socialLinks?.socialX && (
         <a
           className="inline-block w-[20px] hover:opacity-80"
-          href={`https://twitter.com/${socialLinks?.socialX}`}
+          href={`https://x.com/${socialLinks?.socialX}`}
           target="_blank"
           rel="noreferrer"
         >
-          <TwitterIcon />
+          <XIcon />
         </a>
       )}
       {socialLinks?.socialTelegram && (
