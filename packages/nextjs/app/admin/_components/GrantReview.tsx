@@ -164,14 +164,6 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
           {grant.builderData?.batchId?.number && (
             <div className="badge badge-outline">Batch #{grant.builderData.batchId?.number}</div>
           )}
-          {/* TODO: Should we add to SRE data?
-          {grant.builderData?.builderCohort?.map(cohort => {
-            return (
-              <a href={cohort.url} target="_blank" rel="noreferrer" key={cohort.id} className="link">
-                <div className="badge badge-secondary">{cohort.name}</div>
-              </a>
-            );
-          })} */}
         </div>
       </div>
       <div className="p-4">
