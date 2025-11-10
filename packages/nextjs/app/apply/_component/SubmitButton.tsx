@@ -17,7 +17,7 @@ const SubmitButton = () => {
   if (!isConnected) {
     tooltip = "Please connect your wallet";
   } else if (!isEligible) {
-    tooltip = `You need to complete at least ${REQUIRED_CHALLENGE_COUNT} SpeedRun Ethereum challenges to submit a grant${
+    tooltip = `You need to complete at least ${REQUIRED_CHALLENGE_COUNT} Speedrun Ethereum challenges to submit a grant${
       typeof completedChallengesCount === "number" ? `. You have completed ${completedChallengesCount}.` : "."
     }`;
   }

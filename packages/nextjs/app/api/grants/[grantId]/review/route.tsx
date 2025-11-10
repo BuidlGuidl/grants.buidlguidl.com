@@ -122,7 +122,7 @@ export async function POST(req: NextRequest, { params }: { params: { grantId: st
           }
         } catch (sreError) {
           // Log SRE errors but don't fail the main operation
-          console.error("[SRE] Error notifying SpeedRunEthereum:", sreError);
+          console.error("[SRE] Error notifying Speedrun Ethereum:", sreError);
         }
       })(),
     );

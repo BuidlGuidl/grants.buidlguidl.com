@@ -23,12 +23,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid form details submitted" }, { status: 400 });
     }
 
-    // Legacy BG builder presence check removed. All eligibility is now based on the new SpeedRunEthereum system. If needed we could try do some kind of ROLE validation and make sure OG BuidlGuidl members that that certain ROLE in new SRE database.
+    // Legacy BG builder presence check removed. All eligibility is now based on the new Speedrun Ethereum system. If needed we could try do some kind of ROLE validation and make sure OG BuidlGuidl members that that certain ROLE in new SRE database.
     const completed = await fetchAcceptedChallengeCount(signer);
     if (completed < REQUIRED_CHALLENGE_COUNT) {
       return NextResponse.json(
         {
-          error: `Only builders with at least ${REQUIRED_CHALLENGE_COUNT} accepted SpeedRun Ethereum challenges can submit for grants`,
+          error: `Only builders with at least ${REQUIRED_CHALLENGE_COUNT} accepted Speedrun Ethereum challenges can submit for grants`,
         },
         { status: 401 },
       );
