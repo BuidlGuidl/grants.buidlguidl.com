@@ -32,7 +32,7 @@ const FeedbackMessage = ({
           ❌ <strong>Not eligible.</strong>
         </p>
         <p>
-          You need to complete at least <strong>{REQUIRED_CHALLENGE_COUNT} SpeedRun Ethereum challenges</strong> to
+          You need to complete at least <strong>{REQUIRED_CHALLENGE_COUNT} Speedrun Ethereum challenges</strong> to
           apply for a grant.
           <br />
           <span>

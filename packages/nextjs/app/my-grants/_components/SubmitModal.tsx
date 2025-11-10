@@ -90,9 +90,9 @@ export const SubmitModal = ({ grant, closeModal }: { grant: GrantData; closeModa
               rel="noopener noreferrer"
               className="text-black-500 underline"
             >
-              SpeedRun Ethereum profile
+              Speedrun Ethereum profile
             </a>
-            &nbsp;and then submit the URL of your SpeedRun Ethereum build in this form. BG Grants team will review it to
+            &nbsp;and then submit the URL of your Speedrun Ethereum build in this form. BG Grants team will review it to
             complete the grant.
           </span>
         </div>

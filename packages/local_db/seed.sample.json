@@ -119,7 +119,7 @@
       "videoUrl": "",
       "desc": "👩‍🏫 Learn how to build on Ethereum completing the scaffold-eth challenges.",
       "image": "https://storage.googleapis.com/download/storage/v1/b/buidlguidl-v3.appspot.com/o/builds%2F0032da28a08871cbcb2922b00.png?generation=1647284971917513&alt=media",
-      "name": "🏃‍♀️ SpeedRunEthereum.com",
+      "name": "🏃‍♀️ Speedrun Ethereum.com",
       "builder": "0x60583563D5879C2E59973E5718c7DE2147971807",
       "featured": false,
       "submittedTimestamp": 1658587661752,
@@ -280,7 +280,7 @@
       "payload": {
         "userAddress": "0x60583563D5879C2E59973E5718c7DE2147971807",
         "buildUrl": "https://github.com/moonshotcollective/scaffold-directory",
-        "name": "🏃‍♀️ SpeedRunEthereum.com",
+        "name": "🏃‍♀️ Speedrun Ethereum.com",
         "buildId": "06bb3c9d-784b-44d1-b7e2-1ae5affdfa8b"
       }
     },
