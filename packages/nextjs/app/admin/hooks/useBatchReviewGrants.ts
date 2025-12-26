@@ -1,8 +1,9 @@
 import { useSWRConfig } from "swr";
 import useSWRMutation from "swr/mutation";
-import { useAccount, useNetwork, useSignTypedData } from "wagmi";
+import { useAccount, useNetwork, usePublicClient, useSignTypedData } from "wagmi";
 import { EIP_712_DOMAIN, EIP_712_TYPES__REVIEW_GRANT_BATCH } from "~~/utils/eip712";
 import { ProposalStatusType } from "~~/utils/grants";
+import { isSafeContext } from "~~/utils/safe-signature";
 import { getParsedError, notification } from "~~/utils/scaffold-eth";
 import { postMutationFetcher } from "~~/utils/swr";
 
@@ -15,6 +16,7 @@ type BatchReqBody = {
     txHash: string;
     txChainId: string;
   }[];
+  isSafeSignature?: boolean;
 };
 
 export const useBatchReviewGrants = () => {
@@ -22,6 +24,7 @@ export const useBatchReviewGrants = () => {
   const { mutate } = useSWRConfig();
   const { address: connectedAddress } = useAccount();
   const { chain: connectedChain } = useNetwork();
+  const publicClient = usePublicClient({ chainId: connectedChain?.id });
   const { trigger: postBatchReviewGrant, isMutating: isPostingBatchReviewGrant } = useSWRMutation(
     `/api/grants/review`,
     postMutationFetcher<BatchReqBody>,
@@ -51,10 +54,13 @@ export const useBatchReviewGrants = () => {
         message: message,
       });
 
+      const isSafeSignature = await isSafeContext(publicClient, connectedAddress);
+
       await postBatchReviewGrant({
         signature: signature,
         reviews: grantReviews,
         signer: connectedAddress,
+        isSafeSignature: isSafeSignature,
       });
       await mutate("/api/grants/review");
       notification.success(`Grants reviews successfully submitted!`);

@@ -1,15 +1,16 @@
 import useSWRImmutable from "swr/immutable";
-import { BuilderDataResponse } from "~~/services/database/schema";
+import { BuilderData } from "~~/services/api/sre/schema";
+import { fetchBuilderData } from "~~/services/api/sre/builders";
 
 export const useBGBuilderData = (address?: string) => {
   const {
-    data: responseData,
+    data,
     isLoading,
     error,
-  } = useSWRImmutable<BuilderDataResponse>(address ? `/api/builders/${address}` : null);
+  } = useSWRImmutable<BuilderData | undefined>(
+    address ? `builder-${address}` : null,
+    () => fetchBuilderData(address!)
+  );
 
-  const data = responseData?.data;
-  const isBuilderPresent = responseData?.exists ?? false;
-
-  return { isLoading, error, data, isBuilderPresent };
+  return { isLoading, error, data };
 };

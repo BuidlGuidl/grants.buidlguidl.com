@@ -1,7 +1,7 @@
 import { getFirestoreConnector } from "./firestoreDB";
-import { BuilderData, GrantData, GrantDataWithPrivateNote } from "./schema";
+import { GrantData, GrantDataWithPrivateNote } from "./schema";
+import { fetchBuilderData } from "../api/sre/builders";
 import ecosystemGrants from "~~/services/database/ecosystemGrants.json";
-import { findUserByAddress } from "~~/services/database/users";
 import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";
 
 const firestoreDB = getFirestoreConnector();
@@ -63,13 +63,12 @@ export const getAllGrantsForReview = async () => {
       const privateNotes = doc.ref.collection("private_note");
       const privateNotesSnapshot = await privateNotes.get();
       const private_note = privateNotesSnapshot.empty ? undefined : privateNotesSnapshot.docs[0].data().note;
-      const builderDataResponse = await findUserByAddress(grantData.builder);
-
+      const builderData = await fetchBuilderData(grantData.builder);
       return {
         id: doc.id,
         ...grantData,
         private_note,
-        builderData: builderDataResponse.exists ? (builderDataResponse.data as BuilderData) : undefined,
+        builderData,
       } as GrantDataWithPrivateNote;
     });
 
@@ -100,9 +99,15 @@ export const getAllCompletedGrants = async (limit?: number) => {
   }
 };
 
-export const getAllActiveGrants = async () => {
+export const getAllActiveGrants = async (limit?: number) => {
   try {
-    const grantsSnapshot = await grantsCollection.where("status", "==", PROPOSAL_STATUS.APPROVED).get();
+    let query = grantsCollection.where("status", "==", PROPOSAL_STATUS.APPROVED).orderBy("approvedAt", "desc");
+
+    if (limit) {
+      query = query.limit(limit);
+    }
+
+    const grantsSnapshot = await query.get();
     const grants: GrantData[] = [];
     grantsSnapshot.forEach(doc => {
       grants.push({ id: doc.id, ...doc.data() } as GrantData);

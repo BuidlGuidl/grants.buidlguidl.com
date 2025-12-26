@@ -8,10 +8,11 @@ import { useNetwork } from "wagmi";
 import { ArrowTopRightOnSquareIcon, QuestionMarkCircleIcon } from "@heroicons/react/20/solid";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import TelegramIcon from "~~/components/assets/TelegramIcon";
-import TwitterIcon from "~~/components/assets/TwitterIcon";
+import XIcon from "~~/components/assets/XIcon";
 import { Address } from "~~/components/scaffold-eth";
 import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
-import { GrantData, GrantDataWithPrivateNote, SocialLinks } from "~~/services/database/schema";
+import { SocialLinks } from "~~/services/api/sre/schema";
+import { GrantData, GrantDataWithPrivateNote } from "~~/services/database/schema";
 import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";
 
 const BuilderSocials = ({ socialLinks }: { socialLinks?: SocialLinks }) => {
@@ -19,20 +20,20 @@ const BuilderSocials = ({ socialLinks }: { socialLinks?: SocialLinks }) => {
 
   return (
     <>
-      {socialLinks?.twitter && (
+      {socialLinks?.socialX && (
         <a
           className="inline-block w-[20px] hover:opacity-80"
-          href={`https://twitter.com/${socialLinks?.twitter}`}
+          href={`https://x.com/${socialLinks?.socialX}`}
           target="_blank"
           rel="noreferrer"
         >
-          <TwitterIcon />
+          <XIcon />
         </a>
       )}
-      {socialLinks?.telegram && (
+      {socialLinks?.socialTelegram && (
         <a
           className="inline-block w-[20px] hover:opacity-80"
-          href={`https://telegram.me/${socialLinks?.telegram}`}
+          href={`https://telegram.me/${socialLinks?.socialTelegram}`}
           target="_blank"
           rel="noreferrer"
         >
@@ -148,7 +149,7 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
           </div>
         </div>
         <div className="flex gap-4 items-center relative">
-          <Address address={grant.builder} link={`https://app.buidlguidl.com/builders/${grant.builder}`} />
+          <Address address={grant.builder} link={`https://speedrunethereum.com/builders/${grant.builder}`} />
           {grantsCount > 0 && (
             <a href={getImpersonatorLink(grant.builder)} target="_blank" rel="noreferrer">
               <span className="group text-sm text-gray-500 tooltip" data-tip={otherGrantsTooltip}>
@@ -160,16 +161,9 @@ export const GrantReview = ({ grant, selected, toggleSelection }: GrantReviewPro
         </div>
         <div className="flex gap-4 items-center mt-3">
           <BuilderSocials socialLinks={grant.builderData?.socialLinks} />
-          {grant.builderData?.builderBatch && (
-            <div className="badge badge-outline">Batch #{grant.builderData.builderBatch}</div>
+          {grant.builderData?.batchId?.number && (
+            <div className="badge badge-outline">Batch #{grant.builderData.batchId?.number}</div>
           )}
-          {grant.builderData?.builderCohort?.map(cohort => {
-            return (
-              <a href={cohort.url} target="_blank" rel="noreferrer" key={cohort.id} className="link">
-                <div className="badge badge-secondary">{cohort.name}</div>
-              </a>
-            );
-          })}
         </div>
       </div>
       <div className="p-4">

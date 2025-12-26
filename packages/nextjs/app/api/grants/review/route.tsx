@@ -1,10 +1,12 @@
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { EIP712TypedData } from "@safe-global/safe-core-sdk-types";
 import { recoverTypedDataAddress } from "viem";
+import { fetchBuilderData } from "~~/services/api/sre/builders";
 import { getAllGrantsForReview, reviewGrant } from "~~/services/database/grants";
-import { findUserByAddress } from "~~/services/database/users";
 import { EIP_712_DOMAIN, EIP_712_TYPES__REVIEW_GRANT_BATCH } from "~~/utils/eip712";
 import { PROPOSAL_STATUS, ProposalStatusType } from "~~/utils/grants";
+import { validateSafeSignature } from "~~/utils/safe-signature";
 
 export const dynamic = "force-dynamic";
 
@@ -24,8 +26,8 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const signerData = await findUserByAddress(address);
-  if (signerData.data?.role !== "admin") {
+  const signerData = await fetchBuilderData(address);
+  if (signerData?.role !== "admin") {
     console.error("Unauthorized", address);
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
@@ -52,10 +54,11 @@ type BatchReqBody = {
     txHash: string;
     txChainId: string;
   }[];
+  isSafeSignature?: boolean;
 };
 
 export async function POST(req: NextRequest) {
-  const { signer, signature, reviews } = (await req.json()) as BatchReqBody;
+  const { signer, signature, reviews, isSafeSignature } = (await req.json()) as BatchReqBody;
 
   if (!reviews.length) {
     console.error("No reviews in batch");
@@ -73,22 +76,35 @@ export async function POST(req: NextRequest) {
   }
 
   // Only admins can review grants
-  const signerData = await findUserByAddress(signer);
-  if (signerData.data?.role !== "admin") {
+  const signerData = await fetchBuilderData(signer);
+  if (signerData?.role !== "admin") {
     console.error("Unauthorized", signer);
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-
-  const recoveredAddress = await recoverTypedDataAddress({
+  const typedData = {
     domain: { ...EIP_712_DOMAIN, chainId: Number(txChainId) },
     types: EIP_712_TYPES__REVIEW_GRANT_BATCH,
     primaryType: "Message",
     message: { reviews },
     signature,
-  });
+  } as const;
 
-  if (recoveredAddress !== signer) {
-    console.error("Signature error in batch", recoveredAddress, signer);
+  let isValidSignature: boolean;
+
+  if (isSafeSignature) {
+    isValidSignature = await validateSafeSignature({
+      chainId: Number(txChainId),
+      typedData: typedData as unknown as EIP712TypedData,
+      signature,
+      safeAddress: signer,
+    });
+  } else {
+    const recoveredAddress = await recoverTypedDataAddress(typedData);
+    isValidSignature = recoveredAddress === signer;
+  }
+
+  if (!isValidSignature) {
+    console.error("Signature error in batch");
     return NextResponse.json({ error: "Unauthorized in batch" }, { status: 401 });
   }
 
