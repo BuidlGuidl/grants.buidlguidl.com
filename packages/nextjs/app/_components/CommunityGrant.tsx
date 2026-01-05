@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { ApplyEligibilityLink } from "./ApplyEligibilityLink";
+
+// import { ApplyEligibilityLink } from "./ApplyEligibilityLink";
 
 export const CommunityGrant = () => {
   return (
@@ -31,7 +32,15 @@ export const CommunityGrant = () => {
               Are you a BG member eager to make an impact in the ecosystem? At BuidlGuidl, we&apos;re excited to support
               your builds. We offer sponsorships starting at 0.08 ETH for projects that drive the community forward.
             </p>
-            <ApplyEligibilityLink />
+            {/* Grants Paused Notice */}
+            <div className="mx-auto lg:m-0 flex flex-col items-start bg-white px-6 py-4 pb-6 font-spaceGrotesk space-y-2 w-4/5 rounded-2xl text-left border-2 border-warning">
+              <p className="text-2xl font-semibold mb-0">⏸️ Grants Paused</p>
+              <p className="text-sm leading-snug m-0">
+                BuidlGuidl Community Grants are currently paused. We&apos;ll announce when applications reopen. Stay
+                tuned!
+              </p>
+            </div>
+            {/* <ApplyEligibilityLink /> */}
           </div>
         </div>
         {/* Right section (Who, process, payment, etc) */}
