@@ -87,7 +87,7 @@ export const ApplyEligibilityLink = () => {
     <div className="mx-auto lg:m-0 flex flex-col items-start bg-white px-6 py-2 pb-6 font-spaceGrotesk space-y-1 w-4/5 rounded-2xl text-left">
       <p className="text-2xl font-semibold mb-0">Applications Closed</p>
       <div className="leading-snug">
-        <p>Grant applications are currently closed. Please check back later for updates.</p>
+        <p>Grants applications are currently paused. We&apos;ll announce when new applications reopen. Stay tuned!</p>
       </div>
       <button
         className="btn px-4 md:px-8 btn-md border-1 border-black hover:border-1 hover:border-black rounded-2xl shadow-none font-medium btn-disabled cursor-not-allowed"

@@ -36,7 +36,7 @@ export const CommunityGrant = () => {
             <div className="mx-auto lg:m-0 flex flex-col items-start bg-white px-6 py-4 pb-6 font-spaceGrotesk space-y-2 w-4/5 rounded-2xl text-left border-2 border-warning">
               <p className="text-2xl font-semibold mb-0">⏸️ Grants Paused</p>
               <p className="text-sm leading-snug m-0">
-                BuidlGuidl Community Grants are currently paused. We&apos;ll announce when applications reopen. Stay
+                BuidlGuidl Community Grants are currently paused. We&apos;ll announce when new applications reopen. Stay
                 tuned!
               </p>
             </div>
