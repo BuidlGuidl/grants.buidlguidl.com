@@ -1,14 +1,18 @@
 "use client";
 
+// APPLICATIONS DISABLED - These imports are kept for when applications re-open
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import Link from "next/link";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { LockClosedIcon, LockOpenIcon } from "@heroicons/react/24/outline";
 import { useSpeedRunChallengeEligibility } from "~~/hooks/useSpeedRunChallengeEligibility";
 import { REQUIRED_CHALLENGE_COUNT } from "~~/utils/eligibility-criteria";
 
 type BuilderStatus = "notConnected" | "notElegible" | "eligible";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const FeedbackMessage = ({
   builderStatus,
   completedChallengesCount,
@@ -59,10 +63,15 @@ const FeedbackMessage = ({
 };
 
 export const ApplyEligibilityLink = () => {
+  // APPLICATIONS DISABLED - These hooks are kept for when applications re-open
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { isConnected, address: connectedAddress } = useAccount();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { openConnectModal } = useConnectModal();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { isLoading, isEligible, completedChallengesCount } = useSpeedRunChallengeEligibility(connectedAddress);
 
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   let builderStatus: BuilderStatus = "notConnected";
   if (!isConnected || isLoading) {
     builderStatus = "notConnected";
@@ -71,36 +80,55 @@ export const ApplyEligibilityLink = () => {
   } else {
     builderStatus = "notElegible";
   }
+  /* eslint-enable @typescript-eslint/no-unused-vars */
 
+  // APPLICATIONS DISABLED - Show closed message
   return (
     <div className="mx-auto lg:m-0 flex flex-col items-start bg-white px-6 py-2 pb-6 font-spaceGrotesk space-y-1 w-4/5 rounded-2xl text-left">
-      <p className="text-2xl font-semibold mb-0">Do you qualify?</p>
-      <FeedbackMessage builderStatus={builderStatus} completedChallengesCount={completedChallengesCount} />
-      {builderStatus === "eligible" ? (
-        <Link
-          href="/apply"
-          className="btn px-4 md:px-8 btn-md border-1 border-black hover:border-1 hover:border-black rounded-2xl shadow-none font-medium bg-customGreen hover:bg-customGreen hover:opacity-80"
-        >
-          <LockOpenIcon className="h-5 w-5 mr-1 inline-block" />
-          APPLY FOR A GRANT
-        </Link>
-      ) : (
-        <button
-          className={`btn px-4 md:px-8 btn-md border-1 border-black hover:border-1 hover:border-black rounded-2xl shadow-none font-medium ${
-            builderStatus === "notConnected" ? "btn-primary" : "btn-warning cursor-not-allowed"
-          }`}
-          onClick={() => {
-            if (!isConnected && openConnectModal) openConnectModal();
-          }}
-        >
-          {isLoading ? (
-            <span className="loading loading-spinner h-5 w-5"></span>
-          ) : (
-            <LockClosedIcon className="h-5 w-5 mr-1 inline-block" />
-          )}
-          {!isConnected ? "CONNECT WALLET" : "APPLY FOR A GRANT"}
-        </button>
-      )}
+      <p className="text-2xl font-semibold mb-0">Applications Closed</p>
+      <div className="leading-snug">
+        <p>Grants applications are currently paused. We&apos;ll announce when new applications reopen. Stay tuned!</p>
+      </div>
+      <button
+        className="btn px-4 md:px-8 btn-md border-1 border-black hover:border-1 hover:border-black rounded-2xl shadow-none font-medium btn-disabled cursor-not-allowed"
+        disabled
+      >
+        <LockClosedIcon className="h-5 w-5 mr-1 inline-block" />
+        APPLICATIONS CLOSED
+      </button>
     </div>
   );
+
+  // ORIGINAL CODE - Uncomment to re-enable applications (and comment out the above return):
+  // return (
+  //   <div className="mx-auto lg:m-0 flex flex-col items-start bg-white px-6 py-2 pb-6 font-spaceGrotesk space-y-1 w-4/5 rounded-2xl text-left">
+  //     <p className="text-2xl font-semibold mb-0">Do you qualify?</p>
+  //     <FeedbackMessage builderStatus={builderStatus} completedChallengesCount={completedChallengesCount} />
+  //     {builderStatus === "eligible" ? (
+  //       <Link
+  //         href="/apply"
+  //         className="btn px-4 md:px-8 btn-md border-1 border-black hover:border-1 hover:border-black rounded-2xl shadow-none font-medium bg-customGreen hover:bg-customGreen hover:opacity-80"
+  //       >
+  //         <LockOpenIcon className="h-5 w-5 mr-1 inline-block" />
+  //         APPLY FOR A GRANT
+  //       </Link>
+  //     ) : (
+  //       <button
+  //         className={`btn px-4 md:px-8 btn-md border-1 border-black hover:border-1 hover:border-black rounded-2xl shadow-none font-medium ${
+  //           builderStatus === "notConnected" ? "btn-primary" : "btn-warning cursor-not-allowed"
+  //         }`}
+  //         onClick={() => {
+  //           if (!isConnected && openConnectModal) openConnectModal();
+  //         }}
+  //       >
+  //         {isLoading ? (
+  //           <span className="loading loading-spinner h-5 w-5"></span>
+  //         ) : (
+  //           <LockClosedIcon className="h-5 w-5 mr-1 inline-block" />
+  //         )}
+  //         {!isConnected ? "CONNECT WALLET" : "APPLY FOR A GRANT"}
+  //       </button>
+  //     )}
+  //   </div>
+  // );
 };
